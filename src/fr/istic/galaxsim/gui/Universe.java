@@ -82,8 +82,14 @@ public class Universe extends Group {
         });
     }
 
-    public void addAmas(Amas a) {
-        Sphere s = createCosmosElementSphere(0.6f, a);
+  public void addAmas(Amas a) {
+    	
+    	//la taille des sphéres est calculees en fonction de leurs masses
+    	//les valeurs des logs ont été calculées en fonction du max et du min des masses
+    	double radius;
+        radius = a.getMass()*Math.log(1.045)/Math.log(22000);
+        
+        Sphere s = createCosmosElementSphere(radius, a);
         s.setMaterial(amasMaterial);
     }
 
