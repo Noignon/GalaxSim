@@ -187,11 +187,11 @@ public class MainWindow {
             Traitement.traitementGalaxies();
 
             universe.clear();
-            for(Galaxy g : DataBase.getAllGalaxies()) {
+            for(Galaxy g : DataBase.tableGalaxies) {
                 universe.addGalaxy(g);
             }
 
-            for(Amas a : DataBase.getAllAmas()) {
+            for(Amas a : DataBase.tableAmas) {
                 universe.addAmas(a);
             }
 
