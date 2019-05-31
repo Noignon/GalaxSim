@@ -4,6 +4,7 @@ import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Coordinate;
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Galaxy;
+import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -13,6 +14,8 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Sphere;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
@@ -26,9 +29,13 @@ public class Universe extends Group {
 
     private Group elements = new Group();
 
-    private Translate translate = new Translate();
-    public Rotate rotateX = new Rotate(20, Rotate.X_AXIS);
-    public Rotate rotateY = new Rotate(45, Rotate.Y_AXIS);
+    private final Text leftScaleText;
+    private final Text rightScaleText;
+    private final Rotate scaleTextRotate = new Rotate(-45, Rotate.Y_AXIS);
+
+    private final Translate translate = new Translate();
+    public final Rotate rotateX = new Rotate(20, Rotate.X_AXIS);
+    public final Rotate rotateY = new Rotate(45, Rotate.Y_AXIS);
 
     private double lastMouseClickPosX;
     private double lastMouseClickPosY;
@@ -41,7 +48,28 @@ public class Universe extends Group {
 
         Box box = new Box(200, 200, 200);
         box.setDrawMode(DrawMode.LINE);
-        getChildren().addAll(box, elements);
+
+        // Affichage de l'echelle en positionnant les limites du cube
+        // en bas a gauche et a droite
+        leftScaleText = new Text(String.format("-%d Mpc", (int) box.getWidth() / 2));
+        leftScaleText.setFont(new Font(12));
+        leftScaleText.getTransforms().add(scaleTextRotate);
+
+        Bounds b = leftScaleText.getBoundsInLocal();
+        leftScaleText.setTranslateX(-(box.getWidth() + b.getWidth()) / 2);
+        leftScaleText.setTranslateY(box.getHeight() / 2 + b.getHeight() + 3);
+        leftScaleText.setTranslateZ(-box.getDepth() / 2);
+
+        rightScaleText = new Text(String.format("%d Mpc", (int) box.getWidth() / 2));
+        rightScaleText.setFont(new Font(12));
+        rightScaleText.getTransforms().add(scaleTextRotate);
+
+        b = rightScaleText.getBoundsInLocal();
+        rightScaleText.setTranslateX((box.getWidth() - b.getWidth()) / 2);
+        rightScaleText.setTranslateY(box.getHeight() / 2 + b.getHeight() + 3);
+        rightScaleText.setTranslateZ(-box.getDepth() / 2);
+
+        getChildren().addAll(box, elements, leftScaleText, rightScaleText);
 
         getTransforms().addAll(rotateX, rotateY, translate);
 
@@ -64,6 +92,10 @@ public class Universe extends Group {
             if(event.isMiddleButtonDown()) {
                 rotateX.setAngle(rotateX.getAngle() - mouseDeltaY);
                 rotateY.setAngle(rotateY.getAngle() + mouseDeltaX);
+
+                // Rotation du texte de l'echelle pour que celui-ci soit
+                // toujours dans le sens de la lecture
+                scaleTextRotate.setAngle(scaleTextRotate.getAngle() - mouseDeltaX);
             }
             else if(event.isSecondaryButtonDown()) {
                 translate.setX(translate.getX() + mouseDeltaX);
@@ -82,12 +114,10 @@ public class Universe extends Group {
         });
     }
 
-  public void addAmas(Amas a) {
-    	
-    	//la taille des sphéres est calculees en fonction de leurs masses
-    	//les valeurs des logs ont été calculées en fonction du max et du min des masses
-    	double radius;
-        radius = a.getMass()*Math.log(1.045)/Math.log(22000);
+    public void addAmas(Amas a) {
+    	// la taille des spheres est calculees en fonction de leurs masses
+    	// les valeurs des logs ont ete calculees en fonction du max et du min des masses
+    	double radius = a.getMass() * Math.log(1.045) / Math.log(22000);
         
         Sphere s = createCosmosElementSphere(radius, a);
         s.setMaterial(amasMaterial);
