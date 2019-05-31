@@ -22,10 +22,12 @@ public class Amas extends CosmosElement{
 	 * @param ident l'identifiant
 	 * @param distance la distance
 	 * @param velocity la vitesse
+	 * @param deviationUncertainty l'écart d'incertitude
+	 * @param mass la masse de l'amas
 	 * @param nbGalaxies le nombre de galaxies
 	 */
-	public Amas(int ident, double distance, double velocity, double mass, int nbGalaxies) {
-		super(ident, distance, velocity);
+	public Amas(int ident, double distance, double velocity, double deviationUncertainty, double mass, int nbGalaxies) {
+		super(ident, distance, velocity, deviationUncertainty);
 		this.mass = mass;
 		this.nbGalaxies = nbGalaxies;
 	}
@@ -52,7 +54,7 @@ public class Amas extends CosmosElement{
 	 * @return le nouvel amas
 	 */
 	public static Amas create(String datas[]){
-		if (datas.length == 10){
+		if (datas.length == 11){
 			String stringId = datas[0];
 			String stringDist = datas[2];
 			String stringGLon = datas[3];
@@ -62,12 +64,14 @@ public class Amas extends CosmosElement{
 			String stringVelo = datas[7];
 			String stringMass = datas[8];
 			String stringNbGalaxies = datas[9];
+			String stringDeviationUncertainty = datas[10];
 			
 			int id = -1;
 			double dist = -1;
 			double velo = -1;
 			double mass = -1;
 			int nbGalaxies = 1;
+			double deviationUncertainty = 0;
 			
 			if (stringId != null) {
 				id = Integer.parseInt(stringId);
@@ -84,8 +88,11 @@ public class Amas extends CosmosElement{
 			if (stringNbGalaxies != null){
 				nbGalaxies = Integer.parseInt(stringNbGalaxies);
 			}
+			if (stringDeviationUncertainty != null){
+				deviationUncertainty = Double.parseDouble(stringDeviationUncertainty);
+			}
 			
-			Amas newAmas = new Amas(id, dist, velo, mass, nbGalaxies);
+			Amas newAmas = new Amas(id, dist, velo, deviationUncertainty,  mass, nbGalaxies);
 			
 			if (stringGLon != null && stringGLat != null){
 				double GLon = Double.parseDouble(stringGLon);
@@ -110,7 +117,7 @@ public class Amas extends CosmosElement{
 	 * @return la transformation en galaxy
 	 */
 	public Galaxy transformInGalaxy(){
-		Galaxy g = new Galaxy(this.getIdent(), this.getDistance(), this.getVelocity(), null,this.getMass());
+		Galaxy g = new Galaxy(this.getIdent(), this.getDistance(), this.getVelocity(), this.getDeviationUncertainty(), null,this.getMass());
 		g.setGalacticLongLat(this.getGalacticLon(), this.getGalacticLat());
 		g.setSuperGalacticLongLat(this.getSuperGalacticLon(), this.getSuperGalacticLat());
 		

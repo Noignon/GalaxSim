@@ -32,10 +32,12 @@ public class Galaxy extends CosmosElement{
 	 * @param ident l'identifiant
 	 * @param distance la distance
 	 * @param velocity la vitesse
+	 * @param deviationUncertainty l'écart d'incertitude
+	 * @param type le type de la galaxy
 	 * @param amasMass la masse de l'amas associé
 	 */
-	public Galaxy(int ident, double distance, double velocity, String type, double amasMass) {
-		super(ident, distance, velocity);
+	public Galaxy(int ident, double distance, double velocity, double deviationUncertainty, String type, double amasMass) {
+		super(ident, distance, velocity, deviationUncertainty);
 		this.type = type;
 		this.amasMass = amasMass;
 	}
@@ -106,12 +108,14 @@ public class Galaxy extends CosmosElement{
 			String stringSGLat = datas[8];
 			String stringVelo = datas[9];
 			String stringMassAmas = datas[10];
+			String stringDeviationUncertainty = datas[11];
 			
 			int id = -1;
 			double dist = -1;
 			double velo = -1;
 			int idAmas = -1;
 			double massAmas = 0;
+			double deviationUncertainty = 0;
 			
 			if (stringId != null) {
 				id = Integer.parseInt(stringId);
@@ -128,8 +132,11 @@ public class Galaxy extends CosmosElement{
 			if (stringMassAmas != null){
 				massAmas = Double.parseDouble(stringMassAmas);
 			}
+			if (stringDeviationUncertainty != null){
+				deviationUncertainty = Double.parseDouble(stringDeviationUncertainty);
+			}
 			
-			Galaxy newGalaxy = new Galaxy(id, dist, velo, type, massAmas);
+			Galaxy newGalaxy = new Galaxy(id, dist, velo, deviationUncertainty, type, massAmas);
 			
 			newGalaxy.setName(name);
 			newGalaxy.setAmasIdent(idAmas);

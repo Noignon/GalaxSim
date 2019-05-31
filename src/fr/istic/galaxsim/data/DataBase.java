@@ -19,12 +19,23 @@ public class DataBase {
 	public static final int SORTING_ID = 0, SORTING_DISTANCE = 1, SORTING_VELOCITY = 2, SORTING_MASS = 3;
 	
 	/**
-	 * table de galaxies (indice = identifiant)
+	 * liste de toutes les galaxies
+	 */
+	private static ArrayList<Galaxy> listAllGalaxies = new ArrayList<Galaxy>();
+	
+	/**
+	 * liste de tout les amas
+	 */
+	private static ArrayList<Amas> listAllAmas = new ArrayList<Amas>();
+	
+	
+	/**
+	 * table de galaxies
 	 */
 	public static ArrayList<Galaxy> tableGalaxies = new ArrayList<Galaxy>();
 	
 	/**
-	 * table d'amas (indice = identiant)
+	 * table d'amas 
 	 */
 	public static ArrayList<Amas> tableAmas = new ArrayList<Amas>();
 	
@@ -59,7 +70,7 @@ public class DataBase {
 	 * @return le tableau de toutes les galaxies
 	 */
 	public static Galaxy[] getAllGalaxies(){
-		return tableGalaxies.toArray(new Galaxy[tableGalaxies.size()]);
+		return listAllGalaxies.toArray(new Galaxy[listAllGalaxies.size()]);
 	}
 	
 	/**
@@ -67,7 +78,7 @@ public class DataBase {
 	 * @return le tableau de tout les amas
 	 */
 	public static Amas[] getAllAmas(){
-		return tableAmas.toArray(new Amas[tableAmas.size()]);
+		return listAllAmas.toArray(new Amas[listAllAmas.size()]);
 	}
 	
 	/**
@@ -75,6 +86,7 @@ public class DataBase {
 	 * @param g la galaxie que l'on souhaite ajouter
 	 */
 	public static void addGalaxy(Galaxy g){
+		listAllGalaxies.add(g);
 		if (Filter.goodGalaxies(g)) {
 			tableGalaxies.add(g);
 		}
@@ -85,6 +97,7 @@ public class DataBase {
 	 * @param a l'amas que l'on souhaite ajouter
 	 */
 	public static void addAmas(Amas a){
+		listAllAmas.add(a);
 		if (Filter.goodAmas(a)) {
 			tableAmas.add(a);
 		}
@@ -118,6 +131,7 @@ public class DataBase {
 	 * methode permettant de supprimer toutes les galaxies
 	 */
 	public static void removeAllGalaxies(){
+		listAllGalaxies = new ArrayList<Galaxy>();
 		tableGalaxies = new ArrayList<Galaxy>();
 	}
 	
@@ -125,6 +139,7 @@ public class DataBase {
 	 * methode permettant de supprimer tout les amas
 	 */
 	public static void removeAllAmas(){
+		listAllAmas = new ArrayList<Amas>();
 		tableAmas = new ArrayList<Amas>();
 	}
 	
@@ -153,6 +168,7 @@ public class DataBase {
 		AbstractSorting sortingComparator = getSortingComparatorAmas(codeSorting, descending);
 		if (sortingComparator != null) {
 			tableAmas.sort(sortingComparator);
+			listAllAmas.sort(sortingComparator);
 		}
 	}
 	
@@ -165,6 +181,7 @@ public class DataBase {
 		AbstractSorting sortingComparator = getSortingComparatorGalaxies(codeSorting, descending);
 		if (sortingComparator != null) {
 			tableGalaxies.sort(sortingComparator);
+			listAllGalaxies.sort(sortingComparator);
 		}
 	}
 	

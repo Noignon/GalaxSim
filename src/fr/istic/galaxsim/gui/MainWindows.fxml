@@ -51,7 +51,7 @@
                               <Insets bottom="5.0" />
                            </VBox.margin>
                         </TextField>
-                        <Label text="Masse (entière)">
+                        <Label text="Masse min (entière)">
                            <padding>
                               <Insets bottom="3.0" />
                            </padding>

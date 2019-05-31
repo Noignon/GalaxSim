@@ -12,7 +12,7 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	 * @param pathFile le chemin du fichier
 	 */
 	public ParserAmasDatas(String pathFile) {
-		super(pathFile, 10);
+		super(pathFile, 11);
 	}
 	
 	/**
@@ -33,6 +33,14 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 			if (CheckData.isInteger(data)){
 				int i = Integer.parseInt(data);
 				return (i >= 1 && i <= 161);
+			}
+			return false;
+		}
+		
+		if (indice >= 18 && indice <= 21){
+			if (CheckData.isDouble(data)){
+				double d = Double.parseDouble(data);
+				return (d >= 0.02 && d <= 0.54);
 			}
 			return false;
 		}
@@ -93,7 +101,8 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	@Override
 	public boolean isImportantData(String data, int indice) {
 		return ( (indice >= 0 && indice <= 6) ||
-				(indice >= 8 && indice <= 10) || 
+				(indice >= 8 && indice <= 10) ||
+				(indice >= 18 && indice <= 21) ||
 				(indice >= 23 && indice <= 27) || 
 				(indice >= 29 && indice <= 33) || 
 				(indice >= 57 && indice <= 62) || 
@@ -117,6 +126,10 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 		
 		if (indice >= 8 && indice <= 10) {
 			return 9;
+		}
+		
+		if (indice >= 18 && indice <= 21){
+			return 10;
 		}
 		
 		if (indice >= 23 && indice <= 27){

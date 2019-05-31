@@ -20,6 +20,11 @@ public abstract class CosmosElement{
 	private ArrayList<Coordinate> coordinatesInTime = new ArrayList<Coordinate>();  
 	
 	/**
+	 * les vitesses du corps dans le temps (indice = temps)
+	 */
+	private ArrayList<Double> velocitiesInTime = new ArrayList<Double>(); 
+	
+	/**
 	 * l'identifiant
 	 */
 	private int ident;
@@ -54,24 +59,37 @@ public abstract class CosmosElement{
 	 */
 	private double superGalacticLat = 0;
 	
+	/**
+	 * l'écart d'incertitude
+	 */
+	private double deviationUncertainty;
 	
 	/**
 	 * constructeur 
 	 * @param ident l'identifiant
 	 * @param distance la distance
 	 * @param velocity la vitesse
+	 * @param deviationUncertainty l'écart d'incertitude
 	 */
-	public CosmosElement(int ident, double distance, double velocity){
+	public CosmosElement(int ident, double distance, double velocity, double deviationUncertainty){
 		this.ident = ident;
 		this.distance = distance;
-		this.velocity = velocity;		
+		this.velocity = velocity;
+		this.deviationUncertainty = deviationUncertainty;
 	}
 	
 	/**
 	 * methode permettant d'ajouter une coordonnée à la liste
 	 */
-	public void addCoordinate(Coordinate coordinate){
+	public void addCoordinate(Coordinate coordinate) {
 		this.coordinatesInTime.add(coordinate);
+	}
+	
+	/**
+	 * methode permettant d'ajouter une vitesse à la liste
+	 */
+	public void addVelocity(double velocity) {
+		this.velocitiesInTime.add(velocity);
 	}
 	
 	/**
@@ -82,7 +100,14 @@ public abstract class CosmosElement{
 	}
 	
 	/**
-	 * methode permettant de recuperer une coordonnée
+	 * methode permettant de supprimer toutes les vitesses
+	 */
+	public void removeAllVelocities(){
+		this.velocitiesInTime = new ArrayList<Double>();
+	}
+	
+	/**
+	 * methode permettant de recuperer une coordonnée dans le temps
 	 * @param time le temps
 	 */
 	public Coordinate getCoordinate(int time){
@@ -93,6 +118,17 @@ public abstract class CosmosElement{
 	}
 	
 	/**
+	 * methode permettant de recuperer une vitesse dans le temps
+	 * @param time le temps
+	 */
+	public double getVelocity(int time){
+		if (time >= 0 && time < this.velocitiesInTime.size()){
+			return this.velocitiesInTime.get(time);
+		}
+		return 0;
+	}
+	
+	/**
 	 * methode permettant de recuperer le nombre de coordonnée
 	 * @return le nombre de coordonnée
 	 */
@@ -100,6 +136,14 @@ public abstract class CosmosElement{
 		return this.coordinatesInTime.size();
 	}
 
+	/**
+	 * methode permettant de recuperer le nombre de vitesses
+	 * @return le nombre de coordonnée
+	 */
+	public int getSizeVelocity(){
+		return this.velocitiesInTime.size();
+	}
+	
 	/**
 	 * getter identifiant
 	 * @return l'identifiant
@@ -177,11 +221,20 @@ public abstract class CosmosElement{
 	}
 	
 	/**
+	 * getter deviationUncertainty
+	 * @return deviationUncertainty
+	 */
+	public double getDeviationUncertainty() {
+		return deviationUncertainty;
+	}
+
+	/**
 	 * methode toString
 	 */
 	public String toString(){
-		return ident + " -> disttance: " + distance + " | vitesse: " + velocity + " | " +
+		return ident + " -> distance: " + distance + " | vitesse: " + velocity + " | " +
 				"longLatG: (" + galacticLon + "," + galacticLat + ")" + " | " + 
-				"longLatSG: (" + superGalacticLon + "," + superGalacticLat + ")";
+				"longLatSG: (" + superGalacticLon + "," + superGalacticLat + ")" + 
+				" | incertitude: " + deviationUncertainty;
 	}
 }

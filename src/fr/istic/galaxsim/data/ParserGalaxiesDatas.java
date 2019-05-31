@@ -13,7 +13,7 @@ public class ParserGalaxiesDatas extends ParserCosmosDatas{
 	 * @param pathFile le chemin du fichier
 	 */
 	public ParserGalaxiesDatas(String pathFile) {
-		super(pathFile, 11);
+		super(pathFile, 12);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -35,6 +35,14 @@ public class ParserGalaxiesDatas extends ParserCosmosDatas{
 			if (CheckData.isDouble(data)){
 				double d = Double.parseDouble(data);
 				return (d >= 0.05 && d <= 517.7);
+			}
+			return false;
+		}
+		
+		if (indice>= 24 && indice <= 27){
+			if (CheckData.isDouble(data)){
+				double d = Double.parseDouble(data);
+				return (d >= 0.1 && d <= 0.6);
 			}
 			return false;
 		}
@@ -104,6 +112,7 @@ public class ParserGalaxiesDatas extends ParserCosmosDatas{
 	public boolean isImportantData(String data, int indice) {
 		return ( (indice >= 0 && indice <= 7) || 
 				(indice>= 9 && indice <= 14) || 
+				(indice >= 24 && indice <= 27) ||
 				(indice >= 113 && indice <= 120) || 
 				(indice >= 122 && indice <= 129) || 
 				(indice >= 131 && indice <= 138) || 
@@ -123,6 +132,10 @@ public class ParserGalaxiesDatas extends ParserCosmosDatas{
 		
 		if (indice>= 9 && indice <= 14){
 			return 4;
+		}
+		
+		if (indice >= 24 && indice <= 27){
+			return 11;
 		}
 		
 		if (indice >= 113 && indice <= 120){
