@@ -1,6 +1,5 @@
 package fr.istic.galaxsim.data;
 
-import java.util.ArrayList;
 /**
  * classe de filtre
  * @author Yusoig
@@ -24,9 +23,14 @@ public class Filter {
 	private static boolean filterMassActived = false;
 	
 	/**
-	 * boolean indiquant si le filtre de coordonnée est activé ou pas
+	 * boolean indiquant si le filtre de longitude est activé ou pas
 	 */
-	private static boolean filterCoordinateActived = false;
+	private static boolean filterLonActived = false;
+	
+	/**
+	 * boolean indiquant si le filtre de latitude est activé ou pas
+	 */
+	private static boolean filterLatActived = false;
 	
 	/**
 	 * boolean indiquant si le filtre de marge d'erreur est activé ou pas
@@ -54,14 +58,14 @@ public class Filter {
 	private static double deviationUncertainty = -1;
 	
 	/**
-	 * filtres de coordonnée
+	 * filtre de longitude super galactique
 	 */
-	private static double x1 = -1, x2 = -1, y1 = -1, y2 = -1, z1 = -1, z2 = -1;
+	private static double superGalacticLonMin = -1, superGalacticLonMax = -1;
 	
 	/**
-	 * le temps du filtre de coordonnée
+	 * filtre de latitude super galactique
 	 */
-	private static int t = -1;
+	private static double superGalacticLatMin = -1, superGalacticLatMax = -1;
 	
 	/**
 	 * méthode permettant de savoir si un amas correspond bien au filtres
@@ -69,7 +73,7 @@ public class Filter {
 	 * @return boolean
 	 */
 	public static boolean goodAmas(Amas a){
-		return (goodDistance(a) && goodVelocity(a) && goodMassAmas(a) && goodDeviationUncertainty(a) && goodCoordinate(a));
+		return (goodDistance(a) && goodVelocity(a) && goodMassAmas(a) && goodDeviationUncertainty(a) && goodLon(a) && goodLat(a));
 	}
 	
 	/**
@@ -78,7 +82,7 @@ public class Filter {
 	 * @return boolean
 	 */
 	public static boolean goodGalaxies(Galaxy g){
-		return (goodDistance(g) && goodVelocity(g) && goodDeviationUncertainty(g) && goodCoordinate(g));
+		return (goodDistance(g) && goodVelocity(g) && goodDeviationUncertainty(g) && goodLon(g) && goodLat(g));
 	}
 	
 	/**
@@ -118,24 +122,37 @@ public class Filter {
 	}
 	
 	/**
-	 * méthode permettant de changer le fltre de coordonnée max par rapport à un temps
-	 * @param X1 coordonnée max x1
-	 * @param X2 coordonnée max x2
-	 * @param Y1 coordonnée max y1
-	 * @param Y2 coordonnée max y2
-	 * @param Z1 coordonnée max z1
-	 * @param Z2 coordonnée max z2
-	 * @param T temps
+	 * méthode permettant de changer le fltre de longitude min et max
+	 * @param sgLon1 la longitude super galactique 1
+	 * @param sgLon2 la longitude super galactique 2
 	 */
-	public static void setCoordinateFilter(double X1, double X2, double Y1, double Y2, double Z1,double Z2, int T){
-		x1 = X1;
-		x2 = X2;
-		y1 = Y1;
-		y2 = Y2;
-		z1 = Z1;
-		z2 = Z2;
-		t = T;
-		filterCoordinateActived = true;
+	public static void setLonFilter(double sgLon1, double sgLon2){
+		superGalacticLonMin = sgLon1;
+		superGalacticLonMax = sgLon2;	
+		
+		if (sgLon2 < sgLon1) {
+			superGalacticLonMin = sgLon2;
+			superGalacticLonMax = sgLon1;
+		}
+		
+		filterLonActived = true;
+	}
+	
+	/**
+	 * méthode permettant de changer le fltre de latitude min et max
+	 * @param sgLat1 la latitude super galactique 1
+	 * @param sgLat2 la latitude super galactique 2
+	 */
+	public static void setLatFilter(double sgLat1, double sgLat2){
+		superGalacticLatMin = sgLat1;
+		superGalacticLatMax = sgLat2;
+		
+		if (sgLat2 < sgLat1) {
+			superGalacticLatMin = sgLat2;
+			superGalacticLatMax = sgLat1;
+		}
+		
+		filterLatActived = true;
 	}
 	
 	/**
@@ -145,13 +162,18 @@ public class Filter {
 		distance = -1;
 		velocity = -1;
 		mass = -1;
-		t = -1;
+		superGalacticLonMin = -1;
+		superGalacticLonMax = -1;
+		superGalacticLatMin = -1;
+		superGalacticLatMax = -1;
+		deviationUncertainty = -1;
 		
 		filterDistanceActived = false;
 		filterVelocityActived = false;
 		filterMassActived = false;
 		filterDeviationUncertaintyActived = false;
-		filterCoordinateActived = false;
+		filterLonActived = false;
+		filterLatActived = false;
 	}
 	
 	/**
@@ -203,15 +225,26 @@ public class Filter {
 	}
 	
 	/**
-	 * methode permettant de savoir si un objet se trouve dans les intervalles de coordonées [x1,x2], [y1,y2], [z1,z2] à un moment t
+	 * methode permettant de savoir si un objet a la bonne longitude super galatique
 	 * @param cosmosElement l'objet
 	 * @return boolean
 	 */
-	private static boolean goodCoordinate(CosmosElement cosmosElement) {
-		Coordinate c = cosmosElement.getCoordinate(t);
-		if (c != null && c.isIn(x1, x2, y1, y2, z1, z2)) {
+	private static boolean goodLon(CosmosElement cosmosElement) {
+		if (cosmosElement.getSuperGalacticLon() >= superGalacticLonMin && cosmosElement.getSuperGalacticLon() <= superGalacticLonMax) {
 			return true;
 		}
-		return !filterCoordinateActived;
+		return !filterLonActived;
+	}
+	
+	/**
+	 * methode permettant de savoir si un objet a la bonne latitude super galatique
+	 * @param cosmosElement l'objet
+	 * @return boolean
+	 */
+	private static boolean goodLat(CosmosElement cosmosElement) {
+		if (cosmosElement.getSuperGalacticLat() >= superGalacticLatMin && cosmosElement.getSuperGalacticLat() <= superGalacticLatMax) {
+			return true;
+		}
+		return !filterLatActived;
 	}	
 }
