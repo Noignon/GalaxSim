@@ -20,7 +20,10 @@
         <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Filtres sur les données" textAlignment="CENTER" />
+                  <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Paramètres de la simulation" textAlignment="CENTER">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin></Label>
                   <Label text="Données">
                      <VBox.margin>
                         <Insets bottom="3.0" />
@@ -28,7 +31,7 @@
                   </Label>
                   <BrowseField fx:id="dataFileField">
                      <VBox.margin>
-                        <Insets bottom="5.0" />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
                   </BrowseField>
                   <DropdownPane fx:id="filtersPane" text="Filtres">
@@ -63,7 +66,7 @@
                               <TextField fx:id="massField" />
                            </children>
                            <padding>
-                              <Insets left="7.0" right="7.0" />
+                              <Insets left="7.0" right="7.0" top="3.0" />
                            </padding>
                         </VBox>
                      </children></DropdownPane>
@@ -81,6 +84,9 @@
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
             </VBox>
             <StackPane fx:id="pane3D" prefHeight="200.0" prefWidth="100.0">
                <children>

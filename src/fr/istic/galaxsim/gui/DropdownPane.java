@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -16,6 +17,10 @@ public class DropdownPane extends VBox {
 
     @FXML
     private Label headerLabel;
+    @FXML
+    private ImageView hideButton;
+    @FXML
+    private ImageView showButton;
 
     private boolean contentHidden;
 
@@ -90,6 +95,9 @@ public class DropdownPane extends VBox {
         }
 
         contentHidden = !contentHidden;
+
+        hideButton.setVisible(!hideButton.isVisible());
+        showButton.setVisible(!showButton.isVisible());
     }
 
 }
