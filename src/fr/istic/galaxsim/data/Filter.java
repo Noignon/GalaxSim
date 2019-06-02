@@ -11,12 +11,7 @@ public class Filter {
 	 * boolean indiquant si le filtre de distance est activé ou pas
 	 */
 	private static boolean filterDistanceActived = false;
-	
-	/**
-	 * boolean indiquant si le filtre de vitesse est activé ou pas
-	 */
-	private static boolean filterVelocityActived = false;
-	
+		
 	/**
 	 * boolean indiquant si le filtre de masse est activé ou pas
 	 */
@@ -41,12 +36,7 @@ public class Filter {
 	 * filtre de distance
 	 */
 	private static double distance = -1;
-	
-	/**
-	 * filtre de vitesse
-	 */
-	private static double velocity = -1;
-	
+		
 	/**
 	 * filtre de masse
 	 */
@@ -73,7 +63,7 @@ public class Filter {
 	 * @return boolean
 	 */
 	public static boolean goodAmas(Amas a){
-		return (goodDistance(a) && goodVelocity(a) && goodMassAmas(a) && goodDeviationUncertainty(a) && goodLon(a) && goodLat(a));
+		return (goodDistance(a) && goodMassAmas(a) && goodDeviationUncertainty(a) && goodLon(a) && goodLat(a));
 	}
 	
 	/**
@@ -82,7 +72,7 @@ public class Filter {
 	 * @return boolean
 	 */
 	public static boolean goodGalaxies(Galaxy g){
-		return (goodDistance(g) && goodVelocity(g) && goodDeviationUncertainty(g) && goodLon(g) && goodLat(g));
+		return (goodDistance(g) && goodDeviationUncertainty(g) && goodLon(g) && goodLat(g));
 	}
 	
 	/**
@@ -93,16 +83,7 @@ public class Filter {
 		distance = d;
 		filterDistanceActived = true;
 	}
-	
-	/**
-	 * méthode permettant de changer le filtre de vitesse max
-	 * @param v la vitesse max
-	 */
-	public static void setVelocityFilter(double v){
-		velocity = v;
-		filterVelocityActived = true;
-	}
-	
+		
 	/**
 	 * méthode permettant de changer le filtre de masse max
 	 * @param m la masse max
@@ -160,7 +141,6 @@ public class Filter {
 	 */
 	public static void removeAllFilter(){
 		distance = -1;
-		velocity = -1;
 		mass = -1;
 		superGalacticLonMin = -1;
 		superGalacticLonMax = -1;
@@ -169,7 +149,6 @@ public class Filter {
 		deviationUncertainty = -1;
 		
 		filterDistanceActived = false;
-		filterVelocityActived = false;
 		filterMassActived = false;
 		filterDeviationUncertaintyActived = false;
 		filterLonActived = false;
@@ -187,19 +166,7 @@ public class Filter {
 		}
 		return !filterDistanceActived;
 	}
-	
-	/**
-	 * methode permettant de savoir si un objet a une vitesse inférieure ou égale à celle indiquée en paramètre
-	 * @param cosmosElement l'objet
-	 * @return boolean
-	 */
-	private static boolean goodVelocity(CosmosElement cosmosElement) {
-		if (cosmosElement.getVelocity() <= velocity) {
-			return true;
-		}
-		return !filterVelocityActived;
-	}
-		
+			
 	/**
 	 * methode permettant de savoir si un amas a une masse inférieure ou égale à celle indiquée en paramètre
 	 * @param amas l'amas
