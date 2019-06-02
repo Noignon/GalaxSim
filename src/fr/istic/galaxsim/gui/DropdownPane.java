@@ -22,6 +22,7 @@ public class DropdownPane extends VBox {
     @FXML
     private ImageView showButton;
 
+    // Indique si le composant affiche ou non le contenu
     private boolean contentHidden;
 
     public DropdownPane() {
@@ -38,14 +39,25 @@ public class DropdownPane extends VBox {
         contentHidden = false;
     }
 
-    public void addNode(Node node) {
-        getChildren().add(node);
-    }
-
+    /**
+     * Recupere la chaine de caracteres de l'en-tete
+     *
+     * Cette fonction est utilisee par javafx pour permettre l'assignation
+     * de l'attribut text (en-tete)
+     *
+     * @return valeur de l'en-tete
+     */
     public String getText() {
         return headerLabel.getText();
     }
 
+    /**
+     * Cache le contenu du composants
+     *
+     * Chaque enfant est associe a une animation (FadeTransition) pour
+     * disparaitre progressivement. A la fin de l'animation, l'enfant
+     * n'est plus affiche pour que le parent soit redimensionne
+     */
     private void hideContent() {
         for(int i = 1;i < getChildren().size();i++) {
             Node child = getChildren().get(i);
@@ -65,10 +77,23 @@ public class DropdownPane extends VBox {
 
     }
 
+    /**
+     * Definit le texte de l'en-tete
+     *
+     * Cette fonction est utilisee par javafx pour permettre l'assignation
+     * de l'attribut text (en-tete)
+     * @param text nouvel en-tete
+     */
     public void setText(String text) {
         headerLabel.setText(text);
     }
 
+    /**
+     * Affiche le contenu du composant
+     *
+     * Chaque enfant est associe a une animation (FadeTransition) pour
+     * apparaitre progressivement
+     */
     private void showContent() {
         for(int i = 1;i < getChildren().size();i++) {
             Node child = getChildren().get(i);
@@ -81,10 +106,22 @@ public class DropdownPane extends VBox {
         }
     }
 
+    /**
+     * Cette fonction est utilisee par javafx pour permettre l'assignation
+     * de l'attribut text (en-tete)
+     *
+     * @return propriete representant la valeur de l'en-tete
+     */
     public StringProperty textProperty() {
         return headerLabel.textProperty();
     }
 
+    /**
+     * Affiche/masque le contenu du composant selon la valeur de l'attribut
+     * contentHidden. Celle-ci est changee par sa negation a la fin de la fonction
+     *
+     * @param event evennement associe au clique de la souris
+     */
     @FXML
     private void toggleContent(MouseEvent event) {
         if(contentHidden) {
@@ -96,6 +133,7 @@ public class DropdownPane extends VBox {
 
         contentHidden = !contentHidden;
 
+        // Affichage du bon icone en masquant celui qui etait affiche
         hideButton.setVisible(!hideButton.isVisible());
         showButton.setVisible(!showButton.isVisible());
     }
