@@ -136,11 +136,12 @@ public class MainWindow {
 
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();
-                for(Galaxy g : DataBase.tableGalaxies()) {
+
+                for(Galaxy g : DataBase.tableGalaxies) {
                     universe.addGalaxy(g);
                 }
 
-                for(Amas a : DataBase.tableAmas()) {
+                for(Amas a : DataBase.tableAmas) {
                     universe.addAmas(a);
                 }
 
