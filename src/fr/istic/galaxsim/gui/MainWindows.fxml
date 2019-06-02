@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import fr.istic.galaxsim.gui.GalaxyInfos?>
+<?import fr.istic.galaxsim.gui.CosmosElementInfos?>
 <?import fr.istic.galaxsim.gui.form.BrowseField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -82,7 +82,7 @@
             </VBox>
             <StackPane fx:id="pane3D" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <GalaxyInfos fx:id="galaxyInfos" />
+                  <CosmosElementInfos fx:id="cosmosElementInfos" />
                </children>
             </StackPane>
         </items>
