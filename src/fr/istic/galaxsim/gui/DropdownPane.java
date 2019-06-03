@@ -1,6 +1,8 @@
 package fr.istic.galaxsim.gui;
 
 import javafx.animation.FadeTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +25,7 @@ public class DropdownPane extends VBox {
     private ImageView showButton;
 
     // Indique si le composant affiche ou non le contenu
-    private boolean contentHidden;
+    private BooleanProperty contentHidden;
 
     public DropdownPane() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("Dropdownpane.fxml"));
@@ -36,7 +38,15 @@ public class DropdownPane extends VBox {
             throw new RuntimeException(e);
         }
 
-        contentHidden = false;
+        contentHidden = new SimpleBooleanProperty();
+    }
+
+    public BooleanProperty contentHiddenProperty() {
+        return contentHidden;
+    }
+
+    public boolean getContentHidden() {
+        return contentHidden.get();
     }
 
     /**
@@ -75,6 +85,20 @@ public class DropdownPane extends VBox {
     @FXML
     public void initialize() {
 
+    }
+
+    public void setContentHidden(boolean hidden) {
+        contentHidden.set(hidden);
+        if(hidden) {
+            hideContent();
+        }
+        else {
+            showContent();
+        }
+
+        // Affichage du bon icone en masquant celui qui etait affiche
+        hideButton.setVisible(!hideButton.isVisible());
+        showButton.setVisible(!showButton.isVisible());
     }
 
     /**
@@ -124,18 +148,7 @@ public class DropdownPane extends VBox {
      */
     @FXML
     private void toggleContent(MouseEvent event) {
-        if(contentHidden) {
-            showContent();
-        }
-        else {
-            hideContent();
-        }
-
-        contentHidden = !contentHidden;
-
-        // Affichage du bon icone en masquant celui qui etait affiche
-        hideButton.setVisible(!hideButton.isVisible());
-        showButton.setVisible(!showButton.isVisible());
+        setContentHidden(!contentHidden.get());
     }
 
 }

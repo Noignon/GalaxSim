@@ -2,24 +2,25 @@ package fr.istic.galaxsim.gui;
 
 import fr.istic.galaxsim.calcul.Traitement;
 import fr.istic.galaxsim.data.*;
-import fr.istic.galaxsim.gui.form.BrowseField;
-import fr.istic.galaxsim.gui.form.BrowseFieldControl;
-import fr.istic.galaxsim.gui.form.FormControl;
-import fr.istic.galaxsim.gui.form.IntegerFieldControl;
+import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+
+import java.util.ArrayList;
 
 public class MainWindow {
 
@@ -33,13 +34,20 @@ public class MainWindow {
     @FXML
     private ProgressBar progressBar;
     @FXML
-    private TextField distanceField;
-    @FXML
     private BrowseField dataFileField;
+
+    @FXML
+    private CosmosElementInfos cosmosElementInfos;
+
+    // Champs de filtres
     @FXML
     private TextField massField;
     @FXML
-    private CosmosElementInfos cosmosElementInfos;
+    private TextField distanceField;
+    @FXML
+    private TextField uncertaintyField;
+    @FXML
+    private GridPane coordsFilterPane;
 
     private Universe universe;
 
@@ -47,6 +55,8 @@ public class MainWindow {
     private BrowseFieldControl dataFileFieldControl;
     private IntegerFieldControl distanceFieldControl;
     private IntegerFieldControl massFieldControl;
+    private DoubleFieldControl uncertaintyFieldControl;
+    private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
 
     public MainWindow(){
 
@@ -66,7 +76,22 @@ public class MainWindow {
         distanceFieldControl = new IntegerFieldControl(distanceField, "distance", false, 0, 101);
 
         massFieldControl = new IntegerFieldControl(massField, "masse", false);
-        massFieldControl.setLowerBound(0);
+        massFieldControl.getBoundsControl().setLowerBound(0);
+
+        uncertaintyFieldControl = new DoubleFieldControl(uncertaintyField, "marge d'erreur", false);
+        uncertaintyFieldControl.getBoundsControl().setLowerBound(0.0);
+
+        // Creation des controles pour les filtres de masquage de coordonnees
+        // La GridPane contient les 6 filtres
+        String[] fieldNames = { "X min", "X max", "Y min", "Y max", "Z min", "Z max" };
+        for(int i = 0; i < coordsFilterPane.getChildren().size();i++) {
+            Node field = coordsFilterPane.getChildren().get(i);
+            DoubleFieldControl control = new DoubleFieldControl((TextField) field, fieldNames[i], false);
+
+            // Stockage des controles dans un tableau pour les utiliser
+            // a la validation
+            coordsFilterControls.add(control);
+        }
 
         Group sceneRoot = new Group();
 
@@ -118,11 +143,15 @@ public class MainWindow {
      * @param event evenemment associe au bouton du formulaire (non utilise)
      */
     private void startDataAnalysis(ActionEvent event) {
-        if(!FormControl.isValid(dataFileFieldControl, distanceFieldControl, massFieldControl)) {
+        // Verification de la validite des champs
+        if(!FormControl.isValid(dataFileFieldControl, distanceFieldControl, massFieldControl, uncertaintyFieldControl) ||
+                !FormControl.isValid(coordsFilterControls.toArray(new DoubleFieldControl[coordsFilterControls.size()]))) {
             return;
         }
 
-        DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(), distanceFieldControl, massFieldControl);
+        DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(),
+                                                                    distanceFieldControl, massFieldControl,
+                                                                    uncertaintyFieldControl, coordsFilterControls);
 
         // Mise en relation de l'avancement de l'extraction des donnees avec
         // la barre de chargement
@@ -138,11 +167,15 @@ public class MainWindow {
                 universe.clear();
 
                 for(Galaxy g : DataBase.tableGalaxies) {
-                    universe.addGalaxy(g);
+                    if(Filter.goodCoordinate(g)) {
+                        universe.addGalaxy(g);
+                    }
                 }
 
                 for(Amas a : DataBase.tableAmas) {
-                    universe.addAmas(a);
+                    if(Filter.goodCoordinate(a)) {
+                        universe.addAmas(a);
+                    }
                 }
 
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
