@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root id="galaxyInfosPane" maxHeight="180.0" maxWidth="100.0" minHeight="180.0" minWidth="150.0" prefHeight="180.0" prefWidth="100.0" type="VBox" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox fx:id="controlBar" alignment="TOP_RIGHT" onMouseDragged="#movePane" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #c5c8cd;">
+         <children>
+            <Label alignment="CENTER" maxWidth="Infinity" text="Informations" HBox.hgrow="ALWAYS">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
+            <ImageView id="closeGalaxyInfos" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#hidePane" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
+               <image>
+                  <Image url="@icons/close.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" vgap="3.0">
+         <children>
+            <Label text="Identifiant" GridPane.rowIndex="1" />
+            <Label maxWidth="1.7976931348623157E308" text="Vélocité" textAlignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="SGLong" GridPane.rowIndex="5" />
+            <Label text="SGLat" GridPane.rowIndex="6" />
+            <Label text="Distance" GridPane.rowIndex="4" />
+            <Label fx:id="identLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="velocityLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="distanceLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label fx:id="sglongLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label fx:id="sglatLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label text="Type" />
+            <Label fx:id="typeLabel" text="Label" GridPane.columnIndex="1" />
+            <Label text="Nbr galaxies" GridPane.rowIndex="7" />
+            <Label fx:id="galaxiesCountLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label text="Masse" GridPane.rowIndex="3" />
+            <Label fx:id="massLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <VBox.margin>
+            <Insets left="3.0" />
+         </VBox.margin>
+      </GridPane>
+   </children>
+</fx:root>

@@ -5,7 +5,7 @@ public class Traitement {
 	
 	private static final int T = 4;
 	
-	public void traitementGalaxies()
+	public static void traitementGalaxies()
 	{
 
 	    int nbGal = DataBase.getNumberGalaxies();
@@ -44,7 +44,7 @@ public class Traitement {
 	    }
 	  }
 
-	public void traitementAmas()
+	public static void traitementAmas()
 	{
 
 	    int nbAmas = DataBase.getNumberAmas();

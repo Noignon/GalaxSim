@@ -2,11 +2,21 @@
 
 Logiciel de simulation des mouvements des galaxies
 
+## Compilation du projet
+
+Il faut ajouter les options suivantes à la configuration de la machine virtuelle java :
+```
+--module-path <chemin_vers_le_dossier_lib_de_javafx>
+--add-modules javafx.controls,javafx.graphics,javafx.fxml
+```
+
+Voir [ce tutoriel](https://openjfx.io/openjfx-docs/) pour plus d'informations
+
 ## Contrôle de la caméra
 
 En mode caméra libre, celle-ci peut être déplacée à l'aide de la souris :
 
-* Molette : avancer ou reculer sur l'axe Z
+* Molette : zoom
 * Maintient du clique droit : déplacement latéral de la vue sur l'axe X
 * Maintient du clique molette : changement de l'angle de vue sur les axes X et Y
 

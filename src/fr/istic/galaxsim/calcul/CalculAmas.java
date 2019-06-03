@@ -147,7 +147,7 @@ public class CalculAmas {
 					return vitesse* Math.sin(angle);
 				}
 				
-				return 0.0;
+				//return 0.0;
 			}
 
 			//retourne la vitesse de la galaxie sur l'axe Z

@@ -48,10 +48,9 @@ public abstract class ParserCosmosDatas extends AbstractParserFile{
 		while (correct && indice < datas.length()){
 			if (datas.charAt(indice) != ' '){
 				data = sc.next();
-				indice += data.length();
-				if (this.isCorrectData(data, indice)){
-					if (this.isImportantData(data, indice)){
-						int indiceFinalTable = this.getFinalIndiceData(indice);
+				if (this.isCorrectData(data, indice+1)){
+					if (this.isImportantData(data, indice+1)){
+						int indiceFinalTable = this.getFinalIndiceData(indice+1);
 						if (indiceFinalTable >= 0 && indiceFinalTable<sizeFinal) {
 							importantDatas[indiceFinalTable] = data;
 						}
@@ -59,6 +58,7 @@ public abstract class ParserCosmosDatas extends AbstractParserFile{
 				} else {
 					correct = false;
 				}
+				indice += data.length();
 			} else {
 				indice ++;
 			}

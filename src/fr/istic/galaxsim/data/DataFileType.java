@@ -1,12 +1,11 @@
-package fr.istic.galaxsim.gui;
+package fr.istic.galaxsim.data;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public enum DataFileType {
 
     AMAS("amas et galaxies"),
-    GALAXIES("galaxies individuelels");
+    GALAXIES("galaxies individuelles");
 
     private String description;
 

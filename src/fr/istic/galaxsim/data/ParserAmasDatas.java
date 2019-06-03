@@ -12,7 +12,7 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	 * @param pathFile le chemin du fichier
 	 */
 	public ParserAmasDatas(String pathFile) {
-		super(pathFile, 9);
+		super(pathFile, 11);
 	}
 	
 	/**
@@ -21,51 +21,74 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	 */
 	@Override
 	public boolean isCorrectData(String data, int indice) {
-		switch (indice){
-		case 6 : 
+		if (indice >= 0 && indice <= 6){
 			if (CheckData.isInteger(data)){
 				int i = Integer.parseInt(data);
 				return (i >= 100001 && i <= 400002) || i == 0;
 			}
 			return false;
-			
-		case 27 :
+		}
+		
+		if (indice >= 8 && indice <= 10){
+			if (CheckData.isInteger(data)){
+				int i = Integer.parseInt(data);
+				return (i >= 1 && i <= 161);
+			}
+			return false;
+		}
+		
+		if (indice >= 18 && indice <= 21){
+			if (CheckData.isDouble(data)){
+				double d = Double.parseDouble(data);
+				return (d >= 0.02 && d <= 0.54);
+			}
+			return false;
+		}
+		
+		if (indice >= 23 && indice <= 27){
 			if (CheckData.isDouble(data)){
 				double d = Double.parseDouble(data);
 				return (d >= 0 && d <= 494.3);
 			}
 			return false;
-			
-		case 33 : 
+		}
+		
+		if (indice >= 29 && indice <= 33){
 			return true;
-			
-		case 62 : 
+		}
+		
+		if (indice >= 57 && indice <= 62){
 			return CheckData.isDouble(data);
-			
-		case 69 :
+		}
+		
+		if (indice >= 64 && indice <= 69){
 			return CheckData.isDouble(data);
-			
-		case 78 :
+		}
+		
+		if (indice >= 71 && indice <= 78){
 			return CheckData.isDouble(data);
-			
-		case 87 : 
+		}
+		
+		if (indice >= 80 && indice <= 87){
 			return CheckData.isDouble(data);
-			
-		case 125 : 
+		}
+		
+		if (indice >= 127 && indice <= 131){
 			if (CheckData.isDouble(data)){
 				double d = Double.parseDouble(data);
-				return (d >= -189 && d <= 29883);
+				return (d >= -158 && d <= 29882);
 			}
 			return false;
-			
-		case 168 : 
+		}
+		
+		if (indice >= 160 && indice <= 168){
 			if (CheckData.isDouble(data)){
 				double d = Double.parseDouble(data);
 				return (d >= 0 && d <= 24401);
 			}
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -77,8 +100,17 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	 */
 	@Override
 	public boolean isImportantData(String data, int indice) {
-		return (indice == 6 || indice == 27 || indice == 33 || indice == 62 || indice == 69 || indice == 78
-				|| indice == 87 || indice == 125 || indice == 168) ;
+		return ( (indice >= 0 && indice <= 6) ||
+				(indice >= 8 && indice <= 10) ||
+				(indice >= 18 && indice <= 21) ||
+				(indice >= 23 && indice <= 27) || 
+				(indice >= 29 && indice <= 33) || 
+				(indice >= 57 && indice <= 62) || 
+				(indice >= 64 && indice <= 69) || 
+				(indice >= 71 && indice <= 78) || 
+				(indice >= 80 && indice <= 87) ||
+				(indice >= 127 && indice <= 131) || 
+				(indice >= 160 && indice <= 168) );
 	}
 
 	/**
@@ -88,26 +120,50 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	 */
 	@Override
 	public int getFinalIndiceData(int indice) {
-		switch (indice){
-		case 6 : 
+		if (indice >= 0 && indice <= 6){
 			return 0;
-		case 27 :
+		}
+		
+		if (indice >= 8 && indice <= 10) {
+			return 9;
+		}
+		
+		if (indice >= 18 && indice <= 21){
+			return 10;
+		}
+		
+		if (indice >= 23 && indice <= 27){
 			return 2;
-		case 33 : 
+		}
+		
+		if (indice >= 29 && indice <= 33){
 			return 1;
-		case 62 : 
+		}
+		
+		if (indice >= 57 && indice <= 62){
 			return 3;
-		case 69 :
+		}
+		
+		if (indice >= 64 && indice <= 69){
 			return 4;
-		case 78 :
+		}
+		
+		if (indice >= 71 && indice <= 78){
 			return 5;
-		case 87 : 
-			return 6 ;
-		case 125 : 
-			return 7 ;
-		case 168 : 
+		}
+		
+		if (indice >= 80 && indice <= 87){
+			return 6;
+		}
+		
+		if (indice >= 127 && indice <= 131){
+			return 7;
+		}
+		
+		if (indice >= 160 && indice <= 168){
 			return 8;
 		}
+		
 		return -1;
 	}
 

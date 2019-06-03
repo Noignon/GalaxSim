@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<fx:root fx:id="browseFieldContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="field" type="HBox" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TextField fx:id="pathField" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets right="4.0" />
+         </HBox.margin></TextField>
+      <Button fx:id="browseButton" mnemonicParsing="false" onAction="#openFileBrowser" text="Parcourir..." HBox.hgrow="ALWAYS" />
+   </children>
+</fx:root>

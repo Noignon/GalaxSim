@@ -10,3 +10,11 @@
     -fx-border-insets: 0 0 0 0;
     /*-fx-background-color: #dfe4ea;*/
 }
+
+.field {
+
+}
+
+.field-error {
+    -fx-border-color: red;
+}
