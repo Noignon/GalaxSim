@@ -55,7 +55,7 @@ public class MainWindow {
     private BrowseFieldControl dataFileFieldControl;
     private IntegerFieldControl distanceFieldControl;
     private IntegerFieldControl massFieldControl;
-    private IntegerFieldControl uncertaintyFieldControl;
+    private DoubleFieldControl uncertaintyFieldControl;
     private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
 
     public MainWindow(){
@@ -78,7 +78,8 @@ public class MainWindow {
         massFieldControl = new IntegerFieldControl(massField, "masse", false);
         massFieldControl.getBoundsControl().setLowerBound(0);
 
-        uncertaintyFieldControl = new IntegerFieldControl(uncertaintyField, "", true, 0, 101);
+        uncertaintyFieldControl = new DoubleFieldControl(uncertaintyField, "marge d'erreur", false);
+        uncertaintyFieldControl.getBoundsControl().setLowerBound(0.0);
 
         // Creation des controles pour les filtres de masquage de coordonnees
         // La GridPane contient les 6 filtres
@@ -143,12 +144,14 @@ public class MainWindow {
      */
     private void startDataAnalysis(ActionEvent event) {
         // Verification de la validite des champs
-        if(!FormControl.isValid(dataFileFieldControl, distanceFieldControl, massFieldControl) ||
+        if(!FormControl.isValid(dataFileFieldControl, distanceFieldControl, massFieldControl, uncertaintyFieldControl) ||
                 !FormControl.isValid(coordsFilterControls.toArray(new DoubleFieldControl[coordsFilterControls.size()]))) {
             return;
         }
 
-        DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(), distanceFieldControl, massFieldControl, coordsFilterControls);
+        DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(),
+                                                                    distanceFieldControl, massFieldControl,
+                                                                    uncertaintyFieldControl, coordsFilterControls);
 
         // Mise en relation de l'avancement de l'extraction des donnees avec
         // la barre de chargement

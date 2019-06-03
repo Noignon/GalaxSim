@@ -15,6 +15,7 @@ public class DataExtractionTask extends Task<DataFileType> {
     private final String filePath;
     private final IntegerFieldControl distanceFieldControl;
     private final IntegerFieldControl massFieldControl;
+    private final DoubleFieldControl uncertaintyFieldControl;
     private final ArrayList<DoubleFieldControl> coordsControls;
 
     private ParserCosmosDatas parser;
@@ -27,14 +28,16 @@ public class DataExtractionTask extends Task<DataFileType> {
      * @param filePath chemin vers le fichier contenant les donnees
      * @param distanceFieldControl controleur de champ du filtre distance
      * @param massFieldControl controleur de champ du filtre masse
+     * @param uncertaintyFieldControl controleur de champ du filtre de marge d'erreur
      * @param coordsControls controleurs des champs de masquage de coordonnees
      */
-    public DataExtractionTask(String typeDescription, String filePath, IntegerFieldControl distanceFieldControl, IntegerFieldControl massFieldControl, ArrayList<DoubleFieldControl> coordsControls) {
+    public DataExtractionTask(String typeDescription, String filePath, IntegerFieldControl distanceFieldControl, IntegerFieldControl massFieldControl, DoubleFieldControl uncertaintyFieldControl, ArrayList<DoubleFieldControl> coordsControls) {
         super();
         this.dataType = DataFileType.getTypeFromDescription(typeDescription);
         this.filePath = filePath;
         this.distanceFieldControl = distanceFieldControl;
         this.massFieldControl = massFieldControl;
+        this.uncertaintyFieldControl = uncertaintyFieldControl;
         this.coordsControls = coordsControls;
 
         progressProperty = new SimpleDoubleProperty();
@@ -76,6 +79,11 @@ public class DataExtractionTask extends Task<DataFileType> {
         Optional<Integer> massFilterValue = massFieldControl.getOptionalValue();
         if(massFilterValue.isPresent()) {
             Filter.setMassFilter(massFilterValue.get());
+        }
+
+        Optional<Double> uncertaintyFilterValue = uncertaintyFieldControl.getOptionalValue();
+        if(uncertaintyFilterValue.isPresent()) {
+            Filter.setDeviationUncertaintyFilter(uncertaintyFilterValue.get());
         }
 
         for(int i = 0;i < coordsControls.size();i++) {
