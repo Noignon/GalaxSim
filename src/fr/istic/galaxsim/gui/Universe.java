@@ -31,7 +31,8 @@ public class Universe extends Group {
 
     private final Text leftScaleText;
     private final Text rightScaleText;
-    private final Rotate scaleTextRotate = new Rotate(-45, Rotate.Y_AXIS);
+    private final Rotate scaleTextRotateX = new Rotate(-20, Rotate.X_AXIS);
+    private final Rotate scaleTextRotateY = new Rotate(-45, Rotate.Y_AXIS);
 
     private final Translate translate = new Translate();
     public final Rotate rotateX = new Rotate(20, Rotate.X_AXIS);
@@ -53,7 +54,7 @@ public class Universe extends Group {
         // en bas a gauche et a droite
         leftScaleText = new Text(String.format("-%d Mpc", (int) box.getWidth() / 2));
         leftScaleText.setFont(new Font(12));
-        leftScaleText.getTransforms().add(scaleTextRotate);
+        leftScaleText.getTransforms().addAll(scaleTextRotateX, scaleTextRotateY);
 
         Bounds b = leftScaleText.getBoundsInLocal();
         leftScaleText.setTranslateX(-(box.getWidth() + b.getWidth()) / 2);
@@ -62,7 +63,7 @@ public class Universe extends Group {
 
         rightScaleText = new Text(String.format("%d Mpc", (int) box.getWidth() / 2));
         rightScaleText.setFont(new Font(12));
-        rightScaleText.getTransforms().add(scaleTextRotate);
+        rightScaleText.getTransforms().addAll(scaleTextRotateX, scaleTextRotateY);
 
         b = rightScaleText.getBoundsInLocal();
         rightScaleText.setTranslateX((box.getWidth() - b.getWidth()) / 2);
@@ -95,7 +96,8 @@ public class Universe extends Group {
 
                 // Rotation du texte de l'echelle pour que celui-ci soit
                 // toujours dans le sens de la lecture
-                scaleTextRotate.setAngle(scaleTextRotate.getAngle() - mouseDeltaX);
+                scaleTextRotateY.setAngle(scaleTextRotateY.getAngle() - mouseDeltaX);
+                scaleTextRotateX.setAngle(scaleTextRotateX.getAngle() + mouseDeltaY);
             }
             else if(event.isSecondaryButtonDown()) {
                 translate.setX(translate.getX() + mouseDeltaX);

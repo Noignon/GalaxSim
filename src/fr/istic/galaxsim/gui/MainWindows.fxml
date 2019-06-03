@@ -11,19 +11,23 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.galaxsim.gui.MainWindow">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.istic.galaxsim.gui.MainWindow">
    <center>
-      <SplitPane dividerPositions="0.3333" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+      <SplitPane dividerPositions="0.33" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
         <items>
             <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Paramètres de la simulation" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets bottom="10.0" />
-                     </VBox.margin></Label>
+                     </VBox.margin>
+                  </Label>
                   <Label text="Données">
                      <VBox.margin>
                         <Insets bottom="3.0" />
@@ -63,13 +67,53 @@
                                     <Insets bottom="3.0" />
                                  </padding>
                               </Label>
-                              <TextField fx:id="massField" />
+                              <TextField fx:id="massField">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <Label text="Pourcentage d'erreur (max)" />
+                              <TextField fx:id="uncertaintyField">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <DropdownPane contentHidden="true" text="Masquage coordonnées">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <GridPane fx:id="coordsFilterPane" hgap="5.0" vgap="5.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <TextField promptText="X min" />
+                                          <TextField promptText="X max" GridPane.columnIndex="1" />
+                                          <TextField promptText="Y min" GridPane.rowIndex="1" />
+                                          <TextField promptText="Y max" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <TextField promptText="Z min" GridPane.rowIndex="2" />
+                                          <TextField promptText="Z max" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                       </children>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </GridPane>
+                                 </children>
+                              </DropdownPane>
                            </children>
                            <padding>
                               <Insets left="7.0" right="7.0" top="3.0" />
                            </padding>
                         </VBox>
-                     </children></DropdownPane>
+                     </children>
+                  </DropdownPane>
                   <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startDataAnalysis" text="Appliquer">
                      <VBox.margin>
                         <Insets left="10.0" right="10.0" top="10.0" />
