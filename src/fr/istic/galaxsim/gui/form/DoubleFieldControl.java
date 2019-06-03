@@ -5,29 +5,33 @@ import javafx.scene.control.TextField;
 
 import java.util.Optional;
 
-public class IntegerFieldControl extends FieldControl {
+public class DoubleFieldControl extends FieldControl {
 
     private final TextField field;
-    private final BoundsControl<Integer> boundsControl = new BoundsControl<>();
+    private final BoundsControl<Double> boundsControl = new BoundsControl<>();
 
-    public IntegerFieldControl(TextField field, String fieldName, boolean required) {
+    public DoubleFieldControl(TextField field, String fieldName, boolean required) {
         super(fieldName, required);
-        this.field = field;
 
-        // Seuls les chiffres sont acceptes, les autres sont effaces
+        this.field = field;
         field.textProperty().addListener((obs, oldValue, newValue) -> {
-            field.setText(newValue.replaceAll("[^0-9\\-]", ""));
+            field.setText(newValue.replaceAll("[^0-9\\-\\.]", ""));
         });
     }
 
-    public IntegerFieldControl(TextField field, String fieldName, boolean required, int lowerBound, int higherBound) {
+    public DoubleFieldControl(TextField field, String fieldName, boolean required, double lowerBound, double higherBound) {
         this(field, fieldName, required);
 
         boundsControl.setHigherBound(higherBound);
         boundsControl.setLowerBound(lowerBound);
     }
 
-    public BoundsControl<Integer> getBoundsControl() {
+    @Override
+    public void hideError() {
+        field.getStyleClass().remove("field-error");
+    }
+
+    public BoundsControl<Double> getBoundsControl() {
         return boundsControl;
     }
 
@@ -37,38 +41,26 @@ public class IntegerFieldControl extends FieldControl {
      *
      * @return La valeur du champ
      */
-    public Optional<Integer> getOptionalValue() {
+    public Optional<Double> getOptionalValue() {
         try {
-            int value = getValue();
+            double value = getValue();
             return Optional.of(value);
         } catch(NumberFormatException e) {
             return Optional.empty();
         }
     }
 
-    /**
-     * Recupere la valeur du champ de texte et la convertir en un entier
-     *
-     * @throws NumberFormatException si la valeur saisie n'est pas valide
-     * @return la valeur du champ
-     */
-    public int getValue() {
-        return Integer.parseInt(field.getText());
+    public Double getValue() {
+        return Double.valueOf(field.getText());
     }
 
-    /**
-     * Determine si la valeur du champ est bien comprise entre la borne inferieure (inclue)
-     * et la borne superieure (exclue)
-     *
-     * @return true si la valeur est comprise dans l'interval, false sinon
-     */
     @Override
     public boolean isValid() {
         if(field.getText().isEmpty() && !required) {
             return true;
         }
 
-        int value;
+        double value;
         try {
             value = getValue();
         } catch(NumberFormatException e) {
@@ -90,13 +82,7 @@ public class IntegerFieldControl extends FieldControl {
     }
 
     @Override
-    public void hideError() {
-        field.getStyleClass().remove("field-error");
-    }
-
-    @Override
     public void showError() {
         field.getStyleClass().add("field-error");
     }
-
 }
