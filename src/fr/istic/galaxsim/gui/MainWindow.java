@@ -1,6 +1,6 @@
 package fr.istic.galaxsim.gui;
 
-import fr.istic.galaxsim.calcul.Traitement;
+import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
@@ -159,9 +159,9 @@ public class MainWindow {
 
         parserDataTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, taskEvent -> {
             Platform.runLater(() -> {
-                Traitement.calculCoordonnee();
-                Traitement.traitementAmas();
-                Traitement.traitementGalaxies();
+                CalcsProcessing.coordsCalculation();
+                CalcsProcessing.processAmas();
+                CalcsProcessing.processGalaxies();
 
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();
