@@ -151,7 +151,15 @@ public abstract class CosmosElement{
 	public int getIdent() {
 		return ident;
 	}
-
+	
+	/**
+	 * setter ident
+	 * @param ident
+	 */
+	public void setIdent(int ident) {
+		this.ident = ident;
+	}
+	
 	/**
 	 * getter distance
 	 * @return la distance
