@@ -15,10 +15,10 @@ public class CalculAmas {
 	// calcule les coordonnees initiales d'une galaxie
 	public static void calculCoordInit(Amas a1) {
 		// calcul des coordonnees
-		double z = Math.sin(a1.getSuperGalacticLat()) * a1.getDistance();
-		double hypothenus = Math.cos(a1.getSuperGalacticLat()) * a1.getDistance();
-		double x = Math.cos(a1.getSuperGalacticLon()) * hypothenus;
-		double y = Math.sin(a1.getSuperGalacticLon()) * hypothenus;
+		double z = Math.sin(Math.toRadians(a1.getSuperGalacticLat())) * a1.getDistance();
+		double hypothenus = Math.cos(Math.toRadians(a1.getSuperGalacticLat())) * a1.getDistance();
+		double x = Math.cos(Math.toRadians(a1.getSuperGalacticLon())) * hypothenus;
+		double y = Math.sin(Math.toRadians(a1.getSuperGalacticLon())) * hypothenus;
 
 		// enregistrement des donnees initiales
 		a1.addCoordinate(new Coordinate(x, y, z));
@@ -45,32 +45,34 @@ public class CalculAmas {
 
 	// calcule la longitude entre deux galaxies
 	public static double attractionLongitude(Amas a1, Amas a2, int t) {
-		double x = a2.getCoordinate(t).getX() - a1.getCoordinate(t).getX();
-		double y = a2.getCoordinate(t).getY() - a1.getCoordinate(t).getY();
+		double x = a1.getCoordinate(t).getX() - a2.getCoordinate(t).getX();
+		double y = a1.getCoordinate(t).getY() - a2.getCoordinate(t).getY();
 
-		return Math.atan(x / y);
+		return Math.acos(x/(Math.sqrt((x*x) + (y*y))));
 	}
 
 	// calcule la latitude entre deux galaxies
 	public static double attractionLatitude(Amas a1, Amas a2, int t) {
-		double x = Math.pow(a2.getCoordinate(t).getX() - a1.getCoordinate(t).getX(), 2);
-		double y = Math.pow(a2.getCoordinate(t).getY() - a1.getCoordinate(t).getY(), 2);
-		double z = a2.getCoordinate(t).getZ() - a1.getCoordinate(t).getZ();
+		double x = Math.pow(a1.getCoordinate(t).getX() - a2.getCoordinate(t).getX(), 2);
+		double y = Math.pow(a1.getCoordinate(t).getY() - a2.getCoordinate(t).getY(), 2);
+		double z = a1.getCoordinate(t).getZ() - a2.getCoordinate(t).getZ();
 		double hypothenus = Math.sqrt(x + y);
 
-		return Math.atan(z / hypothenus);
+		return Math.acos(hypothenus/(Math.sqrt((hypothenus*hypothenus) + (z*z))));
 	}
 
 	// retourne la force d'attraction entre deux galaxies sur l'axe X
 	public static double forceX(Amas a1, Amas a2, int t, double F) {
 		double longitude = attractionLongitude(a1, a2, t);
-
+		F = F * Math.cos(longitude);
+		
 		return F * Math.cos(longitude);
 	}
 
 	// retourne la force d'attraction entre deux galaxies sur l'axe Y
 	public static double forceY(Amas a1, Amas a2, int t, double F) {
 		double longitude = attractionLongitude(a1, a2, t);
+		F = F * Math.cos(longitude);
 
 		return F * Math.sin(longitude);
 	}
@@ -86,6 +88,7 @@ public class CalculAmas {
 	public static double velocityX(Amas a1, int t) {
 		double velocity = 71 * a1.getDistance();
 		velocity = a1.getVelocity(t) - velocity;
+		velocity = Math.cos(Math.toRadians(a1.getSuperGalacticLat())) * velocity;
 
 		return velocity * Math.cos(Math.toRadians(a1.getSuperGalacticLon()));
 	}
@@ -94,6 +97,7 @@ public class CalculAmas {
 	public static double velocityY(Amas a1, int t) {
 		double velocity = 71 * a1.getDistance();
 		velocity = a1.getVelocity(t) - velocity;
+		velocity = Math.cos(Math.toRadians(a1.getSuperGalacticLat())) * velocity;
 
 		return velocity * Math.sin(Math.toRadians(a1.getSuperGalacticLon()));
 	}
@@ -102,6 +106,7 @@ public class CalculAmas {
 	public static double velocityZ(Amas a1, int t) {
 		double velocity = 71 * a1.getDistance();
 		velocity = a1.getVelocity(t) - velocity;
+		
 
 		return velocity * Math.sin(Math.toRadians(a1.getSuperGalacticLat()));
 	}
@@ -115,11 +120,11 @@ public class CalculAmas {
 		double Vy = velocityY(a1, t);
 		double Vz = velocityZ(a1, t);
 
-		double time = t * Math.pow(10, 17);
+		double time = t * 2 * Math.pow(10, 16);
 
-		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getX();
-		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getY();
-		double z = ((Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vz) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getZ();
+		double x = (-(Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * -Vx) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getX();
+		double y = (-(Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * -Vy) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getY();
+		double z = (-(Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * -Vz) * 3.2408 *Math.pow(10, -20) + a1.getCoordinate(t).getZ();
 
 		Vx = (Ax * time) * 1000 + Vx;
 		Vy = (Ay * time) * 1000 + Vy;
