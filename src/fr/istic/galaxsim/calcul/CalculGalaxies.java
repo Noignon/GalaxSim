@@ -117,9 +117,9 @@ public class CalculGalaxies {
 
 		double time = t * Math.pow(10, 15);
 
-		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -23) + g1.getCoordinate(t).getX();
-		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -23) + g1.getCoordinate(t).getY();
-		double z = ((Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vz) * 3.2408 *Math.pow(10, -23) + g1.getCoordinate(t).getZ();
+		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
+		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();
+		double z = ((Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vz) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getZ();
 
 		Vx = (Ax * time) * 1000 + Vx;
 		Vy = (Ay * time) * 1000 + Vy;
