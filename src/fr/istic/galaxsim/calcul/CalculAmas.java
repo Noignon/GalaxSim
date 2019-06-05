@@ -117,13 +117,13 @@ public class CalculAmas {
 
 		double time = t * Math.pow(10, 7);
 
-		double x = (Ax * time * time) / 2 + time * Vx + a1.getCoordinate(t).getX();
-		double y = (Ay * time * time) / 2 + time * Vy + a1.getCoordinate(t).getY();
-		double z = (Az * time * time) / 2 + time * Vz + a1.getCoordinate(t).getZ();
+		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
+		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();
+		double z = ((Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vz) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getZ();
 
-		Vx = Ax * time + Vx;
-		Vy = Ax * time + Vy;
-		Vz = Ax * time + Vz;
+		Vx = (Ax * time) * 1000 + Vx;
+		Vy = (Ay * time) * 1000 + Vy;
+		Vz = (Az * time) * 1000 + Vz;
 
 		double velocity = Math.sqrt(Vx * Vx + Vy * Vy + Vz * Vz);
 		a1.addVelocity(velocity);
