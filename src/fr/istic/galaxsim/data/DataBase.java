@@ -44,8 +44,13 @@ public class DataBase {
 	 * @param datasAmas les donnees des amas
 	 */
 	public static void initAmas(String[][] datasAmas){
+		int identNull = 1;
 		for (int i = 0; i<datasAmas.length; i++){
 			Amas a = Amas.create(datasAmas[i]);	
+			if (a.getIdent() == 0) {
+				a.setIdent(identNull);
+				identNull++;
+			}
 			if (a.getNbGalaxies() > 1){
 				addAmas(a);
 			} else {
