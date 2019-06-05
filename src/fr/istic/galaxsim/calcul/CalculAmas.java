@@ -107,15 +107,15 @@ public class CalculAmas {
 	}
 
 	public static void coordByTime(Amas a1, double forceX, double forceY, double forceZ, int t) {
-		double Ax = forceX / a1.getMass();
-		double Ay = forceY / a1.getMass();
-		double Az = forceZ / a1.getMass();
+		double Ax = forceX / (a1.getMass()* 1.991 * Math.pow(10, 42));
+		double Ay = forceY / (a1.getMass()* 1.991 * Math.pow(10, 42));
+		double Az = forceZ / (a1.getMass()* 1.991 * Math.pow(10, 42));
 
 		double Vx = velocityX(a1, t);
 		double Vy = velocityY(a1, t);
 		double Vz = velocityZ(a1, t);
 
-		double time = t * Math.pow(10, 7);
+		double time = t * Math.pow(10, 14);
 
 		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
 		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();
