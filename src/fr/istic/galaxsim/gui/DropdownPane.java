@@ -28,7 +28,7 @@ public class DropdownPane extends VBox {
     private BooleanProperty contentHidden;
 
     public DropdownPane() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("Dropdownpane.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("DropdownPane.fxml"));
         loader.setController(this);
         loader.setRoot(this);
         try {

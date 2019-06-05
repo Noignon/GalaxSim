@@ -61,6 +61,8 @@ public class MainWindow {
     private ImageView pauseButton;
     @FXML
     private ImageView stopButton;
+    @FXML
+    private TextField durationField;
 
     private Universe universe;
 
@@ -71,6 +73,7 @@ public class MainWindow {
     private DoubleFieldControl uncertaintyFieldControl;
     private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
 
+    private IntegerFieldControl durationFieldControl;
     private boolean simulationRunning = false;
 
     public MainWindow(){
@@ -149,6 +152,8 @@ public class MainWindow {
         cosmosElementInfos.setViewOrder(-1.0);
         cosmosElementInfos.setVisible(false);
 
+        durationFieldControl = new IntegerFieldControl(durationField, "duree", true);
+        durationFieldControl.getBoundsControl().setLowerBound(1);
         dataPane.setVisible(false);
     }
 
@@ -246,13 +251,18 @@ public class MainWindow {
      */
     @FXML
     private void toggleSimulation(MouseEvent event) {
-        playButton.setVisible(!playButton.isVisible());
-        pauseButton.setVisible(!pauseButton.isVisible());
-
         simulationRunning = !simulationRunning;
 
         if(simulationRunning) {
+            if(!durationFieldControl.isValid()) {
+                durationFieldControl.showError();
+                return;
+            }
+
+            durationFieldControl.hideError();
+            animationProgress.setMax(durationFieldControl.getValue());
             Platform.runLater(() -> {
+                universe.setSimulationDuration(durationFieldControl.getValue());
                 universe.playTransitionsFromStart();
             });
         }
@@ -261,6 +271,9 @@ public class MainWindow {
                 universe.pauseTransitions();
             });
         }
+
+        playButton.setVisible(!playButton.isVisible());
+        pauseButton.setVisible(!pauseButton.isVisible());
     }
 
     @FXML
