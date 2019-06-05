@@ -8,11 +8,16 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -116,14 +121,49 @@
                   </DropdownPane>
                   <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startDataAnalysis" text="Appliquer">
                      <VBox.margin>
-                        <Insets left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Label fx:id="infoLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Label>
+                  <VBox fx:id="dataPane" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <Label fx:id="infoLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" textAlignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="13.0" />
+                           </VBox.margin></Label>
+                        <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
+                              <StackPane maxHeight="18.0" maxWidth="18.0" minHeight="18.0" minWidth="18.0" prefHeight="18.0" prefWidth="18.0">
+                                 <children>
+                                    <ImageView fx:id="playButton" fitHeight="15018.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/play.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fx:id="pauseButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true" visible="false">
+                                       <image>
+                                          <Image url="@icons/pause.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="4.0" />
+                                 </HBox.margin>
+                              </StackPane>
+                              <ImageView fx:id="stopButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#stopSimulation" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/stop.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
                <opaqueInsets>
                   <Insets />

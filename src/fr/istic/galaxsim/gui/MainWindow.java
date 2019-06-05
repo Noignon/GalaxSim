@@ -4,6 +4,7 @@ import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,14 +12,15 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -35,7 +37,8 @@ public class MainWindow {
     private ProgressBar progressBar;
     @FXML
     private BrowseField dataFileField;
-
+    @FXML
+    private VBox dataPane;
     @FXML
     private CosmosElementInfos cosmosElementInfos;
 
@@ -49,6 +52,16 @@ public class MainWindow {
     @FXML
     private GridPane coordsFilterPane;
 
+    // Controles de l'animation
+    @FXML
+    private Slider animationProgress;
+    @FXML
+    private ImageView playButton;
+    @FXML
+    private ImageView pauseButton;
+    @FXML
+    private ImageView stopButton;
+
     private Universe universe;
 
     // Controleurs de valeur pour les filtres
@@ -57,6 +70,8 @@ public class MainWindow {
     private IntegerFieldControl massFieldControl;
     private DoubleFieldControl uncertaintyFieldControl;
     private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
+
+    private boolean simulationRunning = false;
 
     public MainWindow(){
 
@@ -133,6 +148,8 @@ public class MainWindow {
         // La fenetre doit etre affichee au premier plan
         cosmosElementInfos.setViewOrder(-1.0);
         cosmosElementInfos.setVisible(false);
+
+        dataPane.setVisible(false);
     }
 
     @FXML
@@ -178,11 +195,22 @@ public class MainWindow {
                     }
                 }
 
+                // Affichage de l'avancement de l'animation
+                ReadOnlyObjectProperty<Duration> prop = universe.getTimeProperty();
+                if(prop != null) {
+                    prop.addListener((listener) -> {
+                        animationProgress.setValue(prop.get().toSeconds());
+                    });
+                }
+
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
 
                 // Masquage de la barre de chargement
                 progressBar.setManaged(false);
                 progressBar.setVisible(false);
+
+                // Affichage du controle de la simulation
+                dataPane.setVisible(true);
             });
 
         });
@@ -193,6 +221,51 @@ public class MainWindow {
         // Affichage de la barre de chargement
         progressBar.setManaged(true);
         progressBar.setVisible(true);
+    }
+
+    /**
+     * Arret de la simulation
+     * @param event
+     */
+    @FXML
+    private void stopSimulation(MouseEvent event) {
+        Platform.runLater(() -> {
+            universe.stopTransitions();
+        });
+
+        simulationRunning = false;
+        playButton.setVisible(true);
+        pauseButton.setVisible(false);
+        animationProgress.setValue(0.0);
+    }
+
+    /**
+     * Mise en lecture ou en pause de la simulation
+     *
+     * @param event
+     */
+    @FXML
+    private void toggleSimulation(MouseEvent event) {
+        playButton.setVisible(!playButton.isVisible());
+        pauseButton.setVisible(!pauseButton.isVisible());
+
+        simulationRunning = !simulationRunning;
+
+        if(simulationRunning) {
+            Platform.runLater(() -> {
+                universe.playTransitionsFromStart();
+            });
+        }
+        else {
+            Platform.runLater(() -> {
+                universe.pauseTransitions();
+            });
+        }
+    }
+
+    @FXML
+    private void updateSimulationPosition(MouseEvent event) {
+        universe.playTransitionsFrom(animationProgress.getValue());
     }
 
 }

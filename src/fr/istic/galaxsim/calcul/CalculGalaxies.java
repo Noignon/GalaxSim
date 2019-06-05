@@ -115,7 +115,7 @@ public class CalculGalaxies {
 		double Vy = velocityY(g1, t);
 		double Vz = velocityZ(g1, t);
 
-		double time = t * Math.pow(10, 15);
+		double time = t * Math.pow(10, 17);
 
 		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
 		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();

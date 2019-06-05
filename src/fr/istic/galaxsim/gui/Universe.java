@@ -4,6 +4,7 @@ import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Coordinate;
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Galaxy;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -18,6 +19,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
 
 public class Universe extends Group {
 
@@ -43,6 +47,8 @@ public class Universe extends Group {
 
     private Sphere lastSelectedSphere = null;
     private boolean isLastSelectedGalaxy = false;
+
+    private final ArrayList<Path3DTransition> transitions = new ArrayList<>();
 
     public Universe(Node parentContainer, CosmosElementInfos cosmosElementInfos) {
         this.cosmosElementInfos = cosmosElementInfos;
@@ -171,7 +177,44 @@ public class Universe extends Group {
             lastSelectedSphere = s;
         });
 
+        transitions.add(new Path3DTransition(15.0, s, cosmosElement));
+
         return s;
+    }
+
+    public void playTransitionsFrom(double t) {
+        for(Path3DTransition trans : transitions) {
+            trans.pause();
+            trans.setTransitionPosition(t);
+        }
+
+        for(Path3DTransition trans : transitions) {
+            trans.play();
+        }
+    }
+
+    public void playTransitionsFromStart() {
+        for(Path3DTransition trans : transitions) {
+            trans.play();
+        }
+    }
+
+    public void pauseTransitions() {
+        for(Path3DTransition trans : transitions) {
+            trans.pause();
+        }
+    }
+
+    public void stopTransitions() {
+        for(Path3DTransition trans : transitions) {
+            trans.stop();
+            trans.resetInitialPosition();
+            trans.resetTargets();
+        }
+    }
+
+    public ReadOnlyObjectProperty<Duration> getTimeProperty() {
+        return (transitions.isEmpty()) ? null : transitions.get(0).currentTimeProperty();
     }
 
 }
