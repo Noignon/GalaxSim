@@ -177,7 +177,7 @@ public class Universe extends Group {
             lastSelectedSphere = s;
         });
 
-        transitions.add(new Path3DTransition(15.0, s, cosmosElement));
+        transitions.add(new Path3DTransition(s, cosmosElement));
 
         return s;
     }
@@ -202,6 +202,22 @@ public class Universe extends Group {
     public void pauseTransitions() {
         for(Path3DTransition trans : transitions) {
             trans.pause();
+        }
+    }
+
+    /**
+     * Definit la duree de la simulation si celle-ci est differente
+     * de la valeur actuelle
+     *
+     * @param duration duree de la simulation en secondes
+     */
+    public void setSimulationDuration(int duration) {
+        Duration d = Duration.seconds(duration);
+        for(Path3DTransition trans : transitions) {
+            if(trans.durationProperty.get() == d) {
+                break;
+            }
+            trans.durationProperty.set(d);
         }
     }
 

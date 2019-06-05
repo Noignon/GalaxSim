@@ -135,6 +135,16 @@
                            <VBox.margin>
                               <Insets bottom="13.0" />
                            </VBox.margin></Label>
+                        <Label text="Durée de l'animation (en secondes)">
+                           <VBox.margin>
+                              <Insets bottom="3.0" left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="durationField" maxWidth="1.7976931348623157E308" text="30">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </TextField>
                         <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />

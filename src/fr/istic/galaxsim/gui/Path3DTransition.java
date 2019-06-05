@@ -4,6 +4,10 @@ import fr.istic.galaxsim.data.Coordinate;
 import fr.istic.galaxsim.data.CosmosElement;
 import javafx.animation.Interpolator;
 import javafx.animation.Transition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
@@ -13,6 +17,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Path3DTransition extends Transition {
+
+    public final ObjectProperty<Duration> durationProperty = new SimpleObjectProperty<>();
 
     private final Shape3D shape;
 
@@ -26,7 +32,8 @@ public class Path3DTransition extends Transition {
     private Point3D currentTarget;
     private double lastDistance = 0.0;
 
-    public Path3DTransition(double duration, Shape3D shape, CosmosElement element) {
+    public Path3DTransition(Shape3D shape, CosmosElement element) {
+        super(30);
         this.shape = shape;
         double totalDistanceTemp = 0.0;
 
@@ -44,15 +51,15 @@ public class Path3DTransition extends Transition {
         }
         this.totalDistance = totalDistanceTemp;
 
-        speed = totalDistance / duration;
-
         if(!targets.isEmpty()) {
             currentTarget = targets.remove();
             lastDistance = new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ()).distance(currentTarget);
         }
 
-        setCycleDuration(Duration.seconds(duration));
-        setInterpolator(Interpolator.LINEAR);
+        durationProperty.addListener((obs, oldValue, newValue) -> {
+            setCycleDuration(newValue);
+            speed = totalDistance / newValue.toSeconds() / 30;
+        });
     }
 
     private Point3D getShapePosition() {
@@ -65,7 +72,7 @@ public class Path3DTransition extends Transition {
         double d = shapePosition.distance(currentTarget) - 1.0;
         if(lastDistance > d) {
             Point3D direction = currentTarget.subtract(shapePosition).normalize();
-            direction.multiply(speed);
+            direction = direction.multiply(speed);
 
             shape.setTranslateX(shape.getTranslateX() + direction.getX());
             shape.setTranslateY(shape.getTranslateY() + direction.getY());
