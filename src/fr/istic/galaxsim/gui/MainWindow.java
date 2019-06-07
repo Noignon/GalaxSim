@@ -5,6 +5,8 @@ import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -199,14 +201,31 @@ public class MainWindow {
                         universe.addAmas(a);
                     }
                 }
+                
+                boolean animationChanging=false;
 
                 // Affichage de l'avancement de l'animation
+                
                 ReadOnlyObjectProperty<Duration> prop = universe.getTimeProperty();
                 if(prop != null) {
                     prop.addListener((listener) -> {
-                        animationProgress.setValue(prop.get().toSeconds());
+                    	if(!animationChanging) {
+                    		animationProgress.setValue(prop.get().toSeconds());
+                    	}
+                        
                     });
                 }
+                
+                
+                /*
+                animationProgress.valueProperty().addListener((l)->{
+                	universe.playTransitionsFrom(animationProgress.getValue());
+                });
+                
+                */
+                
+                
+                
 
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
 

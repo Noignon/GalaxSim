@@ -58,7 +58,7 @@ public class Path3DTransition extends Transition {
 
         durationProperty.addListener((obs, oldValue, newValue) -> {
             setCycleDuration(newValue);
-            speed = totalDistance / newValue.toSeconds() / 30;
+            speed = totalDistance / newValue.toSeconds() /*/ 30*/;
         });
     }
 
@@ -72,7 +72,7 @@ public class Path3DTransition extends Transition {
         double d = shapePosition.distance(currentTarget) - 1.0;
         if(lastDistance > d) {
             Point3D direction = currentTarget.subtract(shapePosition).normalize();
-            direction = direction.multiply(speed);
+            direction = direction.multiply(speed/30);
 
             shape.setTranslateX(shape.getTranslateX() + direction.getX());
             shape.setTranslateY(shape.getTranslateY() + direction.getY());
@@ -98,25 +98,56 @@ public class Path3DTransition extends Transition {
             targets.add(points.get(i));
         }
     }
-
+    
+    private void resetTargets(int k) {
+    	for(int i = k;i < points.size();i++) {
+            targets.add(points.get(i));
+        }
+		
+	}
+    
+    /**
+     * réinitialise la transition à un temps donné
+     * 
+     * @param temps de la simulation
+     */
     public void setTransitionPosition(double t) {
-        double distanceFromStart = t / speed;
-
+    	
+    	targets.clear();
+    	
+    	
+    	
+        double distanceFromStart =( t * speed) ;
         double d = 0.0;
-        Point3D lastPoint = new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
+        Point3D lastPoint = this.points.get(0);//new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
         Point3D position = lastPoint;
-        for(Point3D p : targets) {
+        
+        
+        for(Point3D p : points) {
+        	
             d += lastPoint.distance(p);
-            lastPoint = p;
-
             if(d >= distanceFromStart) {
                 position = lastPoint;
                 break;
             }
+            lastPoint = p;
         }
+        
+        
+        resetTargets((int )this.points.indexOf(position)  );
+        
 
         shape.setTranslateX(position.getX());
         shape.setTranslateY(position.getY());
         shape.setTranslateZ(position.getZ());
+        
+        this.playFrom(Duration.seconds(t));
+        
+    }
+    
+    
+
+	public void setNextTarget(double d) {
+    	
     }
 }

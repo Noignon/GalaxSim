@@ -187,10 +187,11 @@ public class Universe extends Group {
             trans.pause();
             trans.setTransitionPosition(t);
         }
-
+/*
         for(Path3DTransition trans : transitions) {
             trans.play();
         }
+        */
     }
 
     public void playTransitionsFromStart() {
