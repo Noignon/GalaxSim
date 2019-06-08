@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.calcul;
 
 import fr.istic.galaxsim.data.Amas;
-import fr.istic.galaxsim.data.Coordinate;
+import fr.istic.galaxsim.data.Vector;
 import fr.istic.galaxsim.data.Galaxy;
 
 public class CalculGalaxies {
@@ -21,23 +21,25 @@ public class CalculGalaxies {
 		double y = Math.sin(Math.toRadians(g1.getSuperGalacticLon())) * hypothenus;
 
 		// enregistrement des donnees initiales
-		g1.addCoordinate(new Coordinate(x, y, z));
+		g1.addCoordinate(new Vector(x, y, z));
 	}
 
 	// calcule la force d'attraction entre deux galaxies
 	public static double forceAttraction(Galaxy g1, Amas a, int t) {
 
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double x = Math.pow(g1.getCoordinate(t).getX() - a.getCoordinate(t).getX(), 2);
-		double y = Math.pow(g1.getCoordinate(t).getY() - a.getCoordinate(t).getY(), 2);
-		double z = Math.pow(g1.getCoordinate(t).getZ() - a.getCoordinate(t).getZ(), 2);
+		double x = Math.pow(a.getCoordinate(t).getX() - g1.getCoordinate(t).getX(), 2);
+		double y = Math.pow(a.getCoordinate(t).getY() - g1.getCoordinate(t).getY(), 2);
+		double z = Math.pow(a.getCoordinate(t).getZ() - g1.getCoordinate(t).getZ(), 2);
 		double distance = x + y + z;
+		
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
 		distance = distance * 9.521 * Math.pow(10, 44);
 		double G = 6.67408 * Math.pow(10, -11);
-		double mass = a.getMass() * 1.991 * Math.pow(10, 42);
+		double m1 = a.getMass() * 1.991 * Math.pow(10, 42);
+		double F = (G * m1) / distance;
 
-		return (G * mass) / distance;
+		return F;
 	}
 
 	// calcule la longitude entre deux galaxies
@@ -45,7 +47,7 @@ public class CalculGalaxies {
 		double x = a.getCoordinate(t).getX() - g1.getCoordinate(t).getX();
 		double y = a.getCoordinate(t).getY() - g1.getCoordinate(t).getY();
 
-		return Math.atan(x / y);
+		return Math.acos(x/(Math.sqrt((x*x) + (y*y))));
 	}
 
 	// calcule la latitude entre deux galaxies
@@ -55,12 +57,13 @@ public class CalculGalaxies {
 		double z = a.getCoordinate(t).getZ() - g1.getCoordinate(t).getZ();
 		double hypothenus = Math.sqrt(x + y);
 
-		return Math.atan(z / hypothenus);
+		return Math.acos(hypothenus/(Math.sqrt((hypothenus*hypothenus) + (z*z))));
 	}
 
 	// retourne la force d'attraction entre deux galaxies sur l'axe X
 	public static double forceX(Galaxy g1, Amas a, int t, double F) {
 		double longitude = attractionLongitude(g1, a, t);
+		F = F * Math.cos(longitude);
 
 		return F * Math.cos(longitude);
 	}
@@ -68,6 +71,7 @@ public class CalculGalaxies {
 	// retourne la force d'attraction entre deux galaxies sur l'axe Y
 	public static double forceY(Galaxy g1, Amas a, int t, double F) {
 		double longitude = attractionLongitude(g1, a, t);
+		F = F * Math.cos(longitude);
 
 		return F * Math.sin(longitude);
 	}
@@ -81,53 +85,71 @@ public class CalculGalaxies {
 	}
 
 	// retourne la velocity de la galaxie sur l'axe X
-	public static double velocityX(Galaxy g1, int t) {
+	public static double velocityX(Galaxy g1) {
 		double velocity = 71 * g1.getDistance();
-		velocity = g1.getVelocity(t) - velocity;
+		velocity = g1.getVelocity() - velocity;
+		velocity = Math.cos(Math.toRadians(g1.getSuperGalacticLat())) * velocity;
 
 		return velocity * Math.cos(Math.toRadians(g1.getSuperGalacticLon()));
 
 	}
 
 	// retourne la velocity de la galaxie sur l'axe Y
-	public static double velocityY(Galaxy g1, int t) {
+	public static double velocityY(Galaxy g1) {
 		double velocity = 71 * g1.getDistance();
-		velocity = g1.getVelocity(t) - velocity;
+		velocity = g1.getVelocity() - velocity;
+		velocity = Math.cos(Math.toRadians(g1.getSuperGalacticLat())) * velocity;
 
 		return velocity * Math.sin(Math.toRadians(g1.getSuperGalacticLon()));
 
 	}
 
 	// retourne la velocity de la galaxie sur l'axe Z
-	public static double velocityZ(Galaxy g1, int t) {
+	public static double velocityZ(Galaxy g1) {
 		double velocity = 71 * g1.getDistance();
-		velocity = g1.getVelocity(t) - velocity;
+		velocity = g1.getVelocity() - velocity;
 
 		return velocity * Math.sin(Math.toRadians(g1.getSuperGalacticLat()));
 	}
-
+/**
+ * permet de fepzj pa	z
+ * @param g1 
+ * @param forceX
+ * @param forceY
+ * @param forceZ
+ * @param t
+ * 
+ */
 	public static void coordByTime(Galaxy g1, double forceX, double forceY, double forceZ, int t) {
-		double Ax = forceX;
-		double Ay = forceY;
-		double Az = forceZ;
+		double cons = 1;
+	/**	if (g1.getAmasMass() > 0) {
+			cons = 1/(g1.getAmasMass()*1.991*Math.pow(10,42));
+		} 
+		else {
+			cons = 1/(1.991*Math.pow(10,42));
+		}*/
+		
+		double Ax = forceX * cons;
+		double Ay = forceY * cons;
+		double Az = forceZ * cons;
 
-		double Vx = velocityX(g1, t);
-		double Vy = velocityY(g1, t);
-		double Vz = velocityZ(g1, t);
+		double Vx = g1.getVelocity(t).getX();
+		double Vy = g1.getVelocity(t).getY();
+		double Vz = g1.getVelocity(t).getZ();
 
-		double time = t * Math.pow(10, 15);
-
-		double x = ((Ax * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
-		double y = ((Ay * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();
-		double z = ((Az * time * time) / 2) * 3.2408 *Math.pow(10, -23) + (time * Vz) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getZ();
-
+		double time = t * Math.pow(10, 14);
+		
 		Vx = (Ax * time) * 1000 + Vx;
 		Vy = (Ay * time) * 1000 + Vy;
 		Vz = (Az * time) * 1000 + Vz;
-		
-		double velocity = Math.sqrt(Vx * Vx + Vy * Vy + Vz * Vz);
-		g1.addVelocity(velocity);
 
-		g1.addCoordinate(new Coordinate(x, y, z));
+		double x = (time * Vx) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getX();
+		double y = (time * Vy) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getY();
+		double z = (time * Vz) * 3.2408 *Math.pow(10, -20) + g1.getCoordinate(t).getZ();
+		
+		
+		g1.addVelocity(new Vector(Vx,Vy,Vz));
+		
+		g1.addCoordinate(new Vector(x, y, z));
 	}
 }
