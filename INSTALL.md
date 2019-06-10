@@ -2,7 +2,7 @@
 
 Une version compilée du logiciel est disponible [ici](https://github.com/Noignon/GalaxSim/releases).
 Si vous souhaitez le compiler vous-même, merci de suivre les recommendations
-de la section [Compilation][partie_compilation]
+de la section [Compilation](#compilation-du-projet)
 
 ## Utilisation du logiciel
 
@@ -23,8 +23,6 @@ d'éléments trouvés.
 Vous pouvez lancer l'animation en cliquant sur le bouton de lecture. La vitesse de l'animation
 dépend de la durée : par défaut elle dure 30 secondes. Vous pouvez la modifier en
 mettant un nombre entier (représentant des secondes) strictement supérieur à 0.
-
-[partie_compilation](#compilation)
 
 ## Compilation du projet
 
