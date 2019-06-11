@@ -4,9 +4,6 @@ import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -76,6 +73,8 @@ public class MainWindow {
     private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
 
     private IntegerFieldControl durationFieldControl;
+
+    private boolean simulationFinished = false;
     private boolean simulationRunning = false;
 
     public MainWindow(){
@@ -157,6 +156,17 @@ public class MainWindow {
         durationFieldControl = new IntegerFieldControl(durationField, "duree", true);
         durationFieldControl.getBoundsControl().setLowerBound(1);
         dataPane.setVisible(false);
+
+        playButton.visibleProperty().addListener((obs, oldValue, newValue) -> {
+            pauseButton.setVisible(oldValue);
+        });
+
+        universe.getSimulation().setOnFinished((event) -> {
+            simulationFinished = true;
+            simulationRunning = false;
+
+            playButton.setVisible(true);
+        });
     }
 
     @FXML
@@ -201,31 +211,11 @@ public class MainWindow {
                         universe.addAmas(a);
                     }
                 }
-                
-                boolean animationChanging=false;
 
                 // Affichage de l'avancement de l'animation
-                
-                ReadOnlyObjectProperty<Duration> prop = universe.getTimeProperty();
-                if(prop != null) {
-                    prop.addListener((listener) -> {
-                    	if(!animationChanging) {
-                    		animationProgress.setValue(prop.get().toSeconds());
-                    	}
-                        
-                    });
-                }
-                
-                
-                /*
-                animationProgress.valueProperty().addListener((l)->{
-                	universe.playTransitionsFrom(animationProgress.getValue());
+                universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
+                    animationProgress.setValue(newValue.toSeconds());
                 });
-                
-                */
-                
-                
-                
 
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
 
@@ -253,13 +243,10 @@ public class MainWindow {
      */
     @FXML
     private void stopSimulation(MouseEvent event) {
-        Platform.runLater(() -> {
-            universe.stopTransitions();
-        });
+        universe.getSimulation().stopSimulation();
 
         simulationRunning = false;
         playButton.setVisible(true);
-        pauseButton.setVisible(false);
         animationProgress.setValue(0.0);
     }
 
@@ -271,8 +258,21 @@ public class MainWindow {
     @FXML
     private void toggleSimulation(MouseEvent event) {
         simulationRunning = !simulationRunning;
+        Simulation sim = universe.getSimulation();
 
         if(simulationRunning) {
+            // Reinitialisation de l'animation si l'utiliseur clique sur
+            // le bouton play alors que celle-ci est deja terminee
+            if(simulationFinished) {
+                simulationFinished = false;
+                simulationRunning = false;
+
+                sim.stopSimulation();
+                animationProgress.setValue(0.0);
+                return;
+            }
+
+            // Verification de la valeur du champ de duree
             if(!durationFieldControl.isValid()) {
                 durationFieldControl.showError();
                 return;
@@ -280,24 +280,22 @@ public class MainWindow {
 
             durationFieldControl.hideError();
             animationProgress.setMax(durationFieldControl.getValue());
-            Platform.runLater(() -> {
-                universe.setSimulationDuration(durationFieldControl.getValue());
-                universe.playTransitionsFromStart();
-            });
+
+            sim.setDuration(Duration.seconds(durationFieldControl.getValue()));
+            sim.play();
         }
         else {
-            Platform.runLater(() -> {
-                universe.pauseTransitions();
-            });
+            sim.pause();
         }
 
         playButton.setVisible(!playButton.isVisible());
-        pauseButton.setVisible(!pauseButton.isVisible());
     }
 
     @FXML
     private void updateSimulationPosition(MouseEvent event) {
-        universe.playTransitionsFrom(animationProgress.getValue());
+        Platform.runLater(() -> {
+            universe.getSimulation().setTimePosition((int) animationProgress.getValue());
+        });
     }
 
 }

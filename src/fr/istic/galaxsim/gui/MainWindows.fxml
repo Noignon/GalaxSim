@@ -140,14 +140,14 @@
                               <Insets bottom="3.0" left="5.0" />
                            </VBox.margin>
                         </Label>
-                        <TextField fx:id="durationField" maxWidth="1.7976931348623157E308" text="30">
+                        <TextField fx:id="durationField" maxWidth="1.7976931348623157E308" text="10">
                            <VBox.margin>
                               <Insets bottom="10.0" left="5.0" right="5.0" />
                            </VBox.margin>
                         </TextField>
                         <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS" />
+                              <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
                               <StackPane maxHeight="18.0" maxWidth="18.0" minHeight="18.0" minWidth="18.0" prefHeight="18.0" prefWidth="18.0">
                                  <children>
                                     <ImageView fx:id="playButton" fitHeight="15018.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true">
