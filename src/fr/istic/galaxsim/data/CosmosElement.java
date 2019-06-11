@@ -17,12 +17,12 @@ public abstract class CosmosElement{
 	/**
 	 * les coordonnées du corps dans le temps (indice = temps)
 	 */
-	private ArrayList<Coordinate> coordinatesInTime = new ArrayList<Coordinate>();  
+	private ArrayList<Vector> coordinatesInTime = new ArrayList<Vector>();  
 	
 	/**
 	 * les vitesses du corps dans le temps (indice = temps)
 	 */
-	private ArrayList<Double> velocitiesInTime = new ArrayList<Double>(); 
+	private ArrayList<Vector> velocitiesInTime = new ArrayList<Vector>(); 
 	
 	/**
 	 * l'identifiant
@@ -81,14 +81,14 @@ public abstract class CosmosElement{
 	/**
 	 * methode permettant d'ajouter une coordonnée à la liste
 	 */
-	public void addCoordinate(Coordinate coordinate) {
+	public void addCoordinate(Vector coordinate) {
 		this.coordinatesInTime.add(coordinate);
 	}
 	
 	/**
 	 * methode permettant d'ajouter une vitesse à la liste
 	 */
-	public void addVelocity(double velocity) {
+	public void addVelocity(Vector velocity) {
 		this.velocitiesInTime.add(velocity);
 	}
 	
@@ -96,21 +96,21 @@ public abstract class CosmosElement{
 	 * methode permettant de supprimer toutes les coordonnées
 	 */
 	public void removeAllCoordinate(){
-		this.coordinatesInTime = new ArrayList<Coordinate>();
+		this.coordinatesInTime = new ArrayList<Vector>();
 	}
 	
 	/**
 	 * methode permettant de supprimer toutes les vitesses
 	 */
 	public void removeAllVelocities(){
-		this.velocitiesInTime = new ArrayList<Double>();
+		this.velocitiesInTime = new ArrayList<Vector>();
 	}
 	
 	/**
 	 * methode permettant de recuperer une coordonnée dans le temps
 	 * @param time le temps
 	 */
-	public Coordinate getCoordinate(int time){
+	public Vector getCoordinate(int time){
 		if (time >= 0 && time < this.coordinatesInTime.size()){
 			return this.coordinatesInTime.get(time);
 		}
@@ -121,11 +121,11 @@ public abstract class CosmosElement{
 	 * methode permettant de recuperer une vitesse dans le temps
 	 * @param time le temps
 	 */
-	public double getVelocity(int time){
+	public Vector getVelocity(int time){
 		if (time >= 0 && time < this.velocitiesInTime.size()){
 			return this.velocitiesInTime.get(time);
 		}
-		return 0;
+		return null;
 	}
 	
 	/**
@@ -151,7 +151,15 @@ public abstract class CosmosElement{
 	public int getIdent() {
 		return ident;
 	}
-
+	
+	/**
+	 * setter ident
+	 * @param ident
+	 */
+	public void setIdent(int ident) {
+		this.ident = ident;
+	}
+	
 	/**
 	 * getter distance
 	 * @return la distance

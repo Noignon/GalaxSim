@@ -5,7 +5,7 @@ package fr.istic.galaxsim.data;
  * @author anaofind
  *
  */
-public class Coordinate {
+public class Vector {
 	
 	/**
 	 * coordonnée x
@@ -28,7 +28,7 @@ public class Coordinate {
 	 * @param y la coordonnée y
 	 * @param z la coordonnée z
 	 */
-	public Coordinate(double x, double y, double z){
+	public Vector(double x, double y, double z){
 		this.x = x;
 		this.y = y;
 		this.z = z;

@@ -254,7 +254,7 @@ public class Filter {
 		boolean min = !filterCoordinateXMinActived;
 		boolean max = !filterCoordinateXMaxActived;
 		
-		Coordinate c = cosmosElement.getCoordinate(0);
+		Vector c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateXMinActived) {
@@ -279,7 +279,7 @@ public class Filter {
 		boolean min = !filterCoordinateYMinActived;
 		boolean max = !filterCoordinateYMaxActived;
 		
-		Coordinate c = cosmosElement.getCoordinate(0);
+		Vector c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateYMinActived) {
@@ -304,7 +304,7 @@ public class Filter {
 		boolean min = !filterCoordinateZMinActived;
 		boolean max = !filterCoordinateZMaxActived;
 		
-		Coordinate c = cosmosElement.getCoordinate(0);
+		Vector c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateZMinActived) {
