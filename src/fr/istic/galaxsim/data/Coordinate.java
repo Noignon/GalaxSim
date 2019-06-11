@@ -1,5 +1,7 @@
 package fr.istic.galaxsim.data;
 
+import javafx.geometry.Point3D;
+
 /**
  * classe permettant de définir une coordonnee 3d
  * @author anaofind
@@ -64,6 +66,10 @@ public class Coordinate {
 	 */
 	public boolean isIn(double x1,double x2, double y1,double y2,double z1,double z2) {
 		return x1<=x && x2>=x && y1<= y && y2>=y && z1<=z && z2>=z;
+	}
+
+	public Point3D getPoint3D() {
+		return new Point3D(this.x, this.y, this.z);
 	}
 	
 	

@@ -99,6 +99,12 @@ public class Path3DTransition extends Transition {
         }
     }
     
+    
+    
+    /**
+     * réinitialise la transition à un temps donné
+     * @param temps de la simulation
+     */
     private void resetTargets(int k) {
     	for(int i = k;i < points.size();i++) {
             targets.add(points.get(i));
@@ -107,9 +113,7 @@ public class Path3DTransition extends Transition {
 	}
     
     /**
-     * réinitialise la transition à un temps donné
-     * 
-     * @param temps de la simulation
+     * @param temps auquel se positionner
      */
     public void setTransitionPosition(double t) {
     	
@@ -119,27 +123,25 @@ public class Path3DTransition extends Transition {
     	
         double distanceFromStart =( t * speed) ;
         double d = 0.0;
-        Point3D lastPoint = this.points.get(0);//new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
-        Point3D position = lastPoint;
-        
+        Point3D lastPoint = initialPosition.getPoint3D();
         
         for(Point3D p : points) {
-        	
             d += lastPoint.distance(p);
             if(d >= distanceFromStart) {
-                position = lastPoint;
+            	
                 break;
             }
             lastPoint = p;
         }
         
         
-        resetTargets((int )this.points.indexOf(position)  );
+        
+        resetTargets((int )this.points.indexOf(lastPoint)+1  );
         
 
-        shape.setTranslateX(position.getX());
-        shape.setTranslateY(position.getY());
-        shape.setTranslateZ(position.getZ());
+        shape.setTranslateX(lastPoint.getX());
+        shape.setTranslateY(lastPoint.getY());
+        shape.setTranslateZ(lastPoint.getZ());
         
         this.playFrom(Duration.seconds(t));
         

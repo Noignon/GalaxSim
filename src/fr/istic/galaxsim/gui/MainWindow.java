@@ -217,14 +217,6 @@ public class MainWindow {
                 }
                 
                 
-                /*
-                animationProgress.valueProperty().addListener((l)->{
-                	universe.playTransitionsFrom(animationProgress.getValue());
-                });
-                
-                */
-                
-                
                 
 
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
