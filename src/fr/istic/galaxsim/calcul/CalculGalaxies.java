@@ -72,27 +72,7 @@ public class CalculGalaxies {
 		double x = a.getCoordinate(t).getX() - g1.getCoordinate(t).getX();
 		double y = a.getCoordinate(t).getY() - g1.getCoordinate(t).getY();
 
-		if(x < 0 && y < 0 ) {
-            return -Math.PI + Math.atan(y/x);
-        }
-        
-        if((x > 0 && y < 0) || (x > 0 && y >= 0)) {
-            return Math.atan(y/x);
-        }
-        
-        if(x < 0 && y >= 0) {
-            return Math.PI + Math.atan(y/x);
-        }
-        
-        if(x == 0 && y < 0) {
-            return -Math.PI/2;
-        }
-        
-        if(x == 0 && y >= 0) {
-            return Math.PI/2;
-        }
-        
-        return 0.0;
+		return Math.acos(x/(Math.sqrt((x*x) + (y*y))));
 	}
 
 	/**
@@ -109,27 +89,7 @@ public class CalculGalaxies {
 		double z = a.getCoordinate(t).getZ() - g1.getCoordinate(t).getZ();
 		double hypothenus = Math.sqrt(x + y);
 
-		if(hypothenus < 0 && z < 0 ) {
-            return -Math.PI + Math.atan(z/hypothenus);
-        }
-        
-        if((hypothenus > 0 && z < 0) || (hypothenus > 0 && z >= 0)) {
-            return Math.atan(z/hypothenus);
-        }
-        
-        if(hypothenus < 0 && z >= 0) {
-            return Math.PI + Math.atan(z/hypothenus);
-        }
-        
-        if(hypothenus == 0 && z < 0) {
-            return -Math.PI/2;
-        }
-        
-        if(hypothenus == 0 && z >= 0) {
-            return Math.PI/2;
-        }
-        
-        return 0.0;
+		return Math.acos(hypothenus/(Math.sqrt((hypothenus*hypothenus) + (z*z))));
 	}
 
 	/**
