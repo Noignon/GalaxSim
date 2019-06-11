@@ -120,21 +120,17 @@ public class Path3DTransition extends Transition {
     	targets.clear();
     	
     	
+    	Point3D lastPoint;
+    	int nbPoints = this.points.size();
     	
-        double distanceFromStart =( t * speed) ;
-        double d = 0.0;
-        Point3D lastPoint = initialPosition.getPoint3D();
-        
-        for(Point3D p : points) {
-            d += lastPoint.distance(p);
-            if(d >= distanceFromStart) {
-            	
-                break;
-            }
-            lastPoint = p;
-        }
-        
-        
+    	int mapOnPoints =(int) (t*nbPoints/this.getTotalDuration().toSeconds());
+    	mapOnPoints--;
+    	if(mapOnPoints<0) {
+    		lastPoint = initialPosition.getPoint3D();
+    	}else {
+    		lastPoint = points.get(mapOnPoints);
+    	}
+    	
         
         resetTargets((int )this.points.indexOf(lastPoint)+1  );
         
