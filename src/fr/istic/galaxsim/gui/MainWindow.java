@@ -194,8 +194,7 @@ public class MainWindow {
         parserDataTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, taskEvent -> {
             Platform.runLater(() -> {
                 CalcsProcessing.coordsCalculation();
-                CalcsProcessing.processAmas();
-                CalcsProcessing.processGalaxies();
+                CalcsProcessing.process();
 
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();

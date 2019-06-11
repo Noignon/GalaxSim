@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.gui;
 
-import fr.istic.galaxsim.data.Coordinate;
 import fr.istic.galaxsim.data.CosmosElement;
+import fr.istic.galaxsim.data.Vector;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
@@ -49,13 +49,13 @@ public class SimulationAnimation {
         this.shape = shape;
 
         double d = 0.0;
-        Coordinate firstCoord = element.getCoordinate(0);
+        Vector firstCoord = element.getCoordinate(0);
         positions.add(new Point3D(firstCoord.getX(), firstCoord.getY(), firstCoord.getZ()));
 
         // Calcul de la distance totale entre la premire coordonnee
         // et la derniere. Chaque coordonnee est convertie en Point3D
         for(int i = 1;i < element.getSizeCoordinate();i++) {
-            Coordinate coord = element.getCoordinate(i);
+            Vector coord = element.getCoordinate(i);
             Point3D p = new Point3D(coord.getX(), coord.getY(), coord.getZ());
             d += positions.get(i - 1).distance(p);
             positions.add(p);
