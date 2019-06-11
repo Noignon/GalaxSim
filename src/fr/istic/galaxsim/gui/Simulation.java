@@ -70,7 +70,7 @@ public class Simulation extends Transition {
      *
      * @param t
      */
-    public void setTimePosition(int t) {
+    public void setTimePosition(double t) {
         jumpTo(Duration.seconds(t));
 
         for(SimulationAnimation animation : animations) {

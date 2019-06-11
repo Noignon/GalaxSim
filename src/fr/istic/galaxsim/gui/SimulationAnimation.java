@@ -36,6 +36,11 @@ public class SimulationAnimation {
     private final double totalDistance;
 
     /**
+     * Duree totale de l'animation
+     */
+    private Duration totalDuration;
+
+    /**
      * Vecteur de direction pointant vers le prochain point de l'objet a animer
      */
     private Point3D currentDirection;
@@ -86,6 +91,7 @@ public class SimulationAnimation {
      * @param duration duree de l'animation
      */
     public void updateMoveSpeed(Duration duration) {
+        totalDuration = duration;
         moveSpeed = totalDistance / duration.toSeconds() / Simulation.TICK_RATE;
         updateDirection();
     }
@@ -95,25 +101,17 @@ public class SimulationAnimation {
      * L'objet sera place a un point contenu dans la liste des positions
      *
      * @param t temps ecoule en secondes depuis le debut de l'animation
+     * doit etre compris entre 0 et totalDuration
      */
     public void setTransitionPosition(double t) {
-        double traveledDistance = moveSpeed * t * Simulation.TICK_RATE;
-        Point3D checkpoint = null;
-
-        double d = 0.0;
-        for(positionsIndex = 1;positionsIndex < positions.size();positionsIndex++) {
-            d += positions.get(positionsIndex - 1).distance(positions.get(positionsIndex));
-
-            if(d >= traveledDistance) {
-                checkpoint = positions.get(positionsIndex - 1);
-                break;
-            }
+        if(t < 0 || t > totalDuration.toSeconds()) {
+            return;
         }
 
-        if(checkpoint == null) {
-            positionsIndex = positions.size() - 1;
-            checkpoint = positions.get(positionsIndex);
-        }
+        int checkpointIndex = (int) (t * positions.size() / totalDuration.toSeconds());
+        checkpointIndex = Math.max(checkpointIndex - 1, 0);
+
+        Point3D checkpoint = positions.get(checkpointIndex);
 
         shape.setTranslateX(checkpoint.getX());
         shape.setTranslateY(checkpoint.getY());
