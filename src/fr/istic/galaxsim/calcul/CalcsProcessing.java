@@ -1,16 +1,42 @@
 package fr.istic.galaxsim.calcul;
 
 import fr.istic.galaxsim.data.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.concurrent.Task;
 
-public class CalcsProcessing {
+public class CalcsProcessing extends Task {
 
 	private static final int T = 10;
 
-	public static void process() {
-		// Cette ligne ne sert theoriquement pas
-		// DataBase.sortAmas(DataBase.SORTING_MASS, true);
+	/**
+	 * Propriete d'avancement mise a jour apres chaque element traite
+	 */
+	public final DoubleProperty progressProperty = new SimpleDoubleProperty();
+
+	/**
+	 * Nombre d'elements a traiter
+	 */
+	private int elementsNumber;
+
+	/**
+	 * Nombre d'elements traites
+	 */
+	private int processedElements = 0;
+
+	@Override
+	protected Object call() throws Exception {
+		progressProperty.set(0.0);
 
 		Amas[] amas = DataBase.getAllAmas();
+		Galaxy[] galaxies = DataBase.getAllGalaxies();
+
+		// Calcul du nombre d'elements a traiter :
+		// chaque amas / galaxie possede T coordonnees
+		elementsNumber = T * (DataBase.getAllAmas().length + DataBase.getAllGalaxies().length);
+
+		// Calcul des coordonnees initiales
+		initialCoordsCalculation();
 
 		// boucle pour le nombre d'intervalle de coordonnees
 		for (int t = 0; t < T; t++) {
@@ -36,6 +62,7 @@ public class CalcsProcessing {
 					}
 				}
 				CalculAmas.coordByTime(a1, sumForceX, sumForceY, sumForceZ, t);
+				increaseProgress();
 			}
 
 			// boucle pour traiter chaque galaxies
@@ -56,11 +83,22 @@ public class CalcsProcessing {
 					}
 				}
 				CalculGalaxies.coordByTime(g, sumForceX, sumForceY, sumForceZ, t);
+				increaseProgress();
 			}
 		}
+
+		return null;
 	}
 
-	public static void coordsCalculation() {
+	/**
+	 * Met a jour la progression de la tache
+	 * La valeur de processedElements est incrementee.
+	 */
+	private void increaseProgress() {
+		progressProperty.setValue(++processedElements / (double) elementsNumber);
+	}
+
+	private void initialCoordsCalculation() {
 		DataBase.sortAmas(DataBase.SORTING_MASS, true);
 		for (Galaxy g : DataBase.getAllGalaxies()) {
 			double Vx = CalculGalaxies.velocityX(g);
@@ -78,4 +116,5 @@ public class CalcsProcessing {
 			CalculAmas.calculCoordInit(a);
 		}
 	}
+
 }

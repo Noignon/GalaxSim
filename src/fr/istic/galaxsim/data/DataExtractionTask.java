@@ -19,7 +19,7 @@ public class DataExtractionTask extends Task<DataFileType> {
     private final ArrayList<DoubleFieldControl> coordsControls;
 
     private ParserCosmosDatas parser;
-    public final DoubleProperty progressProperty;
+    public final DoubleProperty progressProperty = new SimpleDoubleProperty();
 
     /**
      * Tache permettant d'extraire les donnees du fichier specifie en appliquant des filtres optionnels
@@ -31,7 +31,7 @@ public class DataExtractionTask extends Task<DataFileType> {
      * @param uncertaintyFieldControl controleur de champ du filtre de marge d'erreur
      * @param coordsControls controleurs des champs de masquage de coordonnees
      */
-    public DataExtractionTask(String typeDescription, String filePath, IntegerFieldControl distanceFieldControl, IntegerFieldControl massFieldControl, DoubleFieldControl uncertaintyFieldControl, ArrayList<DoubleFieldControl> coordsControls) {
+    public DataExtractionTask(/*DoubleProperty progressProperty, */String typeDescription, String filePath, IntegerFieldControl distanceFieldControl, IntegerFieldControl massFieldControl, DoubleFieldControl uncertaintyFieldControl, ArrayList<DoubleFieldControl> coordsControls) {
         super();
         this.dataType = DataFileType.getTypeFromDescription(typeDescription);
         this.filePath = filePath;
@@ -39,8 +39,6 @@ public class DataExtractionTask extends Task<DataFileType> {
         this.massFieldControl = massFieldControl;
         this.uncertaintyFieldControl = uncertaintyFieldControl;
         this.coordsControls = coordsControls;
-
-        progressProperty = new SimpleDoubleProperty();
     }
 
     @Override

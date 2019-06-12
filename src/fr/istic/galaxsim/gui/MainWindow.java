@@ -22,6 +22,8 @@ import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainWindow {
 
@@ -33,7 +35,11 @@ public class MainWindow {
     @FXML
     private Label infoLabel;
     @FXML
+    private StackPane progressPane;
+    @FXML
     private ProgressBar progressBar;
+    @FXML
+    private Label progressStatus;
     @FXML
     private BrowseField dataFileField;
     @FXML
@@ -88,7 +94,7 @@ public class MainWindow {
         dataTypeField.setValue(dataTypeField.getItems().get(0));
 
         // La barre de chargement est uniquement affichee lorsque des donnees sont traitees
-        progressBar.setManaged(false);
+        progressPane.setManaged(false);
 
         // Ajout de controles sur les champs pour verifier la validite des donnees
         dataFileFieldControl = new BrowseFieldControl(dataFileField, true);
@@ -167,6 +173,11 @@ public class MainWindow {
 
             playButton.setVisible(true);
         });
+
+        // Affichage de l'avancement de l'animation
+        universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
+            animationProgress.setValue(newValue.toSeconds());
+        });
     }
 
     @FXML
@@ -183,19 +194,37 @@ public class MainWindow {
             return;
         }
 
+        // Affichage de la barre de chargement
+        progressPane.setManaged(true);
+        progressPane.setVisible(true);
+
         DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(),
                                                                     distanceFieldControl, massFieldControl,
                                                                     uncertaintyFieldControl, coordsFilterControls);
 
-        // Mise en relation de l'avancement de l'extraction des donnees avec
-        // la barre de chargement
-        parserDataTask.progressProperty.bindBidirectional(progressBar.progressProperty());
+        CalcsProcessing calcsProcessing = new CalcsProcessing();
+        calcsProcessing.setOnRunning((e) -> {
+            progressStatus.setText("Calcul des coordonnees");
+        });
 
-        parserDataTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, taskEvent -> {
+        /* Mise en relation de la barre de chargement avec l'avancement
+           des 2 taches. Il n'est pas possible de bind deux observeurs sur une
+           meme propriete, c'est pourquoi il faut connecter le premier
+           observeur sur le second */
+        calcsProcessing.progressProperty.bindBidirectional(parserDataTask.progressProperty);
+        progressBar.progressProperty().bindBidirectional(parserDataTask.progressProperty);
+
+        // Utilisation d'un ExecutorService pour executer les taches les
+        // unes apres les autres dans l'ordre
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        progressStatus.setText("Extraction des donnees");
+        executor.submit(parserDataTask);
+        executor.submit(calcsProcessing);
+
+        executor.submit(() -> {
             Platform.runLater(() -> {
-                CalcsProcessing.coordsCalculation();
-                CalcsProcessing.process();
-
+                progressStatus.setText("Creation des elements 3D");
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();
 
@@ -211,29 +240,18 @@ public class MainWindow {
                     }
                 }
 
-                // Affichage de l'avancement de l'animation
-                universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
-                    animationProgress.setValue(newValue.toSeconds());
-                });
-
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
 
                 // Masquage de la barre de chargement
-                progressBar.setManaged(false);
-                progressBar.setVisible(false);
+                progressPane.setManaged(false);
+                progressPane.setVisible(false);
 
                 // Affichage du controle de la simulation
                 dataPane.setVisible(true);
             });
-
         });
 
-        // Lancement de l'extraction des donnees
-        new Thread(parserDataTask).start();
-
-        // Affichage de la barre de chargement
-        progressBar.setManaged(true);
-        progressBar.setVisible(true);
+        executor.shutdown();
     }
 
     /**

@@ -191,6 +191,14 @@
       </SplitPane>
    </center>
    <bottom>
-      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" BorderPane.alignment="CENTER" />
+      <StackPane fx:id="progressPane" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" />
+            <Label fx:id="progressStatus" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Label">
+               <padding>
+                  <Insets bottom="1.0" />
+               </padding></Label>
+         </children>
+      </StackPane>
    </bottom>
 </BorderPane>
