@@ -1,26 +1,24 @@
 package fr.istic.galaxsim.gui;
 
-import fr.istic.galaxsim.calcul.Traitement;
+import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SubScene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainWindow {
 
@@ -28,14 +26,21 @@ public class MainWindow {
     @FXML
     private StackPane pane3D;
     @FXML
+    private VBox leftPane;
+    @FXML
     private ChoiceBox<String> dataTypeField;
     @FXML
     private Label infoLabel;
     @FXML
+    private StackPane progressPane;
+    @FXML
     private ProgressBar progressBar;
     @FXML
+    private Label progressStatus;
+    @FXML
     private BrowseField dataFileField;
-
+    @FXML
+    private VBox dataPane;
     @FXML
     private CosmosElementInfos cosmosElementInfos;
 
@@ -49,6 +54,18 @@ public class MainWindow {
     @FXML
     private GridPane coordsFilterPane;
 
+    // Controles de l'animation
+    @FXML
+    private Slider animationProgress;
+    @FXML
+    private ImageView playButton;
+    @FXML
+    private ImageView pauseButton;
+    @FXML
+    private ImageView stopButton;
+    @FXML
+    private TextField durationField;
+
     private Universe universe;
 
     // Controleurs de valeur pour les filtres
@@ -57,6 +74,11 @@ public class MainWindow {
     private IntegerFieldControl massFieldControl;
     private DoubleFieldControl uncertaintyFieldControl;
     private ArrayList<DoubleFieldControl> coordsFilterControls = new ArrayList<>();
+
+    private IntegerFieldControl durationFieldControl;
+
+    private boolean simulationFinished = false;
+    private boolean simulationRunning = false;
 
     public MainWindow(){
 
@@ -69,7 +91,7 @@ public class MainWindow {
         dataTypeField.setValue(dataTypeField.getItems().get(0));
 
         // La barre de chargement est uniquement affichee lorsque des donnees sont traitees
-        progressBar.setManaged(false);
+        progressPane.setManaged(false);
 
         // Ajout de controles sur les champs pour verifier la validite des donnees
         dataFileFieldControl = new BrowseFieldControl(dataFileField, true);
@@ -104,7 +126,7 @@ public class MainWindow {
         Rotate ry = new Rotate(0, Rotate.Y_AXIS);
         rx.angleProperty().bind(universe.rotateX.angleProperty());
         ry.angleProperty().bind(universe.rotateY.angleProperty());
-        axes.getTransforms().addAll(new Translate(), rx, ry);
+        axes.getTransforms().addAll(rx, ry);
 
         // Creation de la camera
         PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -113,14 +135,18 @@ public class MainWindow {
         camera.setNearClip(1);
 
         // Creation de la scene contenant la simulation
-        SubScene simScene = new SubScene(sceneRoot, 1, 1);
+        SubScene simScene = new SubScene(sceneRoot, 1, 1, true, SceneAntialiasing.BALANCED);
         simScene.setCamera(camera);
         // La scene possede la meme taille que son pere (pane3d)
         simScene.widthProperty().bind(pane3D.widthProperty());
         simScene.heightProperty().bind(pane3D.heightProperty());
+        simScene.setManaged(false);
 
         sceneRoot.getChildren().addAll(universe, axes);
-        pane3D.getChildren().addAll(simScene);
+        pane3D.getChildren().add(simScene);
+
+        // Le panneau de gauche n'a pas besoin d'etre agrandi
+        SplitPane.setResizableWithParent(leftPane, false);
 
         // Positionnement du panneau en bas a droite de la fenetre
         cosmosElementInfos.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -133,6 +159,26 @@ public class MainWindow {
         // La fenetre doit etre affichee au premier plan
         cosmosElementInfos.setViewOrder(-1.0);
         cosmosElementInfos.setVisible(false);
+
+        durationFieldControl = new IntegerFieldControl(durationField, "duree", true);
+        durationFieldControl.getBoundsControl().setLowerBound(1);
+        dataPane.setVisible(false);
+
+        playButton.visibleProperty().addListener((obs, oldValue, newValue) -> {
+            pauseButton.setVisible(oldValue);
+        });
+
+        universe.getSimulation().setOnFinished((event) -> {
+            simulationFinished = true;
+            simulationRunning = false;
+
+            playButton.setVisible(true);
+        });
+
+        // Affichage de l'avancement de l'animation
+        universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
+            animationProgress.setValue(newValue.toSeconds());
+        });
     }
 
     @FXML
@@ -149,20 +195,37 @@ public class MainWindow {
             return;
         }
 
+        // Affichage de la barre de chargement
+        progressPane.setManaged(true);
+        progressPane.setVisible(true);
+
         DataExtractionTask parserDataTask = new DataExtractionTask(dataTypeField.getValue(), dataFileField.getPath(),
                                                                     distanceFieldControl, massFieldControl,
                                                                     uncertaintyFieldControl, coordsFilterControls);
 
-        // Mise en relation de l'avancement de l'extraction des donnees avec
-        // la barre de chargement
-        parserDataTask.progressProperty.bindBidirectional(progressBar.progressProperty());
+        CalcsProcessing calcsProcessing = new CalcsProcessing();
+        calcsProcessing.setOnRunning((e) -> {
+            progressStatus.setText("Calcul des coordonnees");
+        });
 
-        parserDataTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, taskEvent -> {
+        /* Mise en relation de la barre de chargement avec l'avancement
+           des 2 taches. Il n'est pas possible de bind deux observeurs sur une
+           meme propriete, c'est pourquoi il faut connecter le premier
+           observeur sur le second */
+        calcsProcessing.progressProperty.bindBidirectional(parserDataTask.progressProperty);
+        progressBar.progressProperty().bindBidirectional(parserDataTask.progressProperty);
+
+        // Utilisation d'un ExecutorService pour executer les taches les
+        // unes apres les autres dans l'ordre
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        progressStatus.setText("Extraction des donnees");
+        executor.submit(parserDataTask);
+        executor.submit(calcsProcessing);
+
+        executor.submit(() -> {
             Platform.runLater(() -> {
-                Traitement.calculCoordonnee();
-                Traitement.traitementAmas();
-                Traitement.traitementGalaxies();
-
+                progressStatus.setText("Creation des elements 3D");
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();
 
@@ -181,18 +244,76 @@ public class MainWindow {
                 infoLabel.setText(String.format("Il y a %d amas et %d galaxies dans le fichier", DataBase.getNumberAmas(), DataBase.getNumberGalaxies()));
 
                 // Masquage de la barre de chargement
-                progressBar.setManaged(false);
-                progressBar.setVisible(false);
-            });
+                progressPane.setManaged(false);
+                progressPane.setVisible(false);
 
+                // Affichage du controle de la simulation
+                dataPane.setVisible(true);
+            });
         });
 
-        // Lancement de l'extraction des donnees
-        new Thread(parserDataTask).start();
+        executor.shutdown();
+    }
 
-        // Affichage de la barre de chargement
-        progressBar.setManaged(true);
-        progressBar.setVisible(true);
+    /**
+     * Arret de la simulation
+     * @param event
+     */
+    @FXML
+    private void stopSimulation(MouseEvent event) {
+        universe.getSimulation().stopSimulation();
+
+        simulationRunning = false;
+        playButton.setVisible(true);
+        animationProgress.setValue(0.0);
+    }
+
+    /**
+     * Mise en lecture ou en pause de la simulation
+     *
+     * @param event
+     */
+    @FXML
+    private void toggleSimulation(MouseEvent event) {
+        simulationRunning = !simulationRunning;
+        Simulation sim = universe.getSimulation();
+
+        if(simulationRunning) {
+            // Reinitialisation de l'animation si l'utiliseur clique sur
+            // le bouton play alors que celle-ci est deja terminee
+            if(simulationFinished) {
+                simulationFinished = false;
+                simulationRunning = false;
+
+                sim.stopSimulation();
+                animationProgress.setValue(0.0);
+                return;
+            }
+
+            // Verification de la valeur du champ de duree
+            if(!durationFieldControl.isValid()) {
+                durationFieldControl.showError();
+                return;
+            }
+
+            durationFieldControl.hideError();
+            animationProgress.setMax(durationFieldControl.getValue());
+
+            sim.setDuration(Duration.seconds(durationFieldControl.getValue()));
+            sim.play();
+        }
+        else {
+            sim.pause();
+        }
+
+        playButton.setVisible(!playButton.isVisible());
+    }
+
+    @FXML
+    private void updateSimulationPosition(MouseEvent event) {
+        Platform.runLater(() -> {
+            universe.getSimulation().setTimePosition((int) animationProgress.getValue());
+        });
     }
 
 }

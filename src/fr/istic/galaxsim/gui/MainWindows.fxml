@@ -8,11 +8,16 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -21,7 +26,7 @@
    <center>
       <SplitPane dividerPositions="0.33" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
         <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="leftPane" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Paramètres de la simulation" textAlignment="CENTER">
                      <VBox.margin>
@@ -116,14 +121,59 @@
                   </DropdownPane>
                   <Button alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#startDataAnalysis" text="Appliquer">
                      <VBox.margin>
-                        <Insets left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="20.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </Button>
-                  <Label fx:id="infoLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" textAlignment="CENTER">
-                     <VBox.margin>
-                        <Insets top="15.0" />
-                     </VBox.margin>
-                  </Label>
+                  <VBox fx:id="dataPane" maxWidth="1.7976931348623157E308">
+                     <children>
+                        <Separator prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <Label fx:id="infoLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" textAlignment="CENTER">
+                           <VBox.margin>
+                              <Insets bottom="13.0" />
+                           </VBox.margin></Label>
+                        <Label text="Durée de l'animation (en secondes)">
+                           <VBox.margin>
+                              <Insets bottom="3.0" left="5.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TextField fx:id="durationField" maxWidth="1.7976931348623157E308" text="10">
+                           <VBox.margin>
+                              <Insets bottom="10.0" left="5.0" right="5.0" />
+                           </VBox.margin>
+                        </TextField>
+                        <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
+                              <StackPane maxHeight="18.0" maxWidth="18.0" minHeight="18.0" minWidth="18.0" prefHeight="18.0" prefWidth="18.0">
+                                 <children>
+                                    <ImageView fx:id="playButton" fitHeight="15018.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/play.png" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fx:id="pauseButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true" visible="false">
+                                       <image>
+                                          <Image url="@icons/pause.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets left="4.0" />
+                                 </HBox.margin>
+                              </StackPane>
+                              <ImageView fx:id="stopButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#stopSimulation" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/stop.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
                </children>
                <opaqueInsets>
                   <Insets />
@@ -141,6 +191,14 @@
       </SplitPane>
    </center>
    <bottom>
-      <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" BorderPane.alignment="CENTER" />
+      <StackPane fx:id="progressPane" BorderPane.alignment="CENTER">
+         <children>
+            <ProgressBar fx:id="progressBar" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" />
+            <Label fx:id="progressStatus" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Label">
+               <padding>
+                  <Insets bottom="1.0" />
+               </padding></Label>
+         </children>
+      </StackPane>
    </bottom>
 </BorderPane>

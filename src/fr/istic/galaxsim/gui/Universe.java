@@ -1,9 +1,9 @@
 package fr.istic.galaxsim.gui;
 
 import fr.istic.galaxsim.data.Amas;
-import fr.istic.galaxsim.data.Coordinate;
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Galaxy;
+import fr.istic.galaxsim.data.Vector;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -43,6 +43,8 @@ public class Universe extends Group {
 
     private Sphere lastSelectedSphere = null;
     private boolean isLastSelectedGalaxy = false;
+
+    private final Simulation sim = new Simulation();
 
     public Universe(Node parentContainer, CosmosElementInfos cosmosElementInfos) {
         this.cosmosElementInfos = cosmosElementInfos;
@@ -116,6 +118,11 @@ public class Universe extends Group {
         });
     }
 
+    /**
+     * Ajoute un nouvel amas aux elements de l'univers
+     *
+     * @param a amas a ajouter
+     */
     public void addAmas(Amas a) {
     	// la taille des spheres est calculees en fonction de leurs masses
     	// les valeurs des logs ont ete calculees en fonction du max et du min des masses
@@ -125,19 +132,37 @@ public class Universe extends Group {
         s.setMaterial(amasMaterial);
     }
 
+    /**
+     * Ajoute une nouvelle galaxie aux elements de l'univers
+     *
+     * @param g galaxie a ajouter
+     */
     public void addGalaxy(Galaxy g) {
         Sphere s = createCosmosElementSphere(0.4f, g);
         s.setMaterial(galaxyMaterial);
     }
 
+    /**
+     * Supprime tous les elements (amas et galaxies) de l'univers
+     */
     public void clear() {
         elements.getChildren().clear();
     }
 
+    /**
+     * Creer un nouvel element 3D representant un amas ou une galaxie
+     *
+     * L'element reagit au clique gauche de la souris pour afficher ses informations.
+     * Une animation est ajoutee a la simulation pour cet element.
+     *
+     * @param radius rayon de la sphere a creer
+     * @param cosmosElement
+     * @return sphere 3D representant un amas ou une galaxie
+     */
     private Sphere createCosmosElementSphere(double radius, CosmosElement cosmosElement) {
         Sphere s = new Sphere(radius);
 
-        Coordinate coord = cosmosElement.getCoordinate(0);
+        Vector coord = cosmosElement.getCoordinate(0);
         s.setTranslateX(coord.getX());
         s.setTranslateY(coord.getY());
         s.setTranslateZ(coord.getZ());
@@ -171,7 +196,13 @@ public class Universe extends Group {
             lastSelectedSphere = s;
         });
 
+        sim.addAnimation(new SimulationAnimation(s, cosmosElement));
+
         return s;
+    }
+
+    public Simulation getSimulation() {
+        return sim;
     }
 
 }
