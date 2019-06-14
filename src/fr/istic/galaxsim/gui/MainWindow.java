@@ -4,13 +4,9 @@ import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.PerspectiveCamera;
-import javafx.scene.SubScene;
+import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -18,7 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -30,6 +25,8 @@ public class MainWindow {
     // Elements de l'interface graphique
     @FXML
     private StackPane pane3D;
+    @FXML
+    private VBox leftPane;
     @FXML
     private ChoiceBox<String> dataTypeField;
     @FXML
@@ -129,7 +126,7 @@ public class MainWindow {
         Rotate ry = new Rotate(0, Rotate.Y_AXIS);
         rx.angleProperty().bind(universe.rotateX.angleProperty());
         ry.angleProperty().bind(universe.rotateY.angleProperty());
-        axes.getTransforms().addAll(new Translate(), rx, ry);
+        axes.getTransforms().addAll(rx, ry);
 
         // Creation de la camera
         PerspectiveCamera camera = new PerspectiveCamera(true);
@@ -138,14 +135,18 @@ public class MainWindow {
         camera.setNearClip(1);
 
         // Creation de la scene contenant la simulation
-        SubScene simScene = new SubScene(sceneRoot, 1, 1);
+        SubScene simScene = new SubScene(sceneRoot, 1, 1, true, SceneAntialiasing.BALANCED);
         simScene.setCamera(camera);
         // La scene possede la meme taille que son pere (pane3d)
         simScene.widthProperty().bind(pane3D.widthProperty());
         simScene.heightProperty().bind(pane3D.heightProperty());
+        simScene.setManaged(false);
 
         sceneRoot.getChildren().addAll(universe, axes);
-        pane3D.getChildren().addAll(simScene);
+        pane3D.getChildren().add(simScene);
+
+        // Le panneau de gauche n'a pas besoin d'etre agrandi
+        SplitPane.setResizableWithParent(leftPane, false);
 
         // Positionnement du panneau en bas a droite de la fenetre
         cosmosElementInfos.widthProperty().addListener((obs, oldValue, newValue) -> {

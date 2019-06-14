@@ -26,7 +26,7 @@
    <center>
       <SplitPane dividerPositions="0.33" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
         <items>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="leftPane" prefHeight="200.0" prefWidth="100.0">
                <children>
                   <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="Paramètres de la simulation" textAlignment="CENTER">
                      <VBox.margin>
