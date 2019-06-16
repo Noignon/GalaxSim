@@ -58,9 +58,7 @@ public class MainWindow {
     @FXML
     private Slider animationProgress;
     @FXML
-    private ImageView playButton;
-    @FXML
-    private ImageView pauseButton;
+    private ToggleImageButton playPauseButton;
     @FXML
     private ImageView stopButton;
     @FXML
@@ -164,15 +162,11 @@ public class MainWindow {
         durationFieldControl.getBoundsControl().setLowerBound(1);
         dataPane.setVisible(false);
 
-        playButton.visibleProperty().addListener((obs, oldValue, newValue) -> {
-            pauseButton.setVisible(oldValue);
-        });
-
         universe.getSimulation().setOnFinished((event) -> {
             simulationFinished = true;
             simulationRunning = false;
 
-            playButton.setVisible(true);
+            playPauseButton.setFirstButtonVisibility(true);
         });
 
         // Affichage de l'avancement de l'animation
@@ -264,7 +258,7 @@ public class MainWindow {
         universe.getSimulation().stopSimulation();
 
         simulationRunning = false;
-        playButton.setVisible(true);
+        playPauseButton.setFirstButtonVisibility(true);
         animationProgress.setValue(0.0);
     }
 
@@ -306,7 +300,7 @@ public class MainWindow {
             sim.pause();
         }
 
-        playButton.setVisible(!playButton.isVisible());
+        playPauseButton.toggle();
     }
 
     @FXML

@@ -1,5 +1,6 @@
 package fr.istic.galaxsim.gui;
 
+import fr.istic.galaxsim.gui.form.ToggleImageButton;
 import javafx.animation.FadeTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -8,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -20,9 +20,7 @@ public class DropdownPane extends VBox {
     @FXML
     private Label headerLabel;
     @FXML
-    private ImageView hideButton;
-    @FXML
-    private ImageView showButton;
+    private ToggleImageButton dropButton;
 
     // Indique si le composant affiche ou non le contenu
     private BooleanProperty contentHidden;
@@ -96,9 +94,7 @@ public class DropdownPane extends VBox {
             showContent();
         }
 
-        // Affichage du bon icone en masquant celui qui etait affiche
-        hideButton.setVisible(!hideButton.isVisible());
-        showButton.setVisible(!showButton.isVisible());
+        dropButton.toggle();
     }
 
     /**

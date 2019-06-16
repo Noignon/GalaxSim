@@ -3,6 +3,7 @@
 <?import fr.istic.galaxsim.gui.CosmosElementInfos?>
 <?import fr.istic.galaxsim.gui.DropdownPane?>
 <?import fr.istic.galaxsim.gui.form.BrowseField?>
+<?import fr.istic.galaxsim.gui.form.ToggleImageButton?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
@@ -148,23 +149,7 @@
                         <HBox maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Slider fx:id="animationProgress" majorTickUnit="5.0" max="10.0" onMouseClicked="#updateSimulationPosition" onMouseDragged="#updateSimulationPosition" showTickLabels="true" showTickMarks="true" HBox.hgrow="ALWAYS" />
-                              <StackPane maxHeight="18.0" maxWidth="18.0" minHeight="18.0" minWidth="18.0" prefHeight="18.0" prefWidth="18.0">
-                                 <children>
-                                    <ImageView fx:id="playButton" fitHeight="15018.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/play.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fx:id="pauseButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" pickOnBounds="true" preserveRatio="true" visible="false">
-                                       <image>
-                                          <Image url="@icons/pause.png" />
-                                       </image>
-                                    </ImageView>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets left="4.0" />
-                                 </HBox.margin>
-                              </StackPane>
+                              <ToggleImageButton fx:id="playPauseButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#toggleSimulation" url1="@icons/play.png" url2="@icons/pause.png" />
                               <ImageView fx:id="stopButton" fitHeight="18.0" fitWidth="18.0" onMouseClicked="#stopSimulation" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@icons/stop.png" />
