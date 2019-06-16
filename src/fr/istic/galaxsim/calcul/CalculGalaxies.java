@@ -11,13 +11,6 @@ public class CalculGalaxies {
 	 * amas de galaxies
 	 *
 	 */
-	
-	
-	private static final double Time = 2 * Math.pow(10, 16);
-	private static final double G = 6.67408 * Math.pow(10, -11);
-	private static final double MsolaireEnKilo = 1.991 * Math.pow(10, 42);
-	private static final double MparsecEnMetre = 3.086 * Math.pow(10, 22);
-
 
 	/**
 	 * calcul des coordonnee de la galaxie g1 au temps t=0
@@ -53,9 +46,9 @@ public class CalculGalaxies {
 		double distance = x + y + z;
 		
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		distance = distance * MparsecEnMetre * MparsecEnMetre;
-		double m1 = a.getMass() * MsolaireEnKilo;
-		double F = (G * m1) / distance;
+		distance = distance * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
+		double m1 = a.getMass() * CalcsProcessing.MsolaireEnKilo;
+		double F = (CalcsProcessing.G * m1) / distance;
 
 		return F;
 	}
@@ -72,7 +65,27 @@ public class CalculGalaxies {
 		double x = a.getCoordinate(t).getX() - g1.getCoordinate(t).getX();
 		double y = a.getCoordinate(t).getY() - g1.getCoordinate(t).getY();
 
-		return Math.acos(x/(Math.sqrt((x*x) + (y*y))));
+		if(x < 0 && y < 0 ) {
+            return -Math.PI + Math.atan(y/x);
+        }
+        
+        if((x > 0 && y < 0) || (x > 0 && y >= 0)) {
+            return Math.atan(y/x);
+        }
+        
+        if(x < 0 && y > 0) {
+            return Math.PI/2 + Math.atan((-x)/y);
+        }
+        
+        if(x == 0 && y < 0) {
+            return -Math.PI/2;
+        }
+        
+        if(x == 0 && y > 0) {
+            return Math.PI/2;
+        }
+        
+        return 0.0;
 	}
 
 	/**
@@ -89,7 +102,27 @@ public class CalculGalaxies {
 		double z = a.getCoordinate(t).getZ() - g1.getCoordinate(t).getZ();
 		double hypothenus = Math.sqrt(x + y);
 
-		return Math.acos(hypothenus/(Math.sqrt((hypothenus*hypothenus) + (z*z))));
+		if(hypothenus < 0 && z < 0 ) {
+            return -Math.PI + Math.atan(z/hypothenus);
+        }
+        
+        if((hypothenus > 0 && z < 0) || (hypothenus > 0 && z >= 0)) {
+            return Math.atan(z/hypothenus);
+        }
+        
+        if(hypothenus < 0 && z > 0) {
+            return Math.PI/2 + Math.atan((-hypothenus)/z);
+        }
+        
+        if(hypothenus == 0 && z < 0) {
+            return -Math.PI/2;
+        }
+        
+        if(hypothenus == 0 && z > 0) {
+            return Math.PI/2;
+        }
+        
+        return 0.0;
 	}
 
 	/**
@@ -203,7 +236,7 @@ public class CalculGalaxies {
 		double Vy = g1.getVelocity(t).getY();
 		double Vz = g1.getVelocity(t).getZ();
 
-		double time = t * Time;
+		double time = t * CalcsProcessing.Time;
 		
 		Vx = (Ax * time) * 1000 + Vx;
 		Vy = (Ay * time) * 1000 + Vy;
@@ -211,7 +244,7 @@ public class CalculGalaxies {
 		
 		g1.addVelocity(new Vector(Vx, Vy, Vz));
 
-		double kilometreEnMparsec = 1000 / MparsecEnMetre;
+		double kilometreEnMparsec = 1000 / CalcsProcessing.MparsecEnMetre;
 		
 		double x = (time * Vx) * kilometreEnMparsec + g1.getCoordinate(t).getX();
 		double y = (time * Vy) * kilometreEnMparsec + g1.getCoordinate(t).getY();
