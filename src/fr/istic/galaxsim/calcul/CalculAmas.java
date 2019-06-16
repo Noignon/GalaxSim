@@ -4,7 +4,6 @@ import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Vector;
 
 public class CalculAmas {
-
 	/**
 	 *
 	 * Classe permettant de realiser les calculs de position pour les galaxies et
@@ -12,12 +11,6 @@ public class CalculAmas {
 	 *
 	 */
 
-	private static final double Time = 2 * Math.pow(10, 16);
-	private static final double G = 6.67408 * Math.pow(10, -11);
-	private static final double MsolaireEnKilo = 1.991 * Math.pow(10, 42);
-	private static final double MparsecEnMetre = 3.086 * Math.pow(10, 22);
-	
-	
 	/**
 	 * Calcul des coordonnees de l'amas au temps 0
 	 * 
@@ -52,10 +45,10 @@ public class CalculAmas {
 		double distance = x + y + z;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		distance = distance * MparsecEnMetre * MparsecEnMetre;
-		double m1 = a1.getMass() * MsolaireEnKilo;
-		double m2 = a2.getMass() * MsolaireEnKilo;
-		double F = (G * m1 * m2) / distance;
+		distance = distance * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
+		double m1 = a1.getMass() * CalcsProcessing.MsolaireEnKilo;
+		double m2 = a2.getMass() * CalcsProcessing.MsolaireEnKilo;
+		double F = (CalcsProcessing.G * m1 * m2) / distance;
 
 		return F;
 	}
@@ -72,7 +65,27 @@ public class CalculAmas {
         double x = a2.getCoordinate(t).getX() - a1.getCoordinate(t).getX();
         double y = a2.getCoordinate(t).getY() - a1.getCoordinate(t).getY();
         
-        return Math.acos(x/(Math.sqrt((x*x) + (y*y))));
+        if(x < 0 && y < 0 ) {
+            return -Math.PI + Math.atan(y/x);
+        }
+        
+        if((x > 0 && y < 0) || (x > 0 && y >= 0)) {
+            return Math.atan(y/x);
+        }
+        
+        if(x < 0 && y > 0) {
+            return Math.PI/2 + Math.atan((-x)/y);
+        }
+        
+        if(x == 0 && y < 0) {
+            return -Math.PI/2;
+        }
+        
+        if(x == 0 && y > 0) {
+            return Math.PI/2;
+        }
+        
+        return 0.0;
     }
 
 	/**
@@ -89,7 +102,27 @@ public class CalculAmas {
 		double z = a1.getCoordinate(t).getZ() - a2.getCoordinate(t).getZ();
 		double hypothenus = Math.sqrt(x + y);
 
-		return Math.acos(hypothenus/(Math.sqrt((hypothenus*hypothenus) + (z*z))));
+		if(hypothenus < 0 && z < 0 ) {
+            return -Math.PI + Math.atan(z/hypothenus);
+        }
+        
+        if((hypothenus > 0 && z < 0) || (hypothenus > 0 && z >= 0)) {
+            return Math.atan(z/hypothenus);
+        }
+        
+        if(hypothenus < 0 && z > 0) {
+            return Math.PI/2 + Math.atan((-hypothenus)/z);
+        }
+        
+        if(hypothenus == 0 && z < 0) {
+            return -Math.PI/2;
+        }
+        
+        if(hypothenus == 0 && z > 0) {
+            return Math.PI/2;
+        }
+        
+        return 0.0;
 	}
 
 	/**
@@ -203,7 +236,7 @@ public class CalculAmas {
 		double Vy = a1.getVelocity(t).getY();
 		double Vz = a1.getVelocity(t).getZ();
 
-		double time = t * Time;
+		double time = t * CalcsProcessing.Time;
 		
 		Vx = (Ax * time) * 1000 + Vx;
 		Vy = (Ay * time) * 1000 + Vy;
@@ -211,7 +244,7 @@ public class CalculAmas {
 		
 		a1.addVelocity(new Vector(Vx, Vy, Vz));
 
-		double kilometreEnMparsec = 1000 / MparsecEnMetre;
+		double kilometreEnMparsec = 1000 / CalcsProcessing.MparsecEnMetre;
 		
 		double x = (time * Vx) * kilometreEnMparsec + a1.getCoordinate(t).getX();
 		double y = (time * Vy) * kilometreEnMparsec + a1.getCoordinate(t).getY();
