@@ -118,7 +118,7 @@ public class MainWindow {
         universe = new Universe(pane3D, cosmosElementInfos);
         universe.setTranslateZ(450);
 
-        AxesIndicator axes = new AxesIndicator(0.8f);
+        AxesIndicator axes = new AxesIndicator(4f);
         //Translate t = new Translate(-50, 70, -80);
         Rotate rx = new Rotate(0, Rotate.X_AXIS);
         Rotate ry = new Rotate(0, Rotate.Y_AXIS);
@@ -140,8 +140,21 @@ public class MainWindow {
         simScene.heightProperty().bind(pane3D.heightProperty());
         simScene.setManaged(false);
 
-        sceneRoot.getChildren().addAll(universe, axes);
-        pane3D.getChildren().add(simScene);
+        sceneRoot.getChildren().addAll(universe);
+        
+        pane3D.heightProperty().addListener(
+        		(observable, oldvalue, newvalue) ->
+        		
+        		axes.setTranslateY(((double)newvalue)/2 -50 )
+        		);
+        
+        pane3D.widthProperty().addListener(
+        		(observable, oldvalue, newvalue) ->
+        		axes.setTranslateX(-((double)newvalue)/2 +50 )
+        		);
+        
+        
+        pane3D.getChildren().addAll(simScene, axes);
 
         // Le panneau de gauche n'a pas besoin d'etre agrandi
         SplitPane.setResizableWithParent(leftPane, false);
