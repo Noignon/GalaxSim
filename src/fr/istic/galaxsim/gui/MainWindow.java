@@ -4,6 +4,7 @@ import fr.istic.galaxsim.calcul.CalcsProcessing;
 import fr.istic.galaxsim.data.*;
 import fr.istic.galaxsim.gui.form.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.*;
@@ -133,7 +134,7 @@ public class MainWindow {
         camera.setNearClip(1);
 
         // Creation de la scene contenant la simulation
-        SubScene simScene = new SubScene(sceneRoot, 1, 1, true, SceneAntialiasing.BALANCED);
+        SubScene simScene = new SubScene(sceneRoot, 1, 1, false, SceneAntialiasing.BALANCED);
         simScene.setCamera(camera);
         // La scene possede la meme taille que son pere (pane3d)
         simScene.widthProperty().bind(pane3D.widthProperty());
@@ -142,30 +143,23 @@ public class MainWindow {
 
         sceneRoot.getChildren().addAll(universe);
         
-        pane3D.heightProperty().addListener(
-        		(observable, oldvalue, newvalue) ->
-        		
-        		axes.setTranslateY(((double)newvalue)/2 -50 )
-        		);
-        
-        pane3D.widthProperty().addListener(
-        		(observable, oldvalue, newvalue) ->
-        		axes.setTranslateX(-((double)newvalue)/2 +50 )
-        		);
-        
-        
         pane3D.getChildren().addAll(simScene, axes);
 
         // Le panneau de gauche n'a pas besoin d'etre agrandi
         SplitPane.setResizableWithParent(leftPane, false);
 
-        // Positionnement du panneau en bas a droite de la fenetre
-        cosmosElementInfos.widthProperty().addListener((obs, oldValue, newValue) -> {
+        ChangeListener sizeListener = (obs, oldValue, newValue) -> {
+            // Positionnement du panneau en bas a droite de la fenetre
             cosmosElementInfos.setTranslateX((pane3D.getWidth() - cosmosElementInfos.getWidth()) / 2 - 7);
-        });
-        cosmosElementInfos.heightProperty().addListener((obs, oldValue, newValue) -> {
             cosmosElementInfos.setTranslateY((pane3D.getHeight() - cosmosElementInfos.getHeight()) / 2 - 7);
-        });
+
+            // Positionnement de l'indicateur d'axe en bas a gauche de la fenetre
+            axes.setTranslateX(-pane3D.getWidth() / 2 + 50);
+            axes.setTranslateY(pane3D.getHeight() / 2 - 50);
+        };
+
+        pane3D.widthProperty().addListener(sizeListener);
+        pane3D.heightProperty().addListener(sizeListener);
 
         // La fenetre doit etre affichee au premier plan
         cosmosElementInfos.setViewOrder(-1.0);

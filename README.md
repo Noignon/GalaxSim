@@ -37,6 +37,18 @@ graphiques en 2d.<br>
 Aucun champ n'est obligatoire mais la valeur doit être un nombre entier compris entre
 -100 et 100 inclus.
 
+## Simulation
+
+La partie simulation de l'application permet de visualiser le mouvement des galaxies...
+
+La duréee de l'animation peut être définie à l'aide du champ situé sur la partie gauche
+de l'application. La modification de la durée entrainera un changement dans la vitesse
+de déplacement des objets.
+
+Il est possible d'afficher des informations sur un amas ou une galaxie en cliquant
+sur l'élément : celui-ci devrait apparaitre avec une couleur bleue et une fenêtre
+s'ouvrira sur la partie droite de l'application.
+
 ## Ressources
 
 * Icones venant du pack [Material Design](https://material.io/tools/icons/?style=baseline) de Google
