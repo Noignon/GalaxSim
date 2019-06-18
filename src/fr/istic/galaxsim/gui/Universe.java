@@ -44,13 +44,15 @@ public class Universe extends Group {
     private Sphere lastSelectedSphere = null;
     private boolean isLastSelectedGalaxy = false;
 
-    private final Simulation sim = new Simulation();
+    private final Simulation sim;
 
     public Universe(Node parentContainer, CosmosElementInfos cosmosElementInfos) {
         this.cosmosElementInfos = cosmosElementInfos;
 
         Box box = new Box(200, 200, 200);
         box.setDrawMode(DrawMode.LINE);
+
+        sim = new Simulation(box.getBoundsInParent());
 
         // Affichage de l'echelle en positionnant les limites du cube
         // en bas a gauche et a droite

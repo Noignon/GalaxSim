@@ -1,6 +1,7 @@
 package fr.istic.galaxsim.gui;
 
 import javafx.animation.Transition;
+import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -17,8 +18,15 @@ public class Simulation extends Transition {
      */
     private ArrayList<SimulationAnimation> animations = new ArrayList<>();
 
-    public Simulation() {
+    /**
+     * Limites du cube representant l'univers
+     */
+    private final Bounds bounds;
+
+    public Simulation(Bounds bounds) {
         super(TICK_RATE);
+
+        this.bounds = bounds;
     }
 
     /**
@@ -42,6 +50,9 @@ public class Simulation extends Transition {
     protected void interpolate(double v) {
         for(SimulationAnimation animation : animations) {
             animation.update();
+
+            // les objets qui sont en-dehors du cube ne sont pas affiches
+            animation.getShape().setVisible(animation.shapeInBounds(bounds));
         }
     }
 
@@ -75,6 +86,7 @@ public class Simulation extends Transition {
 
         for(SimulationAnimation animation : animations) {
             animation.setTransitionPosition(t);
+            animation.getShape().setVisible(animation.shapeInBounds(bounds));
         }
     }
 
@@ -88,6 +100,7 @@ public class Simulation extends Transition {
         stop();
         for(SimulationAnimation animation : animations) {
             animation.resetInitialPosition();
+            animation.getShape().setVisible(animation.shapeInBounds(bounds));
         }
     }
 

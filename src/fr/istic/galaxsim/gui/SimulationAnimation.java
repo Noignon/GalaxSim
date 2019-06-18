@@ -2,6 +2,7 @@ package fr.istic.galaxsim.gui;
 
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Vector;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
@@ -66,6 +67,10 @@ public class SimulationAnimation {
         updateDirection();
     }
 
+    public Shape3D getShape() {
+        return shape;
+    }
+
     private Point3D getShapePosition() {
         return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
     }
@@ -117,6 +122,14 @@ public class SimulationAnimation {
         shape.setTranslateY(checkpoint.getY());
         shape.setTranslateZ(checkpoint.getZ());
         updateDirection();
+    }
+
+    /**
+     * @param b limites de l'objet parent
+     * @return true si l'objet est contenu dans son parent, false sinon
+     */
+    public boolean shapeInBounds(Bounds b) {
+        return shape.getBoundsInParent().intersects(b);
     }
 
     /**
