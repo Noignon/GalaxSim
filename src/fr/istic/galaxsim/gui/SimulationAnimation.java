@@ -2,6 +2,7 @@ package fr.istic.galaxsim.gui;
 
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Vector;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
 import javafx.scene.Group;
@@ -82,9 +83,12 @@ public class SimulationAnimation {
      */
     private Point3D currentDirection;
 
-    public SimulationAnimation(Shape3D shape, Group directionTrail, CosmosElement element) {
+    private final BooleanProperty trailVisibility;
+
+    public SimulationAnimation(Shape3D shape, Group directionTrail, CosmosElement element, BooleanProperty trailVisibility) {
         this.shape = shape;
         this.directionTrail = directionTrail;
+        this.trailVisibility = trailVisibility;
 
         double d = 0.0;
         Vector firstCoord = element.getCoordinate(0);
@@ -142,6 +146,15 @@ public class SimulationAnimation {
 
     private Point3D getShapePosition() {
         return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
+    }
+
+    /**
+     * Masque tous les points de la trainee
+     */
+    public void hideTrail() {
+        for(Node node : directionTrail.getChildren()) {
+            node.setVisible(false);
+        }
     }
 
     /**
@@ -238,7 +251,7 @@ public class SimulationAnimation {
 
         lastTrailDistance += moveSpeed;
 
-        if(lastTrailDistance > 1) {
+        if(trailVisibility.get() && lastTrailDistance > 1) {
             Node s = directionTrail.getChildren().get(nextTrailElement);
             s.setVisible(true);
             setObjectPosition(s, lastTrailPoint);

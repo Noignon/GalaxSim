@@ -64,6 +64,10 @@ public class MainWindow {
     private ImageView stopButton;
     @FXML
     private TextField durationField;
+    @FXML
+    private CheckBox showAxesIndicator;
+    @FXML
+    private CheckBox showTrails;
 
     private Universe universe;
 
@@ -120,7 +124,7 @@ public class MainWindow {
         universe.setTranslateZ(450);
 
         AxesIndicator axes = new AxesIndicator(4f);
-        //Translate t = new Translate(-50, 70, -80);
+        axes.visibleProperty().bind(showAxesIndicator.selectedProperty());
         Rotate rx = new Rotate(0, Rotate.X_AXIS);
         Rotate ry = new Rotate(0, Rotate.Y_AXIS);
         rx.angleProperty().bind(universe.rotateX.angleProperty());
@@ -180,6 +184,8 @@ public class MainWindow {
         universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
             animationProgress.setValue(newValue.toSeconds());
         });
+
+        universe.getSimulation().trailVisibility.bind(showTrails.selectedProperty());
     }
 
     @FXML

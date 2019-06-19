@@ -1,6 +1,8 @@
 package fr.istic.galaxsim.gui;
 
 import javafx.animation.Transition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
@@ -23,10 +25,21 @@ public class Simulation extends Transition {
      */
     private final Bounds bounds;
 
+    public final BooleanProperty trailVisibility = new SimpleBooleanProperty();
+
     public Simulation(Bounds bounds) {
         super(TICK_RATE);
 
         this.bounds = bounds;
+
+        // Masquage des trainees si la l'utilisateur ne souhaite plus les afficher
+        trailVisibility.addListener((obs, oldValue, newValue) -> {
+            if(!newValue) {
+                for(SimulationAnimation animation : animations) {
+                    animation.hideTrail();
+                }
+            }
+        });
     }
 
     /**

@@ -199,7 +199,7 @@ public class Universe extends Group {
             lastSelectedSphere = s;
         });
 
-        sim.addAnimation(new SimulationAnimation(s, trail, cosmosElement));
+        sim.addAnimation(new SimulationAnimation(s, trail, cosmosElement, sim.trailVisibility));
 
         return s;
     }
