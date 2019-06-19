@@ -169,7 +169,8 @@ public class Universe extends Group {
         s.setTranslateY(coord.getY());
         s.setTranslateZ(coord.getZ());
 
-        elements.getChildren().add(s);
+        Group trail = new Group();
+        elements.getChildren().addAll(s, trail);
 
         s.setOnMouseClicked((e) -> {
             if(lastSelectedSphere != null) {
@@ -198,7 +199,7 @@ public class Universe extends Group {
             lastSelectedSphere = s;
         });
 
-        sim.addAnimation(new SimulationAnimation(s, cosmosElement));
+        sim.addAnimation(new SimulationAnimation(s, trail, cosmosElement));
 
         return s;
     }

@@ -4,7 +4,12 @@ import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Vector;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -12,12 +17,43 @@ import java.util.ArrayList;
 public class SimulationAnimation {
 
     /**
+     * Nombre maximal de points representant la trainee de l'objet
+     */
+    private final static int MAX_TRAIL = 7;
+
+    /**
+     * Texture des points de la trainee
+     */
+    private final static PhongMaterial TRAIL_MATERIAL = new PhongMaterial(Color.LIGHTBLUE);
+
+    /**
      * Objet 3D a animer
      */
     private final Shape3D shape;
 
     /**
-     * Vitesse de deplacement de l'objet dans l'animatuin
+     * Groupe contenant les points de la trainee de l'objet
+     */
+    private final Group directionTrail;
+
+    /**
+     * Dernier point
+     */
+    private Point3D lastTrailPoint;
+
+    /**
+     * Indice du prochain element dans la liste des points de la trainee
+     */
+    private int nextTrailElement;
+
+    /**
+     * Distance entre le dernier point de la trainee et la derniere position
+     * de l'objet
+     */
+    private double lastTrailDistance;
+
+    /**
+     * Vitesse de deplacement de l'objet dans l'animation
      */
     private double moveSpeed;
 
@@ -46,8 +82,9 @@ public class SimulationAnimation {
      */
     private Point3D currentDirection;
 
-    public SimulationAnimation(Shape3D shape, CosmosElement element) {
+    public SimulationAnimation(Shape3D shape, Group directionTrail, CosmosElement element) {
         this.shape = shape;
+        this.directionTrail = directionTrail;
 
         double d = 0.0;
         Vector firstCoord = element.getCoordinate(0);
@@ -65,10 +102,42 @@ public class SimulationAnimation {
         totalDistance = d;
         positionsIndex = (positions.isEmpty()) ? 0 : 1;
         updateDirection();
+
+        // Initialisation de la trainee de l'objet
+        lastTrailPoint = positions.get(0);
+        lastTrailDistance = 0.0;
+        nextTrailElement = 0;
+
+        // Creation des points de trainee
+        // Ils sont masques par defaut
+        for(int i = 0;i < MAX_TRAIL;i++) {
+            addTrailPoint();
+        }
     }
 
-    public Shape3D getShape() {
-        return shape;
+    /**
+     * Cree un nouveau point (sphere) de trainee et l'ajoute au
+     * groupe directionTrail. Par defaut l'element n'est pas affiche
+     */
+    private void addTrailPoint() {
+        Sphere s = new Sphere(0.2f);
+        s.setMaterial(TRAIL_MATERIAL);
+        s.setVisible(false);
+
+        directionTrail.getChildren().add(s);
+    }
+
+    /**
+     * Calcule la distance au carre entre deux points 3d
+     *
+     * @param a premier point
+     * @param b deuxieme point
+     * @return distance au carre en pixels
+     */
+    private double distance2(Point3D a, Point3D b) {
+        return  Math.pow(a.getX() - b.getX(), 2) +
+                Math.pow(a.getY() - b.getY(), 2) +
+                Math.pow(a.getZ() - b.getZ(), 2);
     }
 
     private Point3D getShapePosition() {
@@ -84,9 +153,10 @@ public class SimulationAnimation {
         positionsIndex = (positions.isEmpty()) ? 0 : 1;
         Point3D initialPosition = positions.get(0);
 
-        shape.setTranslateX(initialPosition.getX());
-        shape.setTranslateY(initialPosition.getY());
-        shape.setTranslateZ(initialPosition.getZ());
+        setObjectPosition(shape, initialPosition);
+
+        resetTrail();
+        lastTrailPoint = initialPosition;
     }
 
     /**
@@ -99,6 +169,30 @@ public class SimulationAnimation {
         totalDuration = duration;
         moveSpeed = totalDistance / duration.toSeconds() / Simulation.TICK_RATE;
         updateDirection();
+    }
+
+    /**
+     * Reinitialise la trainee de l'objet
+     * Tous ses points sont masques
+     */
+    private void resetTrail() {
+        for(Node node : directionTrail.getChildren()) {
+            node.setVisible(false);
+        }
+
+        lastTrailDistance = 0.0;
+        nextTrailElement = 0;
+    }
+
+    /**
+     * Positionne l'objet sur le point passe en parametre
+     * @param node objet a deplacer
+     * @param p nouvelle position de l'objet
+     */
+    private void setObjectPosition(Node node, Point3D p) {
+        node.setTranslateX(p.getX());
+        node.setTranslateY(p.getY());
+        node.setTranslateZ(p.getZ());
     }
 
     /**
@@ -118,10 +212,11 @@ public class SimulationAnimation {
 
         Point3D checkpoint = positions.get(checkpointIndex);
 
-        shape.setTranslateX(checkpoint.getX());
-        shape.setTranslateY(checkpoint.getY());
-        shape.setTranslateZ(checkpoint.getZ());
+        setObjectPosition(shape, checkpoint);
         updateDirection();
+
+        resetTrail();
+        lastTrailPoint = checkpoint;
     }
 
     /**
@@ -141,14 +236,24 @@ public class SimulationAnimation {
         Point3D shapePosition = getShapePosition();
         Point3D currentTarget = positions.get(positionsIndex);
 
-        // Distance separant l'objet du point de destination
-        double d = shapePosition.distance(currentTarget);
+        lastTrailDistance += moveSpeed;
 
-        if(d >= moveSpeed) {
+        if(lastTrailDistance > 1) {
+            Node s = directionTrail.getChildren().get(nextTrailElement);
+            s.setVisible(true);
+            setObjectPosition(s, lastTrailPoint);
+
+            nextTrailElement = (nextTrailElement + 1) % MAX_TRAIL;
+            lastTrailPoint = shapePosition;
+            lastTrailDistance = 0.0;
+        }
+
+        // Distance separant l'objet du point de destination
+        double d = distance2(shapePosition, currentTarget);
+
+        if(d >= moveSpeed * moveSpeed) {
             // L'objet n'est pas encore arrive a sa destination
-            shape.setTranslateX(shape.getTranslateX() + currentDirection.getX());
-            shape.setTranslateY(shape.getTranslateY() + currentDirection.getY());
-            shape.setTranslateZ(shape.getTranslateZ() + currentDirection.getZ());
+            setObjectPosition(shape, shapePosition.add(currentDirection));
         }
         else {
             // Selection de la prochaine destination
@@ -167,6 +272,11 @@ public class SimulationAnimation {
         currentDirection = positions.get(positionsIndex)
                                     .subtract(getShapePosition())
                                     .normalize().multiply(moveSpeed);
+    }
+
+    public void setShapeVisibility(boolean v) {
+        shape.setVisible(v);
+        directionTrail.setVisible(v);
     }
 
 }

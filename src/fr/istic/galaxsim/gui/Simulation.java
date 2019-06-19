@@ -52,7 +52,7 @@ public class Simulation extends Transition {
             animation.update();
 
             // les objets qui sont en-dehors du cube ne sont pas affiches
-            animation.getShape().setVisible(animation.shapeInBounds(bounds));
+            animation.setShapeVisibility(animation.shapeInBounds(bounds));
         }
     }
 
@@ -86,7 +86,7 @@ public class Simulation extends Transition {
 
         for(SimulationAnimation animation : animations) {
             animation.setTransitionPosition(t);
-            animation.getShape().setVisible(animation.shapeInBounds(bounds));
+            animation.setShapeVisibility(animation.shapeInBounds(bounds));
         }
     }
 
@@ -100,7 +100,7 @@ public class Simulation extends Transition {
         stop();
         for(SimulationAnimation animation : animations) {
             animation.resetInitialPosition();
-            animation.getShape().setVisible(animation.shapeInBounds(bounds));
+            animation.setShapeVisibility(animation.shapeInBounds(bounds));
         }
     }
 

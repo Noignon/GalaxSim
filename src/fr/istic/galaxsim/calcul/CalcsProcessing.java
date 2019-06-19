@@ -7,7 +7,7 @@ import javafx.concurrent.Task;
 
 public class CalcsProcessing extends Task {
 	
-	public static final double Time = 2 * Math.pow(10, 16);
+	public static final double Time = 2 * Math.pow(10, 14);
 	public static final double G = 6.67408 * Math.pow(10, -11);
 	public static final double MsolaireEnKilo = 1.9891 * Math.pow(10, 42);
 	public static final double MparsecEnMetre = 3.086 * Math.pow(10, 22);
