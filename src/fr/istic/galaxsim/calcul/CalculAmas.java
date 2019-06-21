@@ -1,4 +1,9 @@
 package fr.istic.galaxsim.calcul;
+/**
+ * classe permettant de calculer les différentes valeures utiles à la localisation des Amas
+ * @author unijere
+ *
+ */
 
 import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Vector;
@@ -40,7 +45,7 @@ public class CalculAmas {
 
 		Vector coord1 = a1.getCoordinate(t);
 		Vector coord2 = a2.getCoordinate(t);
-		
+
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
 		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
 		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
@@ -61,37 +66,23 @@ public class CalculAmas {
 	 * @param a1 amas principal
 	 * @param a2 autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
-	 * @return l'angle longitude que forme le vecteur force entre a1 et a2
+	 * @return   la longitude du vecteur a1a2
 	 */
 
 	public static double attractionLongitude(Amas a1, Amas a2, int t) {
 		Vector coord1 = a1.getCoordinate(t);
 		Vector coord2 = a2.getCoordinate(t);
-		
+
 		double x = coord2.getX() - coord1.getX();
 		double y = coord2.getY() - coord1.getY();
+		double h = Math.sqrt(x*x+y*y);
 
-		if (x < 0 && y < 0) {
-			return -Math.PI + Math.atan(y / x);
+		if (y>0) {
+			return Math.acos(x/h);
 		}
-
-		if ((x > 0 && y < 0) || (x > 0 && y >= 0)) {
-			return Math.atan(y / x);
+		else {
+			return (Math.PI/2)+Math.acos(x/h);
 		}
-
-		if (x < 0 && y > 0) {
-			return Math.PI / 2 + Math.atan((-x) / y);
-		}
-
-		if (x == 0 && y < 0) {
-			return -Math.PI / 2;
-		}
-
-		if (x == 0 && y > 0) {
-			return Math.PI / 2;
-		}
-
-		return 0.0;
 	}
 
 	/**
@@ -99,39 +90,25 @@ public class CalculAmas {
 	 * @param a1 amas principal
 	 * @param a2 autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
-	 * @return l'angle latitude que forme le vecteur force entre a1 et a2
+	 * @return la latitude du vecteur a1a2
 	 */
 
 	public static double attractionLatitude(Amas a1, Amas a2, int t) {
 		Vector coord1 = a1.getCoordinate(t);
 		Vector coord2 = a2.getCoordinate(t);
-		
+
 		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
 		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
 		double z = coord1.getZ() - coord2.getZ();
 		double hypothenus = Math.sqrt(x + y);
+		double distance = Math.sqrt(hypothenus*hypothenus+z*z);
 
-		if (hypothenus < 0 && z < 0) {
-			return -Math.PI + Math.atan(z / hypothenus);
+		if(z>0) {
+			return Math.acos(hypothenus/distance);
 		}
-
-		if ((hypothenus > 0 && z < 0) || (hypothenus > 0 && z >= 0)) {
-			return Math.atan(z / hypothenus);
+		else {
+			return (Math.PI/2)+Math.acos(hypothenus/distance);
 		}
-
-		if (hypothenus < 0 && z > 0) {
-			return Math.PI / 2 + Math.atan((-hypothenus) / z);
-		}
-
-		if (hypothenus == 0 && z < 0) {
-			return -Math.PI / 2;
-		}
-
-		if (hypothenus == 0 && z > 0) {
-			return Math.PI / 2;
-		}
-
-		return 0.0;
 	}
 
 	/**
@@ -246,7 +223,7 @@ public class CalculAmas {
 		double Ax = forceX * divMass;
 		double Ay = forceY * divMass;
 		double Az = forceZ * divMass;
-		
+
 		Vector vitesse = a1.getVelocity(t);
 
 		double Vx = vitesse.getX();

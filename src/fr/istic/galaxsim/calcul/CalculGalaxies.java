@@ -1,4 +1,9 @@
 package fr.istic.galaxsim.calcul;
+/**
+ * classe permettant de calculer les différentes valeures utiles à la localisation des Galaxies
+ * @author unijere
+ *
+ */
 
 import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Vector;
@@ -60,7 +65,7 @@ public class CalculGalaxies {
 	 * @param g1 galaxie
 	 * @param a  amas parmi les plus massif
 	 * @param t  indicateur de temps
-	 * @return l'angle longitude que forme le vecteur force entre a et g1
+	 * @return la longitude du vecteur g1a
 	 */
 
 	public static double attractionLongitude(Galaxy g1, Amas a, int t) {
@@ -69,28 +74,15 @@ public class CalculGalaxies {
 		
 		double x = coord2.getX() - coord1.getX();
 		double y = coord2.getY() - coord1.getY();
-
-		if (x < 0 && y < 0) {
-			return -Math.PI + Math.atan(y / x);
+		double h = Math.sqrt(x*x+y*y);
+		
+		if (y>0) {
+			return Math.acos(x/h);
 		}
-
-		if ((x > 0 && y < 0) || (x > 0 && y >= 0)) {
-			return Math.atan(y / x);
+		else {
+			return (Math.PI/2)+Math.acos(x/h);
 		}
-
-		if (x < 0 && y > 0) {
-			return Math.PI / 2 + Math.atan((-x) / y);
-		}
-
-		if (x == 0 && y < 0) {
-			return -Math.PI / 2;
-		}
-
-		if (x == 0 && y > 0) {
-			return Math.PI / 2;
-		}
-
-		return 0.0;
+	
 	}
 
 	/**
@@ -98,7 +90,7 @@ public class CalculGalaxies {
 	 * @param g1 galaxie
 	 * @param a  amas parmi les plus massif
 	 * @param t  indicateur de temps
-	 * @return l'angle latitude que forme le vecteur force entre a et g1
+	 * @return la latitude du vecteur g1a
 	 */
 
 	public static double attractionLatitude(Galaxy g1, Amas a, int t) {
@@ -109,28 +101,15 @@ public class CalculGalaxies {
 		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
 		double z = coord1.getZ() - coord2.getZ();
 		double hypothenus = Math.sqrt(x + y);
+		double distance = Math.sqrt(hypothenus*hypothenus+z*z);
 
-		if (hypothenus < 0 && z < 0) {
-			return -Math.PI + Math.atan(z / hypothenus);
+		if(z>0) {
+			return Math.acos(hypothenus/distance);
 		}
-
-		if ((hypothenus > 0 && z < 0) || (hypothenus > 0 && z >= 0)) {
-			return Math.atan(z / hypothenus);
+		else {
+			return (Math.PI/2)+Math.acos(hypothenus/distance);
 		}
-
-		if (hypothenus < 0 && z > 0) {
-			return Math.PI / 2 + Math.atan((-hypothenus) / z);
-		}
-
-		if (hypothenus == 0 && z < 0) {
-			return -Math.PI / 2;
-		}
-
-		if (hypothenus == 0 && z > 0) {
-			return Math.PI / 2;
-		}
-
-		return 0.0;
+		
 	}
 
 	/**
