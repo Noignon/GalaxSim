@@ -15,6 +15,11 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
+/**
+ * Animation d'un element representant un amas ou une galaxie
+ *
+ * @see Simulation
+ */
 public class SimulationAnimation {
 
     /**
@@ -85,6 +90,14 @@ public class SimulationAnimation {
 
     private final BooleanProperty trailVisibility;
 
+    /**
+     * Creer une nouvelle instance de SimulationAnimation.
+     *
+     * @param shape objet a animer
+     * @param directionTrail groupe qui contiendra la trainee de l'objet
+     * @param element element (amas ou galaxie) a representer
+     * @param trailVisibility propriete de visibilite de la trainee (partagee par toutes les animations)
+     */
     public SimulationAnimation(Shape3D shape, Group directionTrail, CosmosElement element, BooleanProperty trailVisibility) {
         this.shape = shape;
         this.directionTrail = directionTrail;
@@ -121,7 +134,8 @@ public class SimulationAnimation {
 
     /**
      * Cree un nouveau point (sphere) de trainee et l'ajoute au
-     * groupe directionTrail. Par defaut l'element n'est pas affiche
+     * groupe directionTrail.
+     * Par defaut l'element n'est pas affiche.
      */
     private void addTrailPoint() {
         Sphere s = new Sphere(0.2f);
@@ -132,7 +146,7 @@ public class SimulationAnimation {
     }
 
     /**
-     * Calcule la distance au carre entre deux points 3d
+     * Calcule la distance au carre entre deux points 3d.
      *
      * @param a premier point
      * @param b deuxieme point
@@ -144,12 +158,15 @@ public class SimulationAnimation {
                 Math.pow(a.getZ() - b.getZ(), 2);
     }
 
+    /**
+     * Retourne un vecteur contenant la position de l'objet a animer.
+     */
     private Point3D getShapePosition() {
         return new Point3D(shape.getTranslateX(), shape.getTranslateY(), shape.getTranslateZ());
     }
 
     /**
-     * Masque tous les points de la trainee
+     * Masque tous les points de la trainee.
      */
     public void hideTrail() {
         for(Node node : directionTrail.getChildren()) {
@@ -159,8 +176,8 @@ public class SimulationAnimation {
 
     /**
      * Reinitialise la position de la forme (dans notre cas la sphere)
-     * pour la mettre a sa position initiale (t=0)
-     * L'indice de la prochaine position est lui aussi reinitialise
+     * pour la mettre a sa position initiale (t=0).
+     * L'indice de la prochaine position est lui aussi reinitialise.
      */
     public void resetInitialPosition() {
         nextPositionsIndex = (positions.isEmpty()) ? 0 : 1;
@@ -185,8 +202,8 @@ public class SimulationAnimation {
     }
 
     /**
-     * Reinitialise la trainee de l'objet
-     * Tous ses points sont masques
+     * Reinitialise la trainee de l'objet.
+     * Tous ses points sont masques.
      */
     private void resetTrail() {
         for(Node node : directionTrail.getChildren()) {
@@ -198,7 +215,8 @@ public class SimulationAnimation {
     }
 
     /**
-     * Positionne l'objet sur le point passe en parametre
+     * Positionne l'objet sur le point passe en parametre.
+     *
      * @param node objet a deplacer
      * @param p nouvelle position de l'objet
      */
@@ -209,8 +227,8 @@ public class SimulationAnimation {
     }
 
     /**
-     * Definit la nouvelle position de l'objet en fonction du temps ecoule
-     * L'objet sera place a un point contenu dans la liste des positions
+     * Definit la nouvelle position de l'objet en fonction du temps ecoule.
+     * L'objet sera place a un point contenu dans la liste des positions.
      *
      * @param t temps ecoule en secondes depuis le debut de l'animation
      * doit etre compris entre 0 et totalDuration
@@ -234,6 +252,9 @@ public class SimulationAnimation {
     }
 
     /**
+     * Indique si l'objet a animer est contenu dans les limites
+     * passees en parametres.
+     *
      * @param b limites de l'objet parent
      * @return true si l'objet est contenu dans son parent, false sinon
      */
@@ -244,7 +265,7 @@ public class SimulationAnimation {
     /**
      * Met a jour la position de l'objet.
      * Cette fonction est appellee a chaque tick suivant la valeur de
-     * la constante TICK_RATE de la classe Simulation
+     * {@link fr.istic.galaxsim.gui.Simulation#TICK_RATE}.
      */
     public void update() {
         Point3D shapePosition = getShapePosition();
@@ -280,7 +301,7 @@ public class SimulationAnimation {
 
     /**
      * Met a a jour le vecteur de direction en prenant en compte la destination
-     * et la vitesse de deplacement
+     * et la vitesse de deplacement.
      */
     public void updateDirection() {
         currentDirection = positions.get(nextPositionsIndex)
@@ -288,6 +309,11 @@ public class SimulationAnimation {
                                     .normalize().multiply(moveSpeed);
     }
 
+    /**
+     * Definit la visibilite de l'objet a animer et de sa trainee
+     *
+     * @param v visibilite de l'objet
+     */
     public void setShapeVisibility(boolean v) {
         shape.setVisible(v);
         directionTrail.setVisible(v);

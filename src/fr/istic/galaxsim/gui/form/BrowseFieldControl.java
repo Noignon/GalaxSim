@@ -4,10 +4,19 @@ import fr.istic.galaxsim.gui.ErrorDialog;
 
 import java.io.File;
 
+/**
+ * Controleur du champ de selection de fichier.
+ */
 public class BrowseFieldControl extends FieldControl {
 
     private final BrowseField field;
 
+    /**
+     * Creer une nouvelle instance de BrowseFieldControl.
+     *
+     * @param field champ a controler
+     * @param required indique si le champ est obligatoire ou non
+     */
     public BrowseFieldControl(BrowseField field, boolean required) {
         super(null, required);
         this.field = field;

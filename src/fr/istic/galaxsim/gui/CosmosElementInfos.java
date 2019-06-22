@@ -13,6 +13,9 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 
+/**
+ * Fenetre affichant des informations sur l'amas ou la galaxie selectionne(e).
+ */
 public class CosmosElementInfos extends VBox {
 
     @FXML
@@ -37,6 +40,10 @@ public class CosmosElementInfos extends VBox {
     @FXML
     private Label galaxiesCountLabel;
 
+    /**
+     * Creer une nouvelle instance de CosmosElementInfos.
+     * Le fichier CosmosElementInfos.fxml sera charge dans le constructeur.
+     */
     public CosmosElementInfos() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("CosmosElementInfos.fxml"));
         loader.setController(this);
@@ -49,11 +56,12 @@ public class CosmosElementInfos extends VBox {
         }
     }
 
-    @FXML
-    public void initialize() {
-
-    }
-
+    /**
+     * Affiche les information de l'amas passe en parametre.
+     * Bascule le mode d'affichage pour un amas.
+     *
+     * @param a amas a afficher
+     */
     public void setAmas(Amas a) {
         typeLabel.setText("amas");
         massLabel.setText(String.valueOf(a.getMass()));
@@ -63,8 +71,8 @@ public class CosmosElementInfos extends VBox {
     }
 
     /**
-     * Afficher les informations de la galaxie passee en parametre
-     * Bascule le mode d'affichage pour une galaxie
+     * Affiche les informations de la galaxie passee en parametre.
+     * Bascule le mode d'affichage pour une galaxie.
      *
      * @param g galaxie a afficher
      */
@@ -76,6 +84,11 @@ public class CosmosElementInfos extends VBox {
         setGlobalInfos(g);
     }
 
+    /**
+     * Affiche les informations communes aux amas et aux galaxies.
+     *
+     * @param e element a afficher
+     */
     private void setGlobalInfos(CosmosElement e) {
         identLabel.setText(String.valueOf(e.getIdent()));
         velocityLabel.setText(String.valueOf(e.getVelocity()));
@@ -85,7 +98,7 @@ public class CosmosElementInfos extends VBox {
     }
 
     /**
-     * Masque la fenetre lorsque l'utilisateur clique sur l'icone de fermeture
+     * Masque la fenetre lorsque l'utilisateur clique sur l'icone de fermeture.
      *
      * @param event evennement associe au clique de la souris
      */
@@ -95,7 +108,7 @@ public class CosmosElementInfos extends VBox {
     }
 
     /**
-     * Deplace la fenetre maintient le clique gauche de la souris enfonce et la deplace
+     * Deplace la fenetre maintient le clique gauche de la souris enfonce et la deplace.
      *
      * @param event evennement associe au clique de la souris
      */

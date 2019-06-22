@@ -5,11 +5,21 @@ import javafx.scene.control.TextField;
 
 import java.util.Optional;
 
+/**
+ * Controleur sur un champ de texte recevant un nombre entier.
+ */
 public class IntegerFieldControl extends FieldControl {
 
     private final TextField field;
     private final BoundsControl<Integer> boundsControl = new BoundsControl<>();
 
+    /**
+     * Creer une nouvelle instance de IntegerFieldControl.
+     *
+     * @param field champ de texte a controler
+     * @param fieldName nom du champ
+     * @param required indique si le champ est obligatoire ou non
+     */
     public IntegerFieldControl(TextField field, String fieldName, boolean required) {
         super(fieldName, required);
         this.field = field;
@@ -20,6 +30,15 @@ public class IntegerFieldControl extends FieldControl {
         });
     }
 
+    /**
+     * Creer une nouvelle instance de IntegerFieldControl.
+     *
+     * @param field champ de texte a controler
+     * @param fieldName nom du champ
+     * @param required indique si le champ est obligatoire ou non
+     * @param lowerBound valeur de la borne inferieure (inclue)
+     * @param higherBound valeur de la borne superiere (exclue)
+     */
     public IntegerFieldControl(TextField field, String fieldName, boolean required, int lowerBound, int higherBound) {
         this(field, fieldName, required);
 
@@ -27,13 +46,16 @@ public class IntegerFieldControl extends FieldControl {
         boundsControl.setLowerBound(lowerBound);
     }
 
+    /**
+     * Retourne le controleur de bornes.
+     */
     public BoundsControl<Integer> getBoundsControl() {
         return boundsControl;
     }
 
     /**
-     * Retourne la valeur du champ si celui-ci est rempli
-     * A utiliser pour les champ non obligatoires
+     * Retourne la valeur du champ si celui-ci est rempli.
+     * A utiliser pour les champ non obligatoires.
      *
      * @return La valeur du champ
      */
@@ -47,18 +69,17 @@ public class IntegerFieldControl extends FieldControl {
     }
 
     /**
-     * Recupere la valeur du champ de texte et la convertir en un entier
+     * Recupere la valeur du champ de texte et la convertie en un entier.
      *
      * @throws NumberFormatException si la valeur saisie n'est pas valide
-     * @return la valeur du champ
      */
     public int getValue() {
         return Integer.parseInt(field.getText());
     }
 
     /**
-     * Determine si la valeur du champ est bien comprise entre la borne inferieure (inclue)
-     * et la borne superieure (exclue)
+     * Determine si la valeur du champ est bien comprise entre la borne inferieure (inclue).
+     * et la borne superieure (exclue).
      *
      * @return true si la valeur est comprise dans l'interval, false sinon
      */

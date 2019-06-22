@@ -10,12 +10,20 @@ import javafx.stage.FileChooser;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Composant permettre de selectionner un fichier a l'aide d'une fenetre
+ * ou un champ de texte.
+ */
 public class BrowseField extends HBox {
 
     @FXML
     private TextField pathField;
 
-    // @OTODO Ajouter une restriction d'extensions
+    /**
+     * Creer une nouvelle instance de BrowseField.
+     *
+     * Le fichier BrowseField.fxml est charge dans le constructeur.
+     */
     public BrowseField() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("BrowseField.fxml"));
         loader.setController(this);
@@ -28,23 +36,32 @@ public class BrowseField extends HBox {
         }
     }
 
-    @FXML
-    public void initialize() {
-
-    }
-
+    /**
+     * Retourne le fichier selectionne par l'utilisateur ou null.
+     */
     public File getFile() {
         return pathField.getText().isEmpty() ? null : new File(pathField.getText());
     }
 
+    /**
+     * Retourne le chemin du fichier selectionne par l'utilisateur.
+     */
     public String getPath() {
         return pathField.getText();
     }
 
+    /**
+     * Masque l'affichage de l'erreur en retirant la classe css "field-error"
+     */
     public void hideError() {
         pathField.getStyleClass().remove("field-error");
     }
 
+    /**
+     * Ouvre une fenetre de selection de fichier.
+     *
+     * @param event
+     */
     @FXML
     private void openFileBrowser(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -56,6 +73,9 @@ public class BrowseField extends HBox {
         }
     }
 
+    /**
+     * Affiche une erreur en ajoutant la classe css "field-error".
+     */
     public void showError() {
         pathField.getStyleClass().add("field-error");
     }

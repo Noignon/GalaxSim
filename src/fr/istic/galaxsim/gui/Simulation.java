@@ -8,6 +8,11 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
+/**
+ * Simulation gerant l'animation de chaque objet.
+ *
+ * @see SimulationAnimation
+ */
 public class Simulation extends Transition {
 
     /**
@@ -30,8 +35,16 @@ public class Simulation extends Transition {
      */
     private final Bounds bounds;
 
+    /**
+     * Propriete sur la visibilite de la trainee pour chaque objet
+     */
     public final BooleanProperty trailVisibility = new SimpleBooleanProperty();
 
+    /**
+     * Creer une nouvelle instance de Simulation.
+     *
+     * @param bounds limites du cube de la classe {@link Universe}
+     */
     public Simulation(Bounds bounds) {
         super(TICK_RATE);
 
@@ -50,9 +63,9 @@ public class Simulation extends Transition {
     }
 
     /**
-     * Ajoute une nouvelle animation a la liste
+     * Ajoute une nouvelle animation a la liste.
      *
-     * La vitesse de deplacement de l'objet est calculee
+     * La vitesse de deplacement de l'objet est mise à jour.
      *
      * @param animation
      */
@@ -62,7 +75,7 @@ public class Simulation extends Transition {
     }
 
     /**
-     * Mise a jour des positions de chaque objet a animer
+     * Mise a jour des positions de chaque objet a animer.
      *
      * @param v position de l'animation dans le temps (parametre non utilise)
      */
@@ -77,9 +90,9 @@ public class Simulation extends Transition {
     }
 
     /**
-     * Modifie la duree de l'animation
+     * Modifie la duree de l'animation.
      *
-     * La vitesse de deplacement de chaque objet est calculee a nouveau calcule
+     * La vitesse de deplacement de chaque objet est calculee a nouveau calcule.
      *
      * @param duration duree de l'animation
      */
@@ -116,7 +129,7 @@ public class Simulation extends Transition {
     }
 
     /**
-     * Arrete l'animation
+     * Arrete l'animation.
      *
      * Toutes les animations sont reinitialisees et tous les objets retournent
      * a leur position initiale.

@@ -12,11 +12,10 @@ import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 
+/**
+ * Bouton on/off represente par deux images.
+ */
 public class ToggleImageButton extends StackPane {
-
-    /**
-     * Bouton on/off represente par deux images
-     */
 
     @FXML
     private ImageView img1;
@@ -29,6 +28,11 @@ public class ToggleImageButton extends StackPane {
     private final DoubleProperty fitWidth = new SimpleDoubleProperty();
     private final DoubleProperty fitHeight = new SimpleDoubleProperty();
 
+    /**
+     * Creer une nouvelle instance de ToggleImageButton.
+     *
+     * Le fichier ToggleImageButton.fxml est charge dans le constructeur.
+     */
     public ToggleImageButton() {
         super();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ToggleImageButton.fxml"));
@@ -61,70 +65,70 @@ public class ToggleImageButton extends StackPane {
     }
 
     /**
-     * @return propriete sur la longueur des images
+     * Ppropriete sur la longueur des images.
      */
     public DoubleProperty fitWidthProperty() {
         return fitWidth;
     }
 
     /**
-     * @return propriete sur la hauteur des images
+     * Propriete sur la hauteur des images.
      */
     public DoubleProperty fitHeightProperty() {
         return fitHeight;
     }
 
     /**
-     * @return longueur des images
+     * Retourne la longueur des images.
      */
     public double getFitWidth() {
         return fitWidth.get();
     }
 
     /**
-     * @return hauteur des images
+     * Retourne la hauteur des images.
      */
     public double getFitHeight() {
         return fitHeight.get();
     }
 
     /**
-     * @return chemin de la premiere image
+     * Retourne lechemin de la premiere image.
      */
     public String getUrl1() {
         return url1.get();
     }
 
     /**
-     * @return chemin vers la deuxieme image
+     * Retourne le chemin vers la deuxieme image.
      */
     public String getUrl2() {
         return url2.get();
     }
 
     /**
-     * @return propriete sur le chemin de la premiere image
+     * Propriete sur le chemin de la premiere image.
      */
     public String url1Property() {
         return url1.get();
     }
 
     /**
-     * @return propriete sur le chemin de la deuxieme image
+     * Propriete sur le chemin de la deuxieme image.
      */
     public String url2Property() {
         return url2.get();
     }
 
     /**
-     * Change l'image qui doit etre affichee a l'ecran
+     * Change l'image qui doit etre affichee a l'ecran.
      */
     public void toggle() {
         img1.setVisible(!img1.isVisible());
     }
 
     /**
-     * Definit la visibilite de la premiere image
+     * Definit la visibilite de la premiere image.
      *
      * @param v parametre de visibilite
      */
@@ -133,7 +137,7 @@ public class ToggleImageButton extends StackPane {
     }
 
     /**
-     * Definit la longueur des images
+     * Definit la longueur des images.
      *
      * @param fitWidth longueur en pixel
      */
@@ -142,7 +146,7 @@ public class ToggleImageButton extends StackPane {
     }
 
     /**
-     * Definit la hauteur des images
+     * Definit la hauteur des images.
      *
      * @param fitHeight hauteur en pixel
      */
@@ -151,7 +155,7 @@ public class ToggleImageButton extends StackPane {
     }
 
     /**
-     * Definit le chemin vers la premiere image
+     * Definit le chemin vers la premiere image.
      *
      * @param url chemin vers une image
      */
@@ -160,7 +164,7 @@ public class ToggleImageButton extends StackPane {
     }
 
     /**
-     * Definit le chemin vers la deuxieme image
+     * Definit le chemin vers la deuxieme image.
      *
      * @param url chemin vers une image
      */

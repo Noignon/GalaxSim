@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Controleur de la fenetre principale de l'animation
+ */
 public class MainWindow {
 
     // Elements de l'interface graphique
@@ -83,10 +86,9 @@ public class MainWindow {
     private boolean simulationFinished = false;
     private boolean simulationRunning = false;
 
-    public MainWindow(){
-
-    }
-
+    /**
+     * Initialisation des composants de la fenetre.
+     */
     @FXML
     public void initialize() {
         // Ajout des types de donnees possibles dans le formulaire de selection
@@ -191,7 +193,7 @@ public class MainWindow {
     @FXML
     /**
      * Verifie la validite des champs du formulaire de filtres et lance
-     * l'extraction des donnees dans le fichier selectionne
+     * l'extraction des donnees dans le fichier selectionne.
      *
      * @param event evenemment associe au bouton du formulaire (non utilise)
      */
@@ -263,7 +265,8 @@ public class MainWindow {
     }
 
     /**
-     * Arret de la simulation
+     * Arret de la simulation.
+     *
      * @param event
      */
     @FXML
@@ -276,7 +279,7 @@ public class MainWindow {
     }
 
     /**
-     * Mise en lecture ou en pause de la simulation
+     * Mise en lecture / pause de la simulation.
      *
      * @param event
      */
@@ -316,6 +319,12 @@ public class MainWindow {
         playPauseButton.toggle();
     }
 
+    /**
+     * Met a jour la position de l'animation en fonction de la valeur
+     * du slider.
+     *
+     * @param event
+     */
     @FXML
     private void updateSimulationPosition(MouseEvent event) {
         Platform.runLater(() -> {

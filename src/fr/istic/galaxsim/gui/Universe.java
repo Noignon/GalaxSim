@@ -19,6 +19,9 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+/**
+ * Groupe contenant un cube et des sphères (amas et galaxies).
+ */
 public class Universe extends Group {
 
     private final static PhongMaterial amasMaterial = new PhongMaterial(Color.GREEN);
@@ -35,7 +38,15 @@ public class Universe extends Group {
     private final Rotate scaleTextRotateY = new Rotate(-45, Rotate.Y_AXIS);
 
     private final Translate translate = new Translate();
+
+    /**
+     * Matrice de rotation sur l'axe X du groupe
+     */
     public final Rotate rotateX = new Rotate(20, Rotate.X_AXIS);
+
+    /**
+     * Matrice de rotation sur l'axe Y du groupe
+     */
     public final Rotate rotateY = new Rotate(45, Rotate.Y_AXIS);
 
     private double lastMouseClickPosX;
@@ -46,6 +57,12 @@ public class Universe extends Group {
 
     private final Simulation sim;
 
+    /**
+     * Creer une nouvelle instance de Universe.
+     *
+     * @param parentContainer scene qui contient le groupe
+     * @param cosmosElementInfos fenetre d'informations
+     */
     public Universe(Node parentContainer, CosmosElementInfos cosmosElementInfos) {
         this.cosmosElementInfos = cosmosElementInfos;
 
@@ -121,7 +138,7 @@ public class Universe extends Group {
     }
 
     /**
-     * Ajoute un nouvel amas aux elements de l'univers
+     * Ajoute un nouvel amas aux elements de l'univers.
      *
      * @param a amas a ajouter
      */
@@ -135,7 +152,7 @@ public class Universe extends Group {
     }
 
     /**
-     * Ajoute une nouvelle galaxie aux elements de l'univers
+     * Ajoute une nouvelle galaxie aux elements de l'univers.
      *
      * @param g galaxie a ajouter
      */
@@ -145,14 +162,14 @@ public class Universe extends Group {
     }
 
     /**
-     * Supprime tous les elements (amas et galaxies) de l'univers
+     * Supprime tous les elements (amas et galaxies) de l'univers.
      */
     public void clear() {
         elements.getChildren().clear();
     }
 
     /**
-     * Creer un nouvel element 3D representant un amas ou une galaxie
+     * Creer un nouvel element 3D representant un amas ou une galaxie.
      *
      * L'element reagit au clique gauche de la souris pour afficher ses informations.
      * Une animation est ajoutee a la simulation pour cet element.
@@ -204,6 +221,9 @@ public class Universe extends Group {
         return s;
     }
 
+    /**
+     * Retourne l'instance de la simulation.
+     */
     public Simulation getSimulation() {
         return sim;
     }

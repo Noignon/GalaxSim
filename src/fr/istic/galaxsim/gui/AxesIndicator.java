@@ -9,8 +9,16 @@ import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 import org.fxyz3d.shapes.primitives.ConeMesh;
 
+/**
+ * Indicateur representant les axes X, Y et Z.
+ */
 public class AxesIndicator extends Group {
 
+    /**
+     * Creer une nouvelle instance de AxesIndicator.
+     *
+     * @param scale echelle de l'element
+     */
     public AxesIndicator(double scale) {
         // Definition des textures pour chaque axe
         PhongMaterial materialX = new PhongMaterial(Color.RED);

@@ -15,6 +15,9 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 
+/**
+ * Composant permettant d'afficher / masquer son contenu en cliquant sur un bouton.
+ */
 public class DropdownPane extends VBox {
 
     @FXML
@@ -22,9 +25,15 @@ public class DropdownPane extends VBox {
     @FXML
     private ToggleImageButton dropButton;
 
-    // Indique si le composant affiche ou non le contenu
+    /**
+     * Indique si le composant affiche ou non le contenu.
+     */
     private BooleanProperty contentHidden;
 
+    /**
+     * Creer une nouvelle instance de DropdownPane.
+     * Le fichier DropdownPane.fxml sera charge dans le constructeur.
+     */
     public DropdownPane() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("DropdownPane.fxml"));
         loader.setController(this);
@@ -39,32 +48,34 @@ public class DropdownPane extends VBox {
         contentHidden = new SimpleBooleanProperty();
     }
 
+    /**
+     * Propriete sur la visibilite du contenu du composant.
+     */
     public BooleanProperty contentHiddenProperty() {
         return contentHidden;
     }
 
+    /**
+     * Retourne la valeur de visibilite du composant.
+     */
     public boolean getContentHidden() {
         return contentHidden.get();
     }
 
     /**
-     * Recupere la chaine de caracteres de l'en-tete
-     *
-     * Cette fonction est utilisee par javafx pour permettre l'assignation
-     * de l'attribut text (en-tete)
-     *
-     * @return valeur de l'en-tete
+     * Retourne l'en-tete du composant.
      */
     public String getText() {
         return headerLabel.getText();
     }
 
     /**
-     * Cache le contenu du composants
+     * Cache le contenu du composants.
      *
      * Chaque enfant est associe a une animation (FadeTransition) pour
-     * disparaitre progressivement. A la fin de l'animation, l'enfant
-     * n'est plus affiche pour que le parent soit redimensionne
+     * disparaitre progressivement.
+     * A la fin de l'animation, l'enfant
+     * n'est plus affiche pour que le parent soit redimensionne.
      */
     private void hideContent() {
         for(int i = 1;i < getChildren().size();i++) {
@@ -80,11 +91,11 @@ public class DropdownPane extends VBox {
         }
     }
 
-    @FXML
-    public void initialize() {
-
-    }
-
+    /**
+     * Definit la visibilite du contenu du composant.
+     *
+     * @param hidden visibilite du contenu
+     */
     public void setContentHidden(boolean hidden) {
         contentHidden.set(hidden);
         if(hidden) {
@@ -98,21 +109,19 @@ public class DropdownPane extends VBox {
     }
 
     /**
-     * Definit le texte de l'en-tete
+     * Definit l'en-tete du composant.
      *
-     * Cette fonction est utilisee par javafx pour permettre l'assignation
-     * de l'attribut text (en-tete)
-     * @param text nouvel en-tete
+     * @param text nouvelle en-tete
      */
     public void setText(String text) {
         headerLabel.setText(text);
     }
 
     /**
-     * Affiche le contenu du composant
+     * Affiche le contenu du composant.
      *
      * Chaque enfant est associe a une animation (FadeTransition) pour
-     * apparaitre progressivement
+     * apparaitre progressivement.
      */
     private void showContent() {
         for(int i = 1;i < getChildren().size();i++) {
@@ -127,10 +136,7 @@ public class DropdownPane extends VBox {
     }
 
     /**
-     * Cette fonction est utilisee par javafx pour permettre l'assignation
-     * de l'attribut text (en-tete)
-     *
-     * @return propriete representant la valeur de l'en-tete
+     * Propriete sur l'en-tete du composant.
      */
     public StringProperty textProperty() {
         return headerLabel.textProperty();
@@ -138,7 +144,8 @@ public class DropdownPane extends VBox {
 
     /**
      * Affiche/masque le contenu du composant selon la valeur de l'attribut
-     * contentHidden. Celle-ci est changee par sa negation a la fin de la fonction
+     * contentHidden.
+     * Celle-ci est changee par sa negation a la fin de la fonction.
      *
      * @param event evennement associe au clique de la souris
      */
