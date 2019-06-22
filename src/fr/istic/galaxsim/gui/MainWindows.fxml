@@ -177,7 +177,7 @@
                         </HBox>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <Label text="Nombre d'années écoulées :">
+                              <Label text="Temps écoulé">
                                  <padding>
                                     <Insets right="5.0" />
                                  </padding>
@@ -185,8 +185,8 @@
                                     <Insets />
                                  </HBox.margin>
                               </Label>
-                              <Label fx:id="elapsedYearsLabel" text="0" />
-                              <Label text=" 10^13" />
+                              <Label fx:id="elapsedTimeLabel" text="0" />
+                              <Label text=" x 10^13 secondes" />
                            </children>
                            <VBox.margin>
                               <Insets left="5.0" top="3.0" />

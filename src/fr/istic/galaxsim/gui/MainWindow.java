@@ -73,7 +73,7 @@ public class MainWindow {
     @FXML
     private CheckBox showTrails;
     @FXML
-    private Label elapsedYearsLabel;
+    private Label elapsedTimeLabel;
 
     private Universe universe;
 
@@ -192,9 +192,9 @@ public class MainWindow {
         universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
             animationProgress.setValue(newValue.toSeconds());
 
-            // Affichage du nombre d'annees ecoulees
+            // Affichage du temps ecoule
             double position = newValue.divide(universe.getSimulation().getTotalDuration().toSeconds()).toSeconds();
-            elapsedYearsLabel.setText(elapsedYearsFormat.format(position * CalcsProcessing.T));
+            elapsedTimeLabel.setText(elapsedYearsFormat.format(position * CalcsProcessing.T));
         });
 
         universe.getSimulation().trailVisibility.bind(showTrails.selectedProperty());
