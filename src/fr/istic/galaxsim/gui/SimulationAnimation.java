@@ -61,7 +61,7 @@ public class SimulationAnimation {
     /**
      * Indice de la prochaine position de l'objet
      */
-    private int positionsIndex;
+    private int nextPositionsIndex;
 
     /**
      * Liste des points de destination de l'objet
@@ -104,7 +104,7 @@ public class SimulationAnimation {
         }
 
         totalDistance = d;
-        positionsIndex = (positions.isEmpty()) ? 0 : 1;
+        nextPositionsIndex = (positions.isEmpty()) ? 0 : 1;
         updateDirection();
 
         // Initialisation de la trainee de l'objet
@@ -163,7 +163,7 @@ public class SimulationAnimation {
      * L'indice de la prochaine position est lui aussi reinitialise
      */
     public void resetInitialPosition() {
-        positionsIndex = (positions.isEmpty()) ? 0 : 1;
+        nextPositionsIndex = (positions.isEmpty()) ? 0 : 1;
         Point3D initialPosition = positions.get(0);
 
         setObjectPosition(shape, initialPosition);
@@ -224,6 +224,7 @@ public class SimulationAnimation {
         checkpointIndex = Math.max(checkpointIndex - 1, 0);
 
         Point3D checkpoint = positions.get(checkpointIndex);
+        nextPositionsIndex = checkpointIndex;
 
         setObjectPosition(shape, checkpoint);
         updateDirection();
@@ -247,7 +248,7 @@ public class SimulationAnimation {
      */
     public void update() {
         Point3D shapePosition = getShapePosition();
-        Point3D currentTarget = positions.get(positionsIndex);
+        Point3D currentTarget = positions.get(nextPositionsIndex);
 
         lastTrailDistance += moveSpeed;
 
@@ -270,8 +271,8 @@ public class SimulationAnimation {
         }
         else {
             // Selection de la prochaine destination
-            if(positionsIndex < positions.size() - 1) {
-                positionsIndex++;
+            if(nextPositionsIndex < positions.size() - 1) {
+                nextPositionsIndex++;
                 updateDirection();
             }
         }
@@ -282,7 +283,7 @@ public class SimulationAnimation {
      * et la vitesse de deplacement
      */
     public void updateDirection() {
-        currentDirection = positions.get(positionsIndex)
+        currentDirection = positions.get(nextPositionsIndex)
                                     .subtract(getShapePosition())
                                     .normalize().multiply(moveSpeed);
     }

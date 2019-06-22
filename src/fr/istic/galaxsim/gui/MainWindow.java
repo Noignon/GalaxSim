@@ -319,7 +319,7 @@ public class MainWindow {
     @FXML
     private void updateSimulationPosition(MouseEvent event) {
         Platform.runLater(() -> {
-            universe.getSimulation().setTimePosition((int) animationProgress.getValue());
+            universe.getSimulation().setTimePosition(animationProgress.getValue());
         });
     }
 

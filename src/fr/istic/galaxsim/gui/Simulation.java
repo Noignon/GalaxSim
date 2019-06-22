@@ -16,6 +16,11 @@ public class Simulation extends Transition {
     public final static int TICK_RATE = 30;
 
     /**
+     * Duree par defaut de l'animation
+     */
+    private final static Duration DEFAULT_DURATION = Duration.seconds(10);
+
+    /**
      * Liste des animations des amas / galaxies
      */
     private ArrayList<SimulationAnimation> animations = new ArrayList<>();
@@ -40,6 +45,8 @@ public class Simulation extends Transition {
                 }
             }
         });
+
+        setDuration(DEFAULT_DURATION);
     }
 
     /**
@@ -95,7 +102,12 @@ public class Simulation extends Transition {
      * @param t
      */
     public void setTimePosition(double t) {
+        if(currentTimeProperty().get().toSeconds() == t) {
+            return;
+        }
+
         jumpTo(Duration.seconds(t));
+        pause();
 
         for(SimulationAnimation animation : animations) {
             animation.setTransitionPosition(t);
