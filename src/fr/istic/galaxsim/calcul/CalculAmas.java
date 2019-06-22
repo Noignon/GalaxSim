@@ -24,10 +24,14 @@ public class CalculAmas {
 
 	public static void calculCoordInit(Amas a1) {
 		// calcul des coordonnees
-		double z = Math.sin(Math.toRadians(a1.getSuperGalacticLat())) * a1.getDistance();
-		double hypothenus = Math.cos(Math.toRadians(a1.getSuperGalacticLat())) * a1.getDistance();
-		double x = Math.cos(Math.toRadians(a1.getSuperGalacticLon())) * hypothenus;
-		double y = Math.sin(Math.toRadians(a1.getSuperGalacticLon())) * hypothenus;
+
+		double slonr = Math.toRadians(a1.getSuperGalacticLon());
+		double slatr = Math.toRadians(a1.getSuperGalacticLat());
+
+		double z = Math.sin(slatr) * a1.getDistance();
+		double hypothenus = Math.cos(slatr) * a1.getDistance();
+		double x = Math.cos(slonr) * hypothenus;
+		double y = Math.sin(slonr) * hypothenus;
 
 		// enregistrement des donnees initiales
 		a1.addCoordinate(new Vector(x, y, z));
@@ -35,130 +39,115 @@ public class CalculAmas {
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
+	 * @param m1 masse de l'amas principal
+	 * @param m2 masse de l'autre amas
 	 * @return la force d'attraction qu'excercent les deux amas l'un envers l'autre
 	 */
 
-	public static double forceAttraction(Amas a1, Amas a2, int t) {
-
-		Vector coord1 = a1.getCoordinate(t);
-		Vector coord2 = a2.getCoordinate(t);
-
+	public static double forceAttraction(Vector coord1, Vector coord2, double m1, double m2) {
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
-		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
-		double z = Math.pow(coord1.getZ() - coord2.getZ(), 2);
-		double distance = x + y + z;
+		double x = (coord1.getX() - coord2.getX()) * (coord1.getX() - coord2.getX());
+		double y = (coord1.getY() - coord2.getY()) * (coord1.getY() - coord2.getY());
+		double z = (coord1.getZ() - coord2.getZ()) * (coord1.getZ() - coord2.getZ());
+		double distance2 = (x + y + z) * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		distance = distance * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
-		double m1 = a1.getMass();
-		double m2 = a2.getMass();
-		double F = (CalcsProcessing.G * m1 * m2  * CalcsProcessing.MsolaireEnKilo) / distance;
-
-		return F;
+		return (CalcsProcessing.G * m1 * m2  * CalcsProcessing.MsolaireEnKilo) / distance2;
 	}
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
 	 * @return   la longitude du vecteur a1a2
 	 */
 
-	public static double attractionLongitude(Amas a1, Amas a2, int t) {
-		Vector coord1 = a1.getCoordinate(t);
-		Vector coord2 = a2.getCoordinate(t);
-
+	public static double attractionLongitude(Vector coord1, Vector coord2, int t) {
 		double x = coord2.getX() - coord1.getX();
 		double y = coord2.getY() - coord1.getY();
-		double h = Math.sqrt(x*x+y*y);
+		double h = Math.sqrt(x * x + y * y);
 
-		if (y>0) {
-			return Math.acos(x/h);
+		if (y > 0) {
+			return Math.acos(x / h);
 		}
 		else {
-			return (Math.PI/2)+Math.acos(x/h);
+			return (Math.PI / 2) + Math.acos(x / h);
 		}
 	}
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
 	 * @return la latitude du vecteur a1a2
 	 */
 
-	public static double attractionLatitude(Amas a1, Amas a2, int t) {
-		Vector coord1 = a1.getCoordinate(t);
-		Vector coord2 = a2.getCoordinate(t);
-
-		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
-		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
+	public static double attractionLatitude(Vector coord1, Vector coord2, int t) {
+		double x = coord2.getX() - coord1.getX();
+		double y = coord2.getY() - coord1.getY();
 		double z = coord1.getZ() - coord2.getZ();
-		double hypothenus = Math.sqrt(x + y);
-		double distance = Math.sqrt(hypothenus*hypothenus+z*z);
 
-		if(z>0) {
-			return Math.acos(hypothenus/distance);
+		double hypothenus = Math.sqrt(x * x + y * y);
+		double distance = Math.sqrt(hypothenus * hypothenus + z * z);
+
+		if(z > 0) {
+			return Math.acos(hypothenus / distance);
 		}
 		else {
-			return (Math.PI/2)+Math.acos(hypothenus/distance);
+			return (Math.PI / 2)+Math.acos(hypothenus / distance);
 		}
 	}
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
 	 * @param F  force d'attraction exercee entre a1 et a2, calculee par la fonction
 	 *           forceAttraction
 	 * @return force d'attraction exercee entre a1 et a2 sur l'axe X
 	 */
 
-	public static double forceX(Amas a1, Amas a2, int t, double F) {
-		double longitude = attractionLongitude(a1, a2, t);
-		double latitude = attractionLatitude(a1, a2, t);
-		F = F * Math.cos(latitude);
+	public static double forceX(Vector coord1, Vector coord2, int t, double F) {
+		double longitude = attractionLongitude(coord1, coord2, t);
+		double latitude = attractionLatitude(coord1, coord2, t);
 
-		return F * Math.cos(longitude);
+		return F * Math.cos(latitude) * Math.cos(longitude);
 	}
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
 	 * @param F  force d'attraction exercee entre a1 et a2, calculee par la fonction
 	 *           forceAttraction
 	 * @return force d'attraction exercee entre a1 et a2 sur l'axe Y
 	 */
 
-	public static double forceY(Amas a1, Amas a2, int t, double F) {
-		double longitude = attractionLongitude(a1, a2, t);
-		double latitude = attractionLatitude(a1, a2, t);
-		F = F * Math.cos(latitude);
+	public static double forceY(Vector coord1, Vector coord2, int t, double F) {
+		double longitude = attractionLongitude(coord1, coord2, t);
+		double latitude = attractionLatitude(coord1, coord2, t);
 
-		return F * Math.sin(longitude);
+		return F * Math.cos(latitude) * Math.sin(longitude);
 	}
 
 	/**
 	 * 
-	 * @param a1 amas principal
-	 * @param a2 autre amas etant parmi les plus massif
+	 * @param coord1 coordonnee a l'instant t de l'amas principal
+	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param t  indicateur de temps
 	 * @param F  force d'attraction exercee entre a1 et a2, calculee par la fonction
 	 *           forceAttraction
 	 * @return force d'attraction exercee entre a1 et a2 sur l'axe Z
 	 */
 
-	public static double forceZ(Amas a1, Amas a2, int t, double F) {
-		double latitude = attractionLatitude(a1, a2, t);
+	public static double forceZ(Vector coord1, Vector coord2, int t, double F) {
+		double latitude = attractionLatitude(coord1, coord2, t);
 
 		return F * Math.sin(latitude);
 	}

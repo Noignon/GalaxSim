@@ -66,6 +66,8 @@ public class CalcsProcessing extends Task {
 				double sumForceY = 0;
 				double sumForceZ = 0;
 
+				Vector coord1 = a1.getCoordinate(t);
+
 				// boucle pour calculer les forces entre l'amas actuel et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
 					Amas a2 = amas[i];
@@ -73,10 +75,12 @@ public class CalcsProcessing extends Task {
 						continue;
 					}
 
-					double force = CalculAmas.forceAttraction(a1, a2, t);
+					Vector coord2 = a2.getCoordinate(t);
+
+					double force = CalculAmas.forceAttraction(coord1, coord2, a1.getMass(), a2.getMass());
 					if (force != 0) {
-						sumForceX += CalculAmas.forceX(a1, a2, t, force);
-						sumForceZ += CalculAmas.forceZ(a1, a2, t, force);
+						sumForceX += CalculAmas.forceX(coord1, coord2, t, force);
+						sumForceZ += CalculAmas.forceZ(coord1, coord2, t, force);
 					}
 				}
 
@@ -87,48 +91,55 @@ public class CalcsProcessing extends Task {
 						continue;
 					}
 
-					double force = CalculAmas.forceAttraction(a1, a2, t);
+					Vector coord2 = a2.getCoordinate(t);
+
+					double force = CalculAmas.forceAttraction(coord1, coord2, a1.getMass(), a2.getMass());
 					if (force != 0) {
-						sumForceX += CalculAmas.forceX(a1, a2, t, force);
-						sumForceY += CalculAmas.forceY(a1, a2, t, force);
-						sumForceZ += CalculAmas.forceZ(a1, a2, t, force);
+						sumForceX += CalculAmas.forceX(coord1, coord2, t, force);
+						sumForceY += CalculAmas.forceY(coord1, coord2, t, force);
+						sumForceZ += CalculAmas.forceZ(coord1, coord2, t, force);
 					}
 				}
 				CalculAmas.coordByTime(a1, sumForceX, sumForceY, sumForceZ, t);
 				increaseProgress();
 			}
 
-			Galaxy[] g = DataBase.tableGalaxies.toArray(new Galaxy[DataBase.tableGalaxies.size()]);
-			int nbGalaxies = DataBase.getNumberGalaxies();
-
 			// boucle pour traiter chaque galaxies
-			for ( int j = 0; j < nbGalaxies; j++) {
+			for (Galaxy g : DataBase.tableGalaxies) {
 				double sumForceX = 0;
 				double sumForceY = 0;
 				double sumForceZ = 0;
 
+				Vector coord1 = g.getCoordinate(t);
+
 				// boucle pour calculer les forces entre la galaxie actuelle et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
 					Amas a = amas[i];
-					double force = CalculGalaxies.forceAttraction(g[j], a, t);
+
+					Vector coord2 = a.getCoordinate(t);
+					double force = CalculGalaxies.forceAttraction(coord1, coord2, a.getMass());
+
 					if (force != 0) {
-						sumForceX += CalculGalaxies.forceX(g[j], a, t, force);
-						sumForceY += CalculGalaxies.forceY(g[j], a, t, force);
-						sumForceZ += CalculGalaxies.forceZ(g[j], a, t, force);
+						sumForceX += CalculGalaxies.forceX(coord1, coord2, force);
+						sumForceY += CalculGalaxies.forceY(coord1, coord2, force);
+						sumForceZ += CalculGalaxies.forceZ(coord1, coord2, force);
 					}
 				}
 
 				// boucle pour calculer les forces entre la galaxie actuelle et les 100 amas les plus proches
 				for (int i = 0; i < Math.min(amasProche.length, 100); i++) {
 					Amas a = amasProche[i];
-					double force = CalculGalaxies.forceAttraction(g[j], a, t);
+
+					Vector coord2 = a.getCoordinate(t);
+					double force = CalculGalaxies.forceAttraction(coord1, coord2, a.getMass());
+
 					if (force != 0) {
-						sumForceX += CalculGalaxies.forceX(g[j], a, t, force);
-						sumForceY += CalculGalaxies.forceY(g[j], a, t, force);
-						sumForceZ += CalculGalaxies.forceZ(g[j], a, t, force);
+						sumForceX += CalculGalaxies.forceX(coord1, coord2, force);
+						sumForceY += CalculGalaxies.forceY(coord1, coord2, force);
+						sumForceZ += CalculGalaxies.forceZ(coord1, coord2, force);
 					}
 				}
-				CalculGalaxies.coordByTime(g[j], sumForceX, sumForceY, sumForceZ, t);
+				CalculGalaxies.coordByTime(g, sumForceX, sumForceY, sumForceZ, t);
 				increaseProgress();
 			}
 		}

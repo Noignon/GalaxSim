@@ -5,7 +5,6 @@ package fr.istic.galaxsim.calcul;
  *
  */
 
-import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.Vector;
 import fr.istic.galaxsim.data.Galaxy;
 
@@ -25,10 +24,14 @@ public class CalculGalaxies {
 
 	public static void calculCoordInit(Galaxy g1) {
 		// calcul des coordonnees
-		double z = Math.sin(Math.toRadians(g1.getSuperGalacticLat())) * g1.getDistance();
-		double hypothenus = Math.cos(Math.toRadians(g1.getSuperGalacticLat())) * g1.getDistance();
-		double x = Math.cos(Math.toRadians(g1.getSuperGalacticLon())) * hypothenus;
-		double y = Math.sin(Math.toRadians(g1.getSuperGalacticLon())) * hypothenus;
+
+		double slonr = Math.toRadians(g1.getSuperGalacticLon());
+		double slatr = Math.toRadians(g1.getSuperGalacticLat());
+
+		double z = Math.sin(slatr) * g1.getDistance();
+		double hypothenus = Math.cos(slatr) * g1.getDistance();
+		double x = Math.cos(slonr) * hypothenus;
+		double y = Math.sin(slonr) * hypothenus;
 
 		// enregistrement des donnees initiales
 		g1.addCoordinate(new Vector(x, y, z));
@@ -36,130 +39,112 @@ public class CalculGalaxies {
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas etant parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 * @param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifs
+	 * @param m masse de l'amas
 	 * @return la force d'attraction qu'exerce l'amas a sur la galaxie g1
 	 */
 
-	public static double forceAttraction(Galaxy g1, Amas a, int t) {
-		Vector coord1 = g1.getCoordinate(t);
-		Vector coord2 = a.getCoordinate(t);
-		
+	public static double forceAttraction(Vector coord1, Vector coord2, double m) {
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
-		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
-		double z = Math.pow(coord1.getZ() - coord2.getZ(), 2);
-		double distance = x + y + z;
+		double x = (coord1.getX() - coord2.getX()) * (coord1.getX() - coord2.getX());
+		double y = (coord1.getY() - coord2.getY()) * (coord1.getY() - coord2.getY());
+		double z = (coord1.getZ() - coord2.getZ()) * (coord1.getZ() - coord2.getZ());
+		double distance2 = (x + y + z) * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		distance = distance * CalcsProcessing.MparsecEnMetre * CalcsProcessing.MparsecEnMetre;
-		double m1 = a.getMass() * CalcsProcessing.MsolaireEnKilo;
-		double F = (CalcsProcessing.G * m1) / distance;
+		double m1 = m * CalcsProcessing.MsolaireEnKilo;
 
-		return F;
+		return (CalcsProcessing.G * m1) / distance2;
 	}
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 *@param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifs
 	 * @return la longitude du vecteur g1a
 	 */
 
-	public static double attractionLongitude(Galaxy g1, Amas a, int t) {
-		Vector coord1 = g1.getCoordinate(t);
-		Vector coord2 = a.getCoordinate(t);
-		
+	public static double attractionLongitude(Vector coord1, Vector coord2) {
 		double x = coord2.getX() - coord1.getX();
 		double y = coord2.getY() - coord1.getY();
-		double h = Math.sqrt(x*x+y*y);
+		double h = Math.sqrt(x * x + y * y);
 		
-		if (y>0) {
-			return Math.acos(x/h);
+		if (y > 0) {
+			return Math.acos(x / h);
 		}
 		else {
-			return (Math.PI/2)+Math.acos(x/h);
+			return (Math.PI / 2) + Math.acos(x / h);
 		}
 	
 	}
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 * @param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifs
 	 * @return la latitude du vecteur g1a
 	 */
 
-	public static double attractionLatitude(Galaxy g1, Amas a, int t) {
-		Vector coord1 = g1.getCoordinate(t);
-		Vector coord2 = a.getCoordinate(t);
-		
-		double x = Math.pow(coord1.getX() - coord2.getX(), 2);
-		double y = Math.pow(coord1.getY() - coord2.getY(), 2);
+	public static double attractionLatitude(Vector coord1, Vector coord2) {
+		double x = coord2.getX() - coord1.getX();
+		double y = coord2.getY() - coord1.getY();
 		double z = coord1.getZ() - coord2.getZ();
-		double hypothenus = Math.sqrt(x + y);
-		double distance = Math.sqrt(hypothenus*hypothenus+z*z);
 
-		if(z>0) {
-			return Math.acos(hypothenus/distance);
+		double hypothenus = Math.sqrt(x * x + y * y);
+		double distance = Math.sqrt(hypothenus * hypothenus + z * z);
+
+		if(z > 0) {
+			return Math.acos(hypothenus / distance);
 		}
 		else {
-			return (Math.PI/2)+Math.acos(hypothenus/distance);
+			return (Math.PI / 2) + Math.acos(hypothenus / distance);
 		}
-		
 	}
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 * @param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifs
 	 * @param F  force d'attraction entre la galaxie g1 et l'amas a, calculee par la
 	 *           fonction forceAttraction
 	 * @return force d'attraction exercee entre g1 et a sur l'axe X
 	 */
 
-	public static double forceX(Galaxy g1, Amas a, int t, double F) {
-		double longitude = attractionLongitude(g1, a, t);
-		double latitude = attractionLatitude(g1, a, t);
-		F = F * Math.cos(latitude);
+	public static double forceX(Vector coord1, Vector coord2, double F) {
+		double longitude = attractionLongitude(coord1, coord2);
+		double latitude = attractionLatitude(coord1, coord2);
 
-		return F * Math.cos(longitude);
+		return F * Math.cos(latitude) * Math.cos(longitude);
 	}
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 * @param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifss
 	 * @param F  force d'attraction entre la galaxie g1 et l'amas a, calculee par la
 	 *           fonction forceAttraction
 	 * @return force d'attraction exercee entre g1 et a sur l'axe Y
 	 */
 
-	public static double forceY(Galaxy g1, Amas a, int t, double F) {
-		double longitude = attractionLongitude(g1, a, t);
-		double latitude = attractionLatitude(g1, a, t);
-		F = F * Math.cos(latitude);
+	public static double forceY(Vector coord1, Vector coord2, double F) {
+		double longitude = attractionLongitude(coord1, coord2);
+		double latitude = attractionLatitude(coord1, coord2);
 
-		return F * Math.sin(longitude);
+		return F * Math.cos(latitude) * Math.sin(longitude);
 	}
 
 	/**
 	 * 
-	 * @param g1 galaxie
-	 * @param a  amas parmi les plus massif
-	 * @param t  indicateur de temps
+	 * @param coord1 coordonnee a l'instant t de la galaxie
+	 * @param coord2 coordonne a l'instant t de l'amas qui est parmis les plus massifs
 	 * @param F  force d'attraction entre la galaxie g1 et l'amas a, calculee par la
 	 *           fonction forceAttraction
 	 * @return force d'attraction exercee entre g1 et a sur l'axe Z
 	 */
 
-	public static double forceZ(Galaxy g1, Amas a, int t, double F) {
-		double latitude = attractionLatitude(g1, a, t);
+	public static double forceZ(Vector coord1, Vector coord2, double F) {
+		double latitude = attractionLatitude(coord1, coord2);
 
 		return F * Math.sin(latitude);
 	}
