@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,6 +72,8 @@ public class MainWindow {
     private CheckBox showAxesIndicator;
     @FXML
     private CheckBox showTrails;
+    @FXML
+    private Label elapsedYearsLabel;
 
     private Universe universe;
 
@@ -182,9 +185,16 @@ public class MainWindow {
             playPauseButton.setFirstButtonVisibility(true);
         });
 
+        // On souhaite garder seulement 2 decimales
+        DecimalFormat elapsedYearsFormat = new DecimalFormat("#0.00");
+
         // Affichage de l'avancement de l'animation
         universe.getSimulation().currentTimeProperty().addListener((obs, oldValue, newValue) -> {
             animationProgress.setValue(newValue.toSeconds());
+
+            // Affichage du nombre d'annees ecoulees
+            double position = newValue.divide(universe.getSimulation().getTotalDuration().toSeconds()).toSeconds();
+            elapsedYearsLabel.setText(elapsedYearsFormat.format(position * CalcsProcessing.T));
         });
 
         universe.getSimulation().trailVisibility.bind(showTrails.selectedProperty());
@@ -234,7 +244,6 @@ public class MainWindow {
 
         executor.submit(() -> {
             Platform.runLater(() -> {
-                progressStatus.setText("Creation des elements 3D");
                 // Ajout des amas et des galaxies a l'ecran
                 universe.clear();
 

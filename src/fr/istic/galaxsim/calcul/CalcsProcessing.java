@@ -1,6 +1,6 @@
 package fr.istic.galaxsim.calcul;
 /**
- * classe permettant de calculer les différentes les positions dans le temps pour la simulation
+ * classe permettant de calculer les differentes les positions dans le temps pour la simulation
  * @author unijere
  *
  */
@@ -12,12 +12,12 @@ import javafx.concurrent.Task;
 
 public class CalcsProcessing extends Task {
 
-	public static final double Time =1 * Math.pow(10, 13);
+	public static final double Time = Math.pow(10, 13);
 	public static final double G = 6.67408 * Math.pow(10, -11);
 	public static final double MsolaireEnKilo = 1.9891 * Math.pow(10, 42);
 	public static final double MparsecEnMetre = 3.086 * Math.pow(10, 22);
 
-	private static final int T = 10;
+	public static final int T = 10;
 
 	/**
 	 * Propriete d'avancement mise a jour apres chaque element traite
