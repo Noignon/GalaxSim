@@ -1,8 +1,8 @@
 package fr.istic.galaxsim.calcul;
 /**
- * classe permettant de calculer les differentes les positions dans le temps pour la simulation
- * @author unijere
+ * Classe permettant de calculer les differentes les positions dans le temps pour la simulation
  *
+ * @author Lucas, Mathieu, Maxime
  */
 
 import fr.istic.galaxsim.data.*;
@@ -61,7 +61,6 @@ public class CalcsProcessing extends Task {
 		initialCoordsCalculation();
 
 		// boucle pour le nombre d'intervalle de coordonnees
-		long start = System.nanoTime();
 
 		for (int t = 0; t < T; t++) {
 
@@ -117,9 +116,6 @@ public class CalcsProcessing extends Task {
 				increaseProgress();
 			}
 		}
-
-		long elapsed = System.nanoTime() - start;
-		System.out.println("Elapsed : " + elapsed * Math.pow(10, 9));
 
 		return null;
 	}

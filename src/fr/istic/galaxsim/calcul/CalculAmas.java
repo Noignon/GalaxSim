@@ -6,7 +6,7 @@ import fr.istic.galaxsim.data.Vector;
 /**
  * Classe permettant de calculer les différentes valeures utiles à la localisation des Amas.
  *
- * @author unijere
+ * @author Lucas, Mathieu, Maxime
  *
  */
 public class CalculAmas {

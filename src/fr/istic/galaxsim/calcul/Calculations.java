@@ -6,6 +6,8 @@ import fr.istic.galaxsim.data.Vector;
 /**
  * Classe permettant de calculer l'attraction et la velocite
  * des amas et des galaxies.
+ *
+ * @author Lucas, Mathieu, Maxime
  */
 public class Calculations {
 
