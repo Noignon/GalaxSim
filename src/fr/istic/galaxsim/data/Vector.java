@@ -60,6 +60,12 @@ public class Vector {
 	
 	/**
 	 * methode permetant de savoir si le point est ou non dans les intervalles de coordonées [x1,x2], [y1,y2], [z1,z2]
+	 * @param x1 la coordonnee x min
+	 * @param x2 la coordonnee x max
+	 * @param y1 la coordonnee y min
+	 * @param y2 la coordonnee y max
+	 * @param z1 la coordonnee z min
+	 * @param z2 la coordonnee z max
 	 * @return 1 si le poit est présent dans l'intervalle, sinon 0
 	 */
 	public boolean isIn(double x1,double x2, double y1,double y2,double z1,double z2) {

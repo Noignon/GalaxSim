@@ -110,7 +110,7 @@ public class DataBase {
 	
 	/**
 	 * methode permettant de recuperer un amas
-	 * @param l'indice de l'amas
+	 * @param indice l'indice de l'amas
 	 * @return l'amas
 	 */
 	public static Amas getAmas(int indice){
@@ -122,7 +122,7 @@ public class DataBase {
 	
 	/**
 	 * methode permettant de recuperer une galaxy
-	 * @param l'indice de la galaxie
+	 * @param indice l'indice de la galaxie
 	 * @return la galaxy
 	 */
 	public static Galaxy getGalaxy(int indice){

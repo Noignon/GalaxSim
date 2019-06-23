@@ -95,7 +95,7 @@ public class ParserAmasDatas extends ParserCosmosDatas{
 	/**
 	 * methode permettant de savoir si la donnee est interressante
 	 * @param data la donnee
-	 * @param l'indice de la donnée
+	 * @param indice l'indice de la donnée
 	 * @return boolean indiquant si la donnee est interressante
 	 */
 	@Override

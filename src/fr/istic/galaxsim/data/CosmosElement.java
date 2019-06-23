@@ -80,6 +80,7 @@ public abstract class CosmosElement{
 	
 	/**
 	 * methode permettant d'ajouter une coordonnée à la liste
+	 * @param coordinate la coordonnée à ajouter
 	 */
 	public void addCoordinate(Vector coordinate) {
 		this.coordinatesInTime.add(coordinate);
@@ -87,6 +88,7 @@ public abstract class CosmosElement{
 	
 	/**
 	 * methode permettant d'ajouter une vitesse à la liste
+	 * @param velocity la vitesse à ajouter
 	 */
 	public void addVelocity(Vector velocity) {
 		this.velocitiesInTime.add(velocity);
@@ -109,6 +111,7 @@ public abstract class CosmosElement{
 	/**
 	 * methode permettant de recuperer une coordonnée dans le temps
 	 * @param time le temps
+	 * @return la coordonnée
 	 */
 	public Vector getCoordinate(int time){
 		if (time >= 0 && time < this.coordinatesInTime.size()){
@@ -120,6 +123,7 @@ public abstract class CosmosElement{
 	/**
 	 * methode permettant de recuperer une vitesse dans le temps
 	 * @param time le temps
+	 * @return la vitesse
 	 */
 	public Vector getVelocity(int time){
 		if (time >= 0 && time < this.velocitiesInTime.size()){
@@ -154,7 +158,7 @@ public abstract class CosmosElement{
 	
 	/**
 	 * setter ident
-	 * @param ident
+	 * @param ident l'identifiant
 	 */
 	public void setIdent(int ident) {
 		this.ident = ident;

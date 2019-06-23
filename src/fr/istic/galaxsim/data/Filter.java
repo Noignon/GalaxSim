@@ -129,7 +129,7 @@ public class Filter {
 	
 	/**
 	 * méthode permettant de changer le filtre de marge d'erreur
-	 * @param m la marge d'erreur max
+	 * @param du la marge d'erreur max
 	 */
 	public static void setDeviationUncertaintyFilter(double du){
 		deviationUncertainty = du;

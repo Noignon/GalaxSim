@@ -81,6 +81,7 @@ public abstract class AbstractParserFile {
 	
 	/**
 	 * methode permettant de parser le fichier en donnant le nombre de données suivantes à traiter
+	 * @param nbDatas le nombre de données suivante à traiter
 	 */
 	public void toParse(int nbDatas){
 		int nb = 0;

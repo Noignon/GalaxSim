@@ -29,6 +29,7 @@ public abstract class ParserCosmosDatas extends AbstractParserFile{
 	/**
 	 * constructeurs
 	 * @param pathFile le chemin du fichier
+	 * @param sizeFinal la taille finale
 	 */
 	public ParserCosmosDatas(String pathFile, int sizeFinal) {
 		super(pathFile, AbstractParserFile.DATAS_ORIGINAL_LINE);
@@ -106,6 +107,7 @@ public abstract class ParserCosmosDatas extends AbstractParserFile{
 	 * methode permettant de verifier que la donnee est correcte
 	 * @param data la donnee
 	 * @param indice de la donnée
+	 * @return boolean
 	 */
 	public abstract boolean isCorrectData(String data, int indice);
 	

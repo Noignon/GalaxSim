@@ -52,7 +52,7 @@ public class Galaxy extends CosmosElement{
 
 	/**
 	 * setter identifiant de l'amas
-	 * @param l'identifiant de l'amas
+	 * @param amasIdent l'identifiant de l'amas
 	 */
 	public void setAmasIdent(int amasIdent) {
 		this.amasIdent = amasIdent;
