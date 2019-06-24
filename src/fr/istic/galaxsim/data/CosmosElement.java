@@ -30,6 +30,11 @@ public abstract class CosmosElement{
 	private int ident;
 	
 	/**
+	 * le nom de la galaxie
+	 */
+	private String name;
+	
+	/**
 	 * la distance en Mpc
 	 */
 	private double distance;
@@ -162,6 +167,22 @@ public abstract class CosmosElement{
 	 */
 	public void setIdent(int ident) {
 		this.ident = ident;
+	}
+	
+	/**
+	 * getter nom
+	 * @return le nom de la galaxie
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * setter nom
+	 * @param name le nom de la galaxie
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**

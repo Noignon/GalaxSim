@@ -11,12 +11,7 @@ public class Galaxy extends CosmosElement{
 	 * l'identifiant de l'amas de la galaxie
 	 */
 	private int amasIdent;
-	
-	/**
-	 * le nom de la galaxie
-	 */
-	private String name;
-	
+		
 	/**
 	 * le type de la galaxie
 	 */
@@ -56,22 +51,6 @@ public class Galaxy extends CosmosElement{
 	 */
 	public void setAmasIdent(int amasIdent) {
 		this.amasIdent = amasIdent;
-	}
-
-	/**
-	 * getter nom
-	 * @return le nom de la galaxie
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * setter nom
-	 * @param name le nom de la galaxie
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -163,7 +142,7 @@ public class Galaxy extends CosmosElement{
 	 * methode toString
 	 */
 	public String toString(){
-		return super.toString() + " | name: " + name + " | " + 
+		return super.toString() + " | name: " + getName() + " | " + 
 				"type: " + type + " | " + 
 				"amasIdent: " + amasIdent + " | " + 
 				"amasMass: " + amasMass;

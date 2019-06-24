@@ -54,7 +54,7 @@ public class Amas extends CosmosElement{
 	 * @return le nouvel amas
 	 */
 	public static Amas create(String datas[]){
-		if (datas.length == 11){
+		if (datas.length == 12){
 			String stringId = datas[0];
 			String stringDist = datas[2];
 			String stringGLon = datas[3];
@@ -65,6 +65,7 @@ public class Amas extends CosmosElement{
 			String stringMass = datas[8];
 			String stringNbGalaxies = datas[9];
 			String stringDeviationUncertainty = datas[10];
+			String name = datas[11];
 			
 			int id = -1;
 			double dist = -1;
@@ -93,6 +94,7 @@ public class Amas extends CosmosElement{
 			}
 			
 			Amas newAmas = new Amas(id, dist, velo, deviationUncertainty,  mass, nbGalaxies);
+			newAmas.setName(name);
 			
 			if (stringGLon != null && stringGLat != null){
 				double GLon = Double.parseDouble(stringGLon);
