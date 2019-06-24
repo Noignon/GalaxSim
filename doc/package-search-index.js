@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"fr.istic.galaxsim"},{"l":"fr.istic.galaxsim.calcul"},{"l":"fr.istic.galaxsim.data"},{"l":"fr.istic.galaxsim.gui"},{"l":"fr.istic.galaxsim.gui.form"}]
