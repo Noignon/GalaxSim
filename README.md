@@ -1,5 +1,11 @@
 # GalaxSim
 
+Lien utiles :
+
+* [Javadoc](https://noignon.github.io/GalaxSim/index.html)
+* [Instructions de compilation](INSTALL.md)
+* [Diagrammes UML](DESIGN.md)
+
 GalaxSim est un logiciel qui permet de visualiser le mouvement des galaxies
 qui nous entourent en simulant leurs déplacements.<br>
 La visualisation est centrée sur notre galaxie

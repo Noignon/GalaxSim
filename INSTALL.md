@@ -1,29 +1,5 @@
 # Guide d'installation du logiciel GalaxSim
 
-Une version compilée du logiciel est disponible [ici](https://github.com/Noignon/GalaxSim/releases).
-Si vous souhaitez le compiler vous-même, merci de suivre les recommendations
-de la section [Compilation](#compilation-du-projet)
-
-## Utilisation du logiciel
-
-Après avoir lancé le logiciel, vous devez charger un jeu de données en cliquant sur le bouton
-"Parcourir". Vous avez ensuite la possibilité de définir des filtres dont la description est
-disponible dans le fichier [README.md](README.md).<br>
-
-En cliquant sur le bouton "Valider", vous lancerez l'extraction des éléments contenus dans
-le fichier sélectionné puis le calcul des coordonnées. Une barre de chargement apparaîtra sur
-en bas de la fenêtre pour vous indiquer l'avancement des calculs.
-
-Une fois le chargement terminé, vous devriez voir apparaitre des sphères dans un cube.
-Les sphères vertes représentent les amas, les sphères rouges représentent les galaxies et le cube
-représente l'univers. Selon les valeurs données à chaque filtre, il peut ne pas y avoir d'éléments
-à afficher : un message apparaîtra sur la partie gauche de l'écran pour indiquer le nombre
-d'éléments trouvés.
-
-Vous pouvez lancer l'animation en cliquant sur le bouton de lecture. La vitesse de l'animation
-dépend de la durée : par défaut elle dure 30 secondes. Vous pouvez la modifier en
-mettant un nombre entier (représentant des secondes) strictement supérieur à 0.
-
 ## Compilation du projet
 
 ### Logiciels requis
@@ -56,3 +32,23 @@ Un fichier ReadMe (en anglais) présent dans l'archive explique en détail le co
 
 * *table2.dat* : contient les principaux amas ainsi que des galaxies individuelles
 * *table3.dat* : contient uniquement les galaxies individuelles
+
+## Utilisation du logiciel
+
+Après avoir lancé le logiciel, vous devez charger un jeu de données en cliquant sur le bouton
+"Parcourir". Vous avez ensuite la possibilité de définir des filtres dont la description est
+disponible dans le fichier [README.md](README.md).<br>
+
+En cliquant sur le bouton "Valider", vous lancerez l'extraction des éléments contenus dans
+le fichier sélectionné puis le calcul des coordonnées. Une barre de chargement apparaîtra sur
+en bas de la fenêtre pour vous indiquer l'avancement des calculs.
+
+Une fois le chargement terminé, vous devriez voir apparaitre des sphères dans un cube.
+Les sphères vertes représentent les amas, les sphères rouges représentent les galaxies et le cube
+représente l'univers. Selon les valeurs données à chaque filtre, il peut ne pas y avoir d'éléments
+à afficher : un message apparaîtra sur la partie gauche de l'écran pour indiquer le nombre
+d'éléments trouvés.
+
+Vous pouvez lancer l'animation en cliquant sur le bouton de lecture. La vitesse de l'animation
+dépend de la durée : par défaut elle dure 10 secondes. Vous pouvez la modifier en
+mettant un nombre entier (représentant des secondes) strictement supérieur à 0.
