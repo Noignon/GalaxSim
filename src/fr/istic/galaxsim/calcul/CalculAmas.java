@@ -14,17 +14,16 @@ public class CalculAmas {
 	/**
 	 * Calcul de la force d'attraction entre deux amas.
 	 *
-	 * @param p1 coordonnee a l'instant t de l'amas principal
-	 * @param p2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param m1 masse de l'amas principal
 	 * @param m2 masse de l'autre amas
 	 * @return la force d'attraction qu'excercent les deux amas l'un envers l'autre
 	 */
-	public static Point3D forceAttraction(Point3D p1, Point3D p2, double m1, double m2) {
-		Point3D u = p2.subtract(p1).normalize();
+	public static Point3D forceAttraction(Point3D p, double m1, double m2) {
+		double m = p.magnitude();
+		Point3D u = p.multiply(1 / m);
 
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double distance2 = Calculations.distance2(p1, p2) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+		double distance2 = m * m * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
 		double f = (-Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo) / distance2;

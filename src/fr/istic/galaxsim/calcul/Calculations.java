@@ -32,47 +32,6 @@ public class Calculations {
     public static final double MparsecEnMetre = 3.086 * Math.pow(10, 22);
 
     /**
-     * Calcul la longitude du vecteur coord1coord2.
-     *
-     * @param coord1 premiere coordonnee a l'instant t
-     * @param coord2 deuxieme coordonnee a l'instant t
-     * @return la longitude du vecteur coord1coord2
-     */
-
-    public static double attractionLongitude(Point3D coord1, Point3D coord2) {
-        Point3D p = coord2.subtract(coord1);
-        double h = Math.sqrt(p.getX() * p.getX() + p.getY() * p.getY());
-
-        if (p.getY() > 0) {
-            return Math.acos(p.getX() / h);
-        }
-        else {
-            return (Math.PI / 2) + Math.acos(p.getX() / h);
-        }
-    }
-
-    /**
-     * Calcul la latitude du vecteur coord1coord2.
-     * @param coord1 coordonnee a l'instant t de l'amas principal
-     * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
-     * @return la latitude du vecteur  coord1coord2
-     */
-
-    public static double attractionLatitude(Point3D coord1, Point3D coord2) {
-        Point3D p = coord2.subtract(coord1);
-
-        double hypothenus = Math.sqrt(p.getX() * p.getX() + p.getY() * p.getY());
-        double distance = Math.sqrt(hypothenus * hypothenus + p.getZ() * p.getZ());
-
-        if(p.getZ() > 0) {
-            return Math.acos(hypothenus / distance);
-        }
-        else {
-            return (Math.PI / 2)+Math.acos(hypothenus / distance);
-        }
-    }
-
-    /**
      * Calcul des coordonnees de l'element e au temps t=0
      *
      * @param e amas ou galaxie

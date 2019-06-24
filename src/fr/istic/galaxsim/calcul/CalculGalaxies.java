@@ -18,13 +18,14 @@ public class CalculGalaxies {
 	 * @param m masse de l'amas
 	 * @return la force d'attraction qu'exerce l'amas a sur la galaxie g1
 	 */
-	public static Point3D forceAttraction(Point3D gCoord, Point3D aCoord, double m) {
-		Point3D u = aCoord.subtract(gCoord).normalize();
+	public static Point3D forceAttraction(Point3D p, double mA) {
+		double m = p.magnitude();
+		Point3D u = p.multiply(1 / m);
 
-		double distance2 = Calculations.distance2(gCoord, aCoord) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+		double distance2 = m * m * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		double m1 = m * Calculations.MsolaireEnKilo;
+		double m1 = mA * Calculations.MsolaireEnKilo;
 
 		return u.multiply((Calculations.G * m1) / distance2);
 	}
