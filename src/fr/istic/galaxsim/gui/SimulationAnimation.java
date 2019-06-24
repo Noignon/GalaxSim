@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.gui;
 
+import fr.istic.galaxsim.calcul.Calculations;
 import fr.istic.galaxsim.data.CosmosElement;
-import fr.istic.galaxsim.data.Vector;
 import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
@@ -104,14 +104,13 @@ public class SimulationAnimation {
         this.trailVisibility = trailVisibility;
 
         double d = 0.0;
-        Vector firstCoord = element.getCoordinate(0);
-        positions.add(new Point3D(firstCoord.getX(), firstCoord.getY(), firstCoord.getZ()));
+        Point3D firstCoord = element.getCoordinate(0);
+        positions.add(firstCoord);
 
         // Calcul de la distance totale entre la premire coordonnee
         // et la derniere. Chaque coordonnee est convertie en Point3D
         for(int i = 1;i < element.getSizeCoordinate();i++) {
-            Vector coord = element.getCoordinate(i);
-            Point3D p = new Point3D(coord.getX(), coord.getY(), coord.getZ());
+            Point3D p = element.getCoordinate(i);
             d += positions.get(i - 1).distance(p);
             positions.add(p);
         }
@@ -143,19 +142,6 @@ public class SimulationAnimation {
         s.setVisible(false);
 
         directionTrail.getChildren().add(s);
-    }
-
-    /**
-     * Calcule la distance au carre entre deux points 3d.
-     *
-     * @param a premier point
-     * @param b deuxieme point
-     * @return distance au carre en pixels
-     */
-    private double distance2(Point3D a, Point3D b) {
-        return  Math.pow(a.getX() - b.getX(), 2) +
-                Math.pow(a.getY() - b.getY(), 2) +
-                Math.pow(a.getZ() - b.getZ(), 2);
     }
 
     /**
@@ -284,7 +270,7 @@ public class SimulationAnimation {
         }
 
         // Distance separant l'objet du point de destination
-        double d = distance2(shapePosition, currentTarget);
+        double d = Calculations.distance2(shapePosition, currentTarget);
 
         if(d >= moveSpeed * moveSpeed) {
             // L'objet n'est pas encore arrive a sa destination

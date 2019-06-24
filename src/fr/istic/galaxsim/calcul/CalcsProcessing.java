@@ -9,6 +9,7 @@ import fr.istic.galaxsim.data.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.concurrent.Task;
+import javafx.geometry.Point3D;
 
 /**
  * Classe permettant de calculer les coordonnees des amas et des galaxies.
@@ -68,7 +69,7 @@ public class CalcsProcessing extends Task {
 			for (Amas a1 : amas) {
 				double[] sumForce = { 0d, 0d, 0d };
 
-				Vector coord1 = a1.getCoordinate(t);
+				Point3D coord1 = a1.getCoordinate(t);
 
 				// boucle pour calculer les forces entre l'amas actuel et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
@@ -97,7 +98,7 @@ public class CalcsProcessing extends Task {
 			for (Galaxy g : DataBase.tableGalaxies) {
 				double[] sumForce = { 0d, 0d, 0d };
 
-				Vector coord1 = g.getCoordinate(t);
+				Point3D coord1 = g.getCoordinate(t);
 
 				// boucle pour calculer les forces entre la galaxie actuelle et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
@@ -120,34 +121,27 @@ public class CalcsProcessing extends Task {
 		return null;
 	}
 
-	private void calcAmasForces(Vector coord1, Vector coord2, double m1, double m2, double[] sumForce) {
+	private void calcAmasForces(Point3D coord1, Point3D coord2, double m1, double m2, double[] sumForce) {
 		double lat = Calculations.attractionLatitude(coord1, coord2);
 		double lon = Calculations.attractionLongitude(coord1, coord2);
-		double force = CalculAmas.forceAttraction(coord1, coord2, m1, m2);
+		Point3D force = CalculAmas.forceAttraction(coord1, coord2, m1, m2);
 
-		calcForces(lat, lon, force, sumForce);
+		//calcForces(lat, lon, force, sumForce);
+		sumForce[0] += force.getX();
+		sumForce[1] += force.getY();
+		sumForce[2] += force.getZ();
 	}
 
-	private void calcGalaxiesForces(Vector coord1, Vector coord2, double m, double[] sumForce) {
+	private void calcGalaxiesForces(Point3D coord1, Point3D coord2, double m, double[] sumForce) {
 		double lat = Calculations.attractionLatitude(coord1, coord2);
 		double lon = Calculations.attractionLongitude(coord1, coord2);
-		double force = CalculGalaxies.forceAttraction(coord1, coord2, m);
+		Point3D force = CalculGalaxies.forceAttraction(coord1, coord2, m);
 
-		calcForces(lat, lon, force, sumForce);
-	}
+		sumForce[0] += force.getX();
+		sumForce[1] += force.getY();
+		sumForce[2] += force.getZ();
 
-	private void calcForces(double lat, double lon, double force, double[] sumForce) {
-		double cosLat = Math.cos(lat);
-		double cosLon = Math.cos(lon);
-
-		double sinLat = Math.sin(lat);
-		double sinLon = Math.sin(lon);
-
-		if (force != 0) {
-			sumForce[0] += Calculations.forceX(cosLon, cosLat, force);
-			sumForce[1] += Calculations.forceY(sinLon, cosLat, force);
-			sumForce[2] += Calculations.forceZ(sinLat, force);
-		}
+		//calcForces(lat, lon, force, sumForce);
 	}
 
 
@@ -168,7 +162,7 @@ public class CalcsProcessing extends Task {
 			double Vx = Calculations.velocityX(g[i]);
 			double Vy = Calculations.velocityY(g[i]);
 			double Vz = Calculations.velocityZ(g[i]);
-			g[i].addVelocity(new Vector(Vx, Vy, Vz));
+			g[i].addVelocity(new Point3D(Vx, Vy, Vz));
 			Calculations.calculCoordInit(g[i]);
 		}
 
@@ -176,7 +170,7 @@ public class CalcsProcessing extends Task {
 			double Vx = Calculations.velocityX(a);
 			double Vy = Calculations.velocityY(a);
 			double Vz = Calculations.velocityZ(a);
-			a.addVelocity(new Vector(Vx, Vy, Vz));
+			a.addVelocity(new Point3D(Vx, Vy, Vz));
 			Calculations.calculCoordInit(a);
 		}
 	}

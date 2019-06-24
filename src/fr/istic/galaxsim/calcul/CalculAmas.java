@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.calcul;
 
 import fr.istic.galaxsim.data.Amas;
-import fr.istic.galaxsim.data.Vector;
+import javafx.geometry.Point3D;
 
 /**
  * Classe permettant de calculer les différentes valeures utiles à la localisation des Amas.
@@ -14,21 +14,22 @@ public class CalculAmas {
 	/**
 	 * Calcul de la force d'attraction entre deux amas.
 	 *
-	 * @param coord1 coordonnee a l'instant t de l'amas principal
-	 * @param coord2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
+	 * @param p1 coordonnee a l'instant t de l'amas principal
+	 * @param p2 coordonnee a l'instant t de l'autre amas etant parmi les plus massif
 	 * @param m1 masse de l'amas principal
 	 * @param m2 masse de l'autre amas
 	 * @return la force d'attraction qu'excercent les deux amas l'un envers l'autre
 	 */
-	public static double forceAttraction(Vector coord1, Vector coord2, double m1, double m2) {
+	public static Point3D forceAttraction(Point3D p1, Point3D p2, double m1, double m2) {
+		Point3D u = p2.subtract(p1).normalize();
+
 		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double x = (coord1.getX() - coord2.getX()) * (coord1.getX() - coord2.getX());
-		double y = (coord1.getY() - coord2.getY()) * (coord1.getY() - coord2.getY());
-		double z = (coord1.getZ() - coord2.getZ()) * (coord1.getZ() - coord2.getZ());
-		double distance2 = (x + y + z) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+		double distance2 = Calculations.distance2(p1, p2) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
-		return (Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo) / distance2;
+		double f = (-Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo) / distance2;
+
+		return u.multiply(f);
 	}
 
 	/**
@@ -50,7 +51,7 @@ public class CalculAmas {
 		double Ay = forceY * divMass;
 		double Az = forceZ * divMass;
 
-		Vector vitesse = a1.getVelocity(t);
+		Point3D vitesse = a1.getVelocity(t);
 
 		double Vx = vitesse.getX();
 		double Vy = vitesse.getY();
@@ -62,7 +63,7 @@ public class CalculAmas {
 		Vy = (Ay * time) * 1000 + Vy;
 		Vz = (Az * time) * 1000 + Vz;
 
-		a1.addVelocity(new Vector(Vx, Vy, Vz));
+		a1.addVelocity(new Point3D(Vx, Vy, Vz));
 
 		double kilometreEnMparsec = 1000 / Calculations.MparsecEnMetre;
 
@@ -70,6 +71,6 @@ public class CalculAmas {
 		double y = (time * Vy) * kilometreEnMparsec + a1.getCoordinate(t).getY();
 		double z = (time * Vz) * kilometreEnMparsec + a1.getCoordinate(t).getZ();
 
-		a1.addCoordinate(new Vector(x, y, z));
+		a1.addCoordinate(new Point3D(x, y, z));
 	}
 }

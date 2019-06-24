@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.calcul;
 
-import fr.istic.galaxsim.data.Vector;
 import fr.istic.galaxsim.data.Galaxy;
+import javafx.geometry.Point3D;
 
 /**
  * Classe permettant de calculer les différentes valeures utiles à la localisation des Galaxies.
@@ -18,17 +18,15 @@ public class CalculGalaxies {
 	 * @param m masse de l'amas
 	 * @return la force d'attraction qu'exerce l'amas a sur la galaxie g1
 	 */
-	public static double forceAttraction(Vector gCoord, Vector aCoord, double m) {
-		// distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
-		double x = (gCoord.getX() - aCoord.getX()) * (gCoord.getX() - aCoord.getX());
-		double y = (gCoord.getY() - aCoord.getY()) * (gCoord.getY() - aCoord.getY());
-		double z = (gCoord.getZ() - aCoord.getZ()) * (gCoord.getZ() - aCoord.getZ());
-		double distance2 = (x + y + z) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+	public static Point3D forceAttraction(Point3D gCoord, Point3D aCoord, double m) {
+		Point3D u = aCoord.subtract(gCoord).normalize();
+
+		double distance2 = Calculations.distance2(gCoord, aCoord) * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
 
 		// Force de gravitation = (G * Masse1 * Masse2) / distance^2
 		double m1 = m * Calculations.MsolaireEnKilo;
 
-		return (Calculations.G * m1) / distance2;
+		return u.multiply((Calculations.G * m1) / distance2);
 	}
 
 	/**
@@ -50,7 +48,7 @@ public class CalculGalaxies {
 		double Ay = forceY;
 		double Az = forceZ;
 
-		Vector velocity = g1.getVelocity(t);
+		Point3D velocity = g1.getVelocity(t);
 		double Vx = velocity.getX();
 		double Vy = velocity.getY();
 		double Vz = velocity.getZ();
@@ -61,15 +59,15 @@ public class CalculGalaxies {
 		Vy = (Ay * time) * 1000 + Vy;
 		Vz = (Az * time) * 1000 + Vz;
 
-		g1.addVelocity(new Vector(Vx, Vy, Vz));
+		g1.addVelocity(new Point3D(Vx, Vy, Vz));
 
 		double kilometreEnMparsec = 1000 / Calculations.MparsecEnMetre;
 
-		Vector coord = g1.getCoordinate(t);
+		Point3D coord = g1.getCoordinate(t);
 		double x = (time * Vx) * kilometreEnMparsec + coord.getX();
 		double y = (time * Vy) * kilometreEnMparsec + coord.getY();
 		double z = (time * Vz) * kilometreEnMparsec + coord.getZ();
 
-		g1.addCoordinate(new Vector(x, y, z));
+		g1.addCoordinate(new Point3D(x, y, z));
 	}
 }

@@ -3,8 +3,8 @@ package fr.istic.galaxsim.gui;
 import fr.istic.galaxsim.data.Amas;
 import fr.istic.galaxsim.data.CosmosElement;
 import fr.istic.galaxsim.data.Galaxy;
-import fr.istic.galaxsim.data.Vector;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
@@ -203,7 +203,7 @@ public class Universe extends Group {
     private Sphere createCosmosElementSphere(double radius, CosmosElement cosmosElement) {
         Sphere s = new Sphere(radius);
 
-        Vector coord = cosmosElement.getCoordinate(0);
+        Point3D coord = cosmosElement.getCoordinate(0);
         s.setTranslateX(coord.getX());
         s.setTranslateY(coord.getY());
         s.setTranslateZ(coord.getZ());

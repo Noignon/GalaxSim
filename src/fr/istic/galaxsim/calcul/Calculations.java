@@ -1,7 +1,7 @@
 package fr.istic.galaxsim.calcul;
 
 import fr.istic.galaxsim.data.CosmosElement;
-import fr.istic.galaxsim.data.Vector;
+import javafx.geometry.Point3D;
 
 /**
  * Classe permettant de calculer l'attraction et la velocite
@@ -39,16 +39,15 @@ public class Calculations {
      * @return la longitude du vecteur coord1coord2
      */
 
-    public static double attractionLongitude(Vector coord1, Vector coord2) {
-        double x = coord2.getX() - coord1.getX();
-        double y = coord2.getY() - coord1.getY();
-        double h = Math.sqrt(x * x + y * y);
+    public static double attractionLongitude(Point3D coord1, Point3D coord2) {
+        Point3D p = coord2.subtract(coord1);
+        double h = Math.sqrt(p.getX() * p.getX() + p.getY() * p.getY());
 
-        if (y > 0) {
-            return Math.acos(x / h);
+        if (p.getY() > 0) {
+            return Math.acos(p.getX() / h);
         }
         else {
-            return (Math.PI / 2) + Math.acos(x / h);
+            return (Math.PI / 2) + Math.acos(p.getX() / h);
         }
     }
 
@@ -59,15 +58,13 @@ public class Calculations {
      * @return la latitude du vecteur  coord1coord2
      */
 
-    public static double attractionLatitude(Vector coord1, Vector coord2) {
-        double x = coord2.getX() - coord1.getX();
-        double y = coord2.getY() - coord1.getY();
-        double z = coord1.getZ() - coord2.getZ();
+    public static double attractionLatitude(Point3D coord1, Point3D coord2) {
+        Point3D p = coord2.subtract(coord1);
 
-        double hypothenus = Math.sqrt(x * x + y * y);
-        double distance = Math.sqrt(hypothenus * hypothenus + z * z);
+        double hypothenus = Math.sqrt(p.getX() * p.getX() + p.getY() * p.getY());
+        double distance = Math.sqrt(hypothenus * hypothenus + p.getZ() * p.getZ());
 
-        if(z > 0) {
+        if(p.getZ() > 0) {
             return Math.acos(hypothenus / distance);
         }
         else {
@@ -92,42 +89,20 @@ public class Calculations {
         double y = Math.sin(slonr) * hypothenus;
 
         // enregistrement des donnees initiales
-        e.addCoordinate(new Vector(x, y, z));
+        e.addCoordinate(new Point3D(x, y, z));
     }
 
     /**
-     * Calcul de la force d'attraction exercee entre a1 et a2 sur l'axe X.
+     * Calcule la distance au carre entre deux points 3d.
      *
-     * @param cosLon cosinus de la longitude obtenue avec {@link Calculations#attractionLongitude}
-     * @param cosLat cosinus de la latitude obtenue avec {@link Calculations#attractionLatitude}
-     * @param F force d'attraction exercee entre a1 et a2, calculee par {@link CalculGalaxies#forceAttraction}
-     * @return force d'attraction exercee entre a1 et a2 sur l'axe X
+     * @param a premier point
+     * @param b deuxieme point
+     * @return distance au carre en pixels
      */
-    public static double forceX(double cosLon, double cosLat, double F) {
-        return F * cosLon * cosLat;
-    }
-
-    /**
-     * Calcul de la force d'attraction exercee entre a1 et a2 sur l'axe Y.
-     *
-     * @param sinLon sinus de la longitude obtenue avec {@link Calculations#attractionLongitude}
-     * @param cosLat cosinus de la latitude obtenue avec {@link Calculations#attractionLatitude}
-     * @param F force d'attraction exercee entre a1 et a2, calculee par {@link CalculGalaxies#forceAttraction}
-     * @return force d'attraction exercee entre a1 et a2 sur l'axe Y
-     */
-    public static double forceY(double sinLon, double cosLat, double F) {
-        return F * cosLat * sinLon;
-    }
-
-    /**
-     * Calcul de la force d'attraction exercee entre a1 et a2 sur l'axe Z.
-     *
-     * @param sinLat sinus de la latitude obtenue avec {@link Calculations#attractionLatitude}
-     * @param F force d'attraction exercee entre a1 et a2, calculee par {@link CalculGalaxies#forceAttraction}
-     * @return force d'attraction exercee entre a1 et a2 sur l'axe Z
-     */
-    public static double forceZ(double sinLat, double F) {
-        return F * sinLat;
+    public static double distance2(Point3D a, Point3D b) {
+        return  Math.pow(a.getX() - b.getX(), 2) +
+                Math.pow(a.getY() - b.getY(), 2) +
+                Math.pow(a.getZ() - b.getZ(), 2);
     }
 
     /**
