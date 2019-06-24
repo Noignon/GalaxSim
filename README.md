@@ -8,7 +8,12 @@ Lien utiles :
 
 GalaxSim est un logiciel qui permet de visualiser le mouvement des galaxies
 qui nous entourent en simulant leurs déplacements.<br>
-La visualisation est centrée sur notre galaxie
+La visualisation est centrée sur notre amas local (la Voie lactée).
+Les sphères rouges représentent des galaxies et les sphères d'une autre couleur représentent des amas :
+
+* [Amas de la vierge](https://fr.wikipedia.org/wiki/Amas_de_la_Vierge) : couleur noire
+* [Amas du Centaure](https://fr.wikipedia.org/wiki/Amas_du_Centaure) : couleur violette
+* Amas non nommés : couleur jaune
 
 ![Capture d'écran du logiciel](galaxsim.png)
 

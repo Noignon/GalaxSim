@@ -90,7 +90,13 @@ public class CosmosElementInfos extends VBox {
      * @param e element a afficher
      */
     private void setGlobalInfos(CosmosElement e) {
-        identLabel.setText(String.valueOf(e.getIdent()));
+        if(e.getName() != null) {
+            identLabel.setText(e.getName());
+        }
+        else {
+            identLabel.setText(String.valueOf(e.getIdent()));
+        }
+
         velocityLabel.setText(String.valueOf(e.getVelocity()));
         distanceLabel.setText(String.valueOf(e.getDistance()));
         sglongLabel.setText(String.valueOf(e.getSuperGalacticLon()));

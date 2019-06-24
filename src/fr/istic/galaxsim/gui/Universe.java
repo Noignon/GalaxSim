@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Material;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
@@ -19,12 +20,16 @@ import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
+import java.util.HashMap;
+
 /**
  * Groupe contenant un cube et des sphères (amas et galaxies).
  */
 public class Universe extends Group {
 
     private final static PhongMaterial amasMaterial = new PhongMaterial(Color.GREEN);
+    private final static PhongMaterial namedAmasMaterial = new PhongMaterial(Color.YELLOW);
+
     private final static PhongMaterial galaxyMaterial = new PhongMaterial(Color.RED);
     private final static PhongMaterial selectedElementMaterial = new PhongMaterial(Color.BLUE);
 
@@ -53,9 +58,10 @@ public class Universe extends Group {
     private double lastMouseClickPosY;
 
     private Sphere lastSelectedSphere = null;
-    private boolean isLastSelectedGalaxy = false;
+    private Material lastMaterial = null;
 
     private final Simulation sim;
+    private final HashMap<Integer, PhongMaterial> importantAmas = new HashMap<>();
 
     /**
      * Creer une nouvelle instance de Universe.
@@ -135,6 +141,10 @@ public class Universe extends Group {
             double amount = (event.getDeltaY() < 0.0) ? 20f : -20f;
             setTranslateZ(getTranslateZ() + amount);
         });
+
+        // Ajout des amas importants qui auront une couleur speciale
+        importantAmas.put(100003, new PhongMaterial(Color.BLACK)); // Virgo
+        importantAmas.put(100002, new PhongMaterial(Color.PURPLE)); // Centaurus
     }
 
     /**
@@ -148,7 +158,19 @@ public class Universe extends Group {
     	double radius = a.getMass() * Math.log(1.045) / Math.log(22000);
         
         Sphere s = createCosmosElementSphere(radius, a);
-        s.setMaterial(amasMaterial);
+
+        PhongMaterial material;
+        if((material = importantAmas.get(a.getIdent())) != null) {
+            // Si c'est un amas important (Virgo, Centaurus) alors il a une couleur personnalisee
+            s.setMaterial(material);
+        }
+        else if(a.getName() != null) {
+            // S'il possede un nom alors il aura une couleur differente des amas non nommes
+            s.setMaterial(namedAmasMaterial);
+        }
+        else {
+            s.setMaterial(amasMaterial);
+        }
     }
 
     /**
@@ -191,29 +213,32 @@ public class Universe extends Group {
 
         s.setOnMouseClicked((e) -> {
             if(lastSelectedSphere != null) {
-                // Reinitialisation de la couleur par default de la sphere
+                // Reinitialisation de la couleur par precedente de la sphere
                 // dernierement selectionnee
-                if(isLastSelectedGalaxy) {
-                    lastSelectedSphere.setMaterial(galaxyMaterial);
-                }
-                else {
-                    lastSelectedSphere.setMaterial(amasMaterial);
-                }
+                lastSelectedSphere.setMaterial(lastMaterial);
             }
 
-            // La sphere selectionne possede la couleur bleue
-            s.setMaterial(selectedElementMaterial);
-            if(cosmosElement instanceof Galaxy) {
-                cosmosElementInfos.setGalaxy((Galaxy) cosmosElement);
-                isLastSelectedGalaxy = true;
+            if(lastSelectedSphere == s) {
+                // De-selection de la sphere en cours de selection
+                lastSelectedSphere.setMaterial(lastMaterial);
+                lastSelectedSphere = null;
+
+                // Masquage de la fenetre d'informations
+                cosmosElementInfos.setVisible(false);
             }
             else {
-                cosmosElementInfos.setAmas((Amas) cosmosElement);
-                isLastSelectedGalaxy = false;
-            }
+                // La sphere selectionne possede la couleur bleue
+                lastMaterial = s.getMaterial();
+                s.setMaterial(selectedElementMaterial);
+                if (cosmosElement instanceof Galaxy) {
+                    cosmosElementInfos.setGalaxy((Galaxy) cosmosElement);
+                } else {
+                    cosmosElementInfos.setAmas((Amas) cosmosElement);
+                }
 
-            cosmosElementInfos.setVisible(true);
-            lastSelectedSphere = s;
+                cosmosElementInfos.setVisible(true);
+                lastSelectedSphere = s;
+            }
         });
 
         sim.addAnimation(new SimulationAnimation(s, trail, cosmosElement, sim.trailVisibility));
