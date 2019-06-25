@@ -93,7 +93,7 @@ public class Calculations {
      * @return la force d'attraction qu'excerce le deuxieme amas sur le premier
      */
     public static Point3D forceAttractionAmas(Point3D amas1, Point3D amas2, double m1, double m2) {
-        Point3D p = amas2.subtract(amas1);
+        Point3D p = amas1.subtract(amas2);
         double m = p.magnitude();
         Point3D u = p.multiply(1 / m);
 
@@ -115,7 +115,7 @@ public class Calculations {
      * @return la force d'attraction qu'exerce l'amas sur la galaxie
      */
     public static Point3D forceAttractionGalaxy(Point3D gP, Point3D aP, double mA) {
-        Point3D p = aP.subtract(gP);
+        Point3D p = gP.subtract(aP);
         double m = p.magnitude();
         Point3D u = p.multiply(1 / m);
 
@@ -124,7 +124,7 @@ public class Calculations {
         // Force de gravitation = (G * Masse1 * Masse2) / distance^2
         double m1 = mA * Calculations.MsolaireEnKilo;
 
-        return u.multiply((Calculations.G * m1) / distance2);
+        return u.multiply((-Calculations.G * m1) / distance2);
     }
 
     /**
