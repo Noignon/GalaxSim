@@ -91,7 +91,7 @@ public class CalcsProcessing extends Task {
 					sumForce = sumForce.add(Calculations.forceAttractionAmas(coord1, a2.getCoordinate(t), a1.getMass(), a2.getMass()));
 				}
 
-				Calculations.coordByTime(a1, sumForce.multiply(1 / a1.getMass()), t);
+				Calculations.coordByTime(a1, sumForce.multiply(1 / (a1.getMass() * Calculations.MsolaireEnKilo)), t);
 				increaseProgress();
 			}
 

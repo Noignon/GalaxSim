@@ -52,13 +52,13 @@ public class Calculations {
         e.addCoordinate(new Point3D(x, y, z));
     }
 
-    public static void coordByTime(CosmosElement e, Point3D f, int t) {
+    public static void coordByTime(CosmosElement e, Point3D a, int t) {
         Point3D velocity = e.getVelocity(t);
 
         double time = t * Calculations.Time;
 
         double velocityTime = time * 1000;
-        Point3D nextVelocity = velocity.add(f.multiply(velocityTime));
+        Point3D nextVelocity = velocity.add(a.multiply(velocityTime));
         e.addVelocity(nextVelocity);
 
         double kilometreEnMparsec = 1000 / Calculations.MparsecEnMetre;
@@ -101,7 +101,7 @@ public class Calculations {
         double distance2 = m * m * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
 
         // Force de gravitation = (G * Masse1 * Masse2) / distance^2
-        double f = (-Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo) / distance2;
+        double f = (-Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo * Calculations.MsolaireEnKilo) / distance2;
 
         return u.multiply(f);
     }
