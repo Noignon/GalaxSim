@@ -52,6 +52,13 @@ public class Calculations {
         e.addCoordinate(new Point3D(x, y, z));
     }
 
+    /**
+     * Calcul de la position de l'element a l'instant t
+     *
+     * @param e amas ou galaxie
+     * @param a vecteur d'attraction
+     * @param t indice de la coordonne precedente
+     */
     public static void coordByTime(CosmosElement e, Point3D a, int t) {
         Point3D velocity = e.getVelocity(t);
 

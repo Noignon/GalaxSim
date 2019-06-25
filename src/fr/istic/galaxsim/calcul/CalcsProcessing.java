@@ -1,9 +1,4 @@
 package fr.istic.galaxsim.calcul;
-/**
- * Classe permettant de calculer les differentes les positions dans le temps pour la simulation
- *
- * @author Lucas, Mathieu, Maxime
- */
 
 import fr.istic.galaxsim.data.*;
 import javafx.beans.property.DoubleProperty;
@@ -16,6 +11,8 @@ import javafx.geometry.Point3D;
  *
  * Les calculs sont faits dans un autre thread pour ne pas bloquer
  * l'interface graphique.
+ *
+ * @author Lucas, Mathieu, Maxime
  */
 public class CalcsProcessing extends Task {
 
