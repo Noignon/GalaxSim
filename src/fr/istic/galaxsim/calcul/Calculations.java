@@ -1,6 +1,7 @@
 package fr.istic.galaxsim.calcul;
 
 import fr.istic.galaxsim.data.CosmosElement;
+import fr.istic.galaxsim.data.Galaxy;
 import javafx.geometry.Point3D;
 
 /**
@@ -51,6 +52,24 @@ public class Calculations {
         e.addCoordinate(new Point3D(x, y, z));
     }
 
+    public static void coordByTime(CosmosElement e, Point3D f, int t) {
+        Point3D velocity = e.getVelocity(t);
+
+        double time = t * Calculations.Time;
+
+        double velocityTime = time * 1000;
+        Point3D nextVelocity = velocity.add(f.multiply(velocityTime));
+        e.addVelocity(nextVelocity);
+
+        double kilometreEnMparsec = 1000 / Calculations.MparsecEnMetre;
+
+        Point3D pos = e.getCoordinate(t);
+        double positionTime = time * kilometreEnMparsec;
+        Point3D nextPosition = pos.add(nextVelocity.multiply(positionTime));
+
+        e.addCoordinate(nextPosition);
+    }
+
     /**
      * Calcule la distance au carre entre deux points 3d.
      *
@@ -62,6 +81,50 @@ public class Calculations {
         return  Math.pow(a.getX() - b.getX(), 2) +
                 Math.pow(a.getY() - b.getY(), 2) +
                 Math.pow(a.getZ() - b.getZ(), 2);
+    }
+
+    /**
+     * Calcul de la force d'attraction entre deux amas (Famas2/amas1).
+     *
+     * @param amas1 position de l'amas principal
+     * @param amas2 position de l'autre amas
+     * @param m1 masse de l'amas principal
+     * @param m2 masse de l'autre amas
+     * @return la force d'attraction qu'excerce le deuxieme amas sur le premier
+     */
+    public static Point3D forceAttractionAmas(Point3D amas1, Point3D amas2, double m1, double m2) {
+        Point3D p = amas2.subtract(amas1);
+        double m = p.magnitude();
+        Point3D u = p.multiply(1 / m);
+
+        // distance = racine carre de ((x1 + x2)^2 + (y1 + y2)^2 + (z1 + z2)^2)
+        double distance2 = m * m * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+
+        // Force de gravitation = (G * Masse1 * Masse2) / distance^2
+        double f = (-Calculations.G * m1 * m2  * Calculations.MsolaireEnKilo) / distance2;
+
+        return u.multiply(f);
+    }
+
+    /**
+     * Calcul de la force d'attraction entre une galaxie et un amas.
+     *
+     * @param gP position de la galaxie
+     * @param aP position de l'amas
+     * @param mA masse de l'amas
+     * @return la force d'attraction qu'exerce l'amas sur la galaxie
+     */
+    public static Point3D forceAttractionGalaxy(Point3D gP, Point3D aP, double mA) {
+        Point3D p = aP.subtract(gP);
+        double m = p.magnitude();
+        Point3D u = p.multiply(1 / m);
+
+        double distance2 = m * m * Calculations.MparsecEnMetre * Calculations.MparsecEnMetre;
+
+        // Force de gravitation = (G * Masse1 * Masse2) / distance^2
+        double m1 = mA * Calculations.MsolaireEnKilo;
+
+        return u.multiply((Calculations.G * m1) / distance2);
     }
 
     /**
