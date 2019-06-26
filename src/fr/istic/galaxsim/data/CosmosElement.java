@@ -1,6 +1,8 @@
 package fr.istic.galaxsim.data;
 
-import java.util.*;
+import javafx.geometry.Point3D;
+
+import java.util.ArrayList;
 
 /**
  * classe abstraite permettant de définir un element du cosmos
@@ -17,12 +19,12 @@ public abstract class CosmosElement{
 	/**
 	 * les coordonnées du corps dans le temps (indice = temps)
 	 */
-	private ArrayList<Vector> coordinatesInTime = new ArrayList<Vector>();  
+	private final ArrayList<Point3D> coordinatesInTime = new ArrayList<>();
 	
 	/**
 	 * les vitesses du corps dans le temps (indice = temps)
 	 */
-	private ArrayList<Vector> velocitiesInTime = new ArrayList<Vector>(); 
+	private final ArrayList<Point3D> velocitiesInTime = new ArrayList<>();
 	
 	/**
 	 * l'identifiant
@@ -87,7 +89,7 @@ public abstract class CosmosElement{
 	 * methode permettant d'ajouter une coordonnée à la liste
 	 * @param coordinate la coordonnée à ajouter
 	 */
-	public void addCoordinate(Vector coordinate) {
+	public void addCoordinate(Point3D coordinate) {
 		this.coordinatesInTime.add(coordinate);
 	}
 	
@@ -95,7 +97,7 @@ public abstract class CosmosElement{
 	 * methode permettant d'ajouter une vitesse à la liste
 	 * @param velocity la vitesse à ajouter
 	 */
-	public void addVelocity(Vector velocity) {
+	public void addVelocity(Point3D velocity) {
 		this.velocitiesInTime.add(velocity);
 	}
 	
@@ -103,14 +105,14 @@ public abstract class CosmosElement{
 	 * methode permettant de supprimer toutes les coordonnées
 	 */
 	public void removeAllCoordinate(){
-		this.coordinatesInTime = new ArrayList<Vector>();
+		this.coordinatesInTime.clear();
 	}
 	
 	/**
 	 * methode permettant de supprimer toutes les vitesses
 	 */
 	public void removeAllVelocities(){
-		this.velocitiesInTime = new ArrayList<Vector>();
+		this.velocitiesInTime.clear();
 	}
 	
 	/**
@@ -118,7 +120,7 @@ public abstract class CosmosElement{
 	 * @param time le temps
 	 * @return la coordonnée
 	 */
-	public Vector getCoordinate(int time){
+	public Point3D getCoordinate(int time){
 		if (time >= 0 && time < this.coordinatesInTime.size()){
 			return this.coordinatesInTime.get(time);
 		}
@@ -130,7 +132,7 @@ public abstract class CosmosElement{
 	 * @param time le temps
 	 * @return la vitesse
 	 */
-	public Vector getVelocity(int time){
+	public Point3D getVelocity(int time){
 		if (time >= 0 && time < this.velocitiesInTime.size()){
 			return this.velocitiesInTime.get(time);
 		}

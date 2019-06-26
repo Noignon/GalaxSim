@@ -1,5 +1,7 @@
 package fr.istic.galaxsim.data;
 
+import javafx.geometry.Point3D;
+
 /**
  * classe de filtre
  * @author Yusoig
@@ -254,7 +256,7 @@ public class Filter {
 		boolean min = !filterCoordinateXMinActived;
 		boolean max = !filterCoordinateXMaxActived;
 		
-		Vector c = cosmosElement.getCoordinate(0);
+		Point3D c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateXMinActived) {
@@ -278,8 +280,8 @@ public class Filter {
 	private static boolean goodCoordinateY(CosmosElement cosmosElement){
 		boolean min = !filterCoordinateYMinActived;
 		boolean max = !filterCoordinateYMaxActived;
-		
-		Vector c = cosmosElement.getCoordinate(0);
+
+		Point3D c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateYMinActived) {
@@ -303,8 +305,8 @@ public class Filter {
 	private static boolean goodCoordinateZ(CosmosElement cosmosElement){
 		boolean min = !filterCoordinateZMinActived;
 		boolean max = !filterCoordinateZMaxActived;
-		
-		Vector c = cosmosElement.getCoordinate(0);
+
+		Point3D c = cosmosElement.getCoordinate(0);
 		
 		if (c != null) {
 			if (filterCoordinateZMinActived) {
