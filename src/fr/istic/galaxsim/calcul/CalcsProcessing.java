@@ -1,20 +1,18 @@
 package fr.istic.galaxsim.calcul;
-/**
- * Classe permettant de calculer les differentes les positions dans le temps pour la simulation
- *
- * @author Lucas, Mathieu, Maxime
- */
 
 import fr.istic.galaxsim.data.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.concurrent.Task;
+import javafx.geometry.Point3D;
 
 /**
  * Classe permettant de calculer les coordonnees des amas et des galaxies.
  *
  * Les calculs sont faits dans un autre thread pour ne pas bloquer
  * l'interface graphique.
+ *
+ * @author Lucas, Mathieu, Maxime
  */
 public class CalcsProcessing extends Task {
 
@@ -66,9 +64,9 @@ public class CalcsProcessing extends Task {
 
 			// boucle pour taiter chaque amas
 			for (Amas a1 : amas) {
-				double[] sumForce = { 0d, 0d, 0d };
+				Point3D sumForce = Point3D.ZERO;
 
-				Vector coord1 = a1.getCoordinate(t);
+				Point3D coord1 = a1.getCoordinate(t);
 
 				// boucle pour calculer les forces entre l'amas actuel et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
@@ -77,7 +75,7 @@ public class CalcsProcessing extends Task {
 						continue;
 					}
 
-					calcAmasForces(coord1, a2.getCoordinate(t), a1.getMass(), a2.getMass(), sumForce);
+					sumForce = sumForce.add(Calculations.forceAttractionAmas(coord1, a2.getCoordinate(t), a1.getMass(), a2.getMass()));
 				}
 
 				// boucle pour calculer les forces entre l'amas actuel et les 100 amas les plus proches
@@ -87,69 +85,39 @@ public class CalcsProcessing extends Task {
 						continue;
 					}
 
-					calcAmasForces(coord1, a2.getCoordinate(t), a1.getMass(), a2.getMass(), sumForce);
+					sumForce = sumForce.add(Calculations.forceAttractionAmas(coord1, a2.getCoordinate(t), a1.getMass(), a2.getMass()));
 				}
-				CalculAmas.coordByTime(a1, sumForce[0], sumForce[1], sumForce[2], t);
+
+				Calculations.coordByTime(a1, sumForce.multiply(1 / (a1.getMass() * Calculations.MsolaireEnKilo)), t);
 				increaseProgress();
 			}
 
 			// boucle pour traiter chaque galaxies
 			for (Galaxy g : DataBase.tableGalaxies) {
-				double[] sumForce = { 0d, 0d, 0d };
+				Point3D sumForce = Point3D.ZERO;
 
-				Vector coord1 = g.getCoordinate(t);
+				Point3D coord1 = g.getCoordinate(t);
 
 				// boucle pour calculer les forces entre la galaxie actuelle et les 100 amas les plus massifs
 				for (int i = 0; i < Math.min(amas.length, 100); i++) {
 					Amas a = amas[i];
 
-					calcGalaxiesForces(coord1, a.getCoordinate(t), a.getMass(), sumForce);
+					sumForce = sumForce.add(Calculations.forceAttractionGalaxy(coord1, a.getCoordinate(t), a.getMass()));
 				}
 
 				// boucle pour calculer les forces entre la galaxie actuelle et les 100 amas les plus proches
 				for (int i = 0; i < Math.min(amasProche.length, 100); i++) {
 					Amas a = amasProche[i];
 
-					calcGalaxiesForces(coord1, a.getCoordinate(t), a.getMass(), sumForce);
+					sumForce = sumForce.add(Calculations.forceAttractionGalaxy(coord1, a.getCoordinate(t), a.getMass()));
 				}
-				CalculGalaxies.coordByTime(g, sumForce[0], sumForce[1], sumForce[2], t);
+				Calculations.coordByTime(g, sumForce, t);
 				increaseProgress();
 			}
 		}
 
 		return null;
 	}
-
-	private void calcAmasForces(Vector coord1, Vector coord2, double m1, double m2, double[] sumForce) {
-		double lat = Calculations.attractionLatitude(coord1, coord2);
-		double lon = Calculations.attractionLongitude(coord1, coord2);
-		double force = CalculAmas.forceAttraction(coord1, coord2, m1, m2);
-
-		calcForces(lat, lon, force, sumForce);
-	}
-
-	private void calcGalaxiesForces(Vector coord1, Vector coord2, double m, double[] sumForce) {
-		double lat = Calculations.attractionLatitude(coord1, coord2);
-		double lon = Calculations.attractionLongitude(coord1, coord2);
-		double force = CalculGalaxies.forceAttraction(coord1, coord2, m);
-
-		calcForces(lat, lon, force, sumForce);
-	}
-
-	private void calcForces(double lat, double lon, double force, double[] sumForce) {
-		double cosLat = Math.cos(lat);
-		double cosLon = Math.cos(lon);
-
-		double sinLat = Math.sin(lat);
-		double sinLon = Math.sin(lon);
-
-		if (force != 0) {
-			sumForce[0] += Calculations.forceX(cosLon, cosLat, force);
-			sumForce[1] += Calculations.forceY(sinLon, cosLat, force);
-			sumForce[2] += Calculations.forceZ(sinLat, force);
-		}
-	}
-
 
 	/**
 	 * Met a jour la progression de la tache
@@ -168,7 +136,7 @@ public class CalcsProcessing extends Task {
 			double Vx = Calculations.velocityX(g[i]);
 			double Vy = Calculations.velocityY(g[i]);
 			double Vz = Calculations.velocityZ(g[i]);
-			g[i].addVelocity(new Vector(Vx, Vy, Vz));
+			g[i].addVelocity(new Point3D(Vx, Vy, Vz));
 			Calculations.calculCoordInit(g[i]);
 		}
 
@@ -176,7 +144,7 @@ public class CalcsProcessing extends Task {
 			double Vx = Calculations.velocityX(a);
 			double Vy = Calculations.velocityY(a);
 			double Vz = Calculations.velocityZ(a);
-			a.addVelocity(new Vector(Vx, Vy, Vz));
+			a.addVelocity(new Point3D(Vx, Vy, Vz));
 			Calculations.calculCoordInit(a);
 		}
 	}
